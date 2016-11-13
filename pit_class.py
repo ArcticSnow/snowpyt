@@ -153,6 +153,8 @@ a.filename = filename
 a.load_csv()
 a.summary_plot()
 
+####################################################
+# Plotting tool in development
 
 fig = plt.figure(figsize=(10,10),dpi=150)
 #fig = plt.figure()
@@ -191,6 +193,7 @@ ax3.set_xlim(0,7)
 im4 = ax4.plot(a.density, a.depth_density)
 ax4.yaxis.tick_right()
 
+# add
 ax1.set_title("Temperature ($^\circ$C)")
 ax2.set_title("Stratigraphy")
 ax3.set_title("Hardness")
@@ -199,6 +202,12 @@ ax1.set_ylabel("Depth (cm)")
 
 ax1.grid()
 ax4.grid()
+
+# addind metadata information on layout:
+metadata='sdsfaos;nfkajnsklbhbfjhwef\niebkbdksbdfkjbkuwbef\nsdfbehbwifeb'
+fig.suptitle(metadata)
+
+# finalize and save as an image
 plt.tight_layout()
 plt.subplots_adjust(wspace=0)
 fig.savefig('test.png')
