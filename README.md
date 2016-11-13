@@ -37,7 +37,7 @@ required library:
 
 ## Example
 
-See file (test.png)[test.png]
+See file ![test.png](test.png)
 
 
 
