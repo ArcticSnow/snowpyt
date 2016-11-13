@@ -15,12 +15,9 @@ The snow grain classification follows the guidelines provided by the UNESCO
 
 Fierz, C., Amstrong, R.L., Durand, Y., 
 Etchevers, P., Greene, E., McClung, D.M., 
-Nishimura, K., Satyawali, P.K. and Sokratov, S.A. 2009.  
-The International 
-Classification for Seasonal Snow on the Ground.
-  IHP-VII Technical Documents in 
-Hydrology N°83, IACS Contribut
-ion N°1, UNESCO-IHP, Paris. 
+Nishimura, K., Satyawali, P.K. and Sokratov, S.A. 2009.
+The International Classification for Seasonal Snow on the Ground. IHP-VII Technical Documents in 
+Hydrology N°83, IACS Contribution N°1, UNESCO-IHP, Paris. 
 
 ## Installation
 
@@ -36,8 +33,7 @@ required library:
 ## Use
 
 ## Example
-
-See file ![test.png](test.png)
+![test.png](test.png)
 
 
 
