@@ -33,7 +33,7 @@ required library:
 ## Use
 
 ## Example
-![test.png](/home/arcticsnow/github/snowpyt/kvg2_3.png)
+![test.png](kvg2_3.png)
 
 
 
