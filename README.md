@@ -1,4 +1,4 @@
-# Library to visualize snowpits
+# Snowpyt: Library to visualize snowpits
 Simon Filhol, November 2016, copyright under the MIT license
 
 Feel free to contribute to the project!!!!
