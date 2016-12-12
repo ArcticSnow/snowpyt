@@ -46,7 +46,10 @@ required library:
 - pandas
 
 ## Use
-Individual snowpits have to be loaded into python class object from which the user can easily access information. See the file Example.py for an example of a basic use.
+
+1. Snowpit must be formated following the template file "Standard_pit.xlsx"
+2. Export the snowpit to a csv file using tab as delimiter
+3. Individual snowpits have to be loaded into python class object from which the user can easily access information. See the file Example.py for an example of a basic use.
 
 
 ## Example
