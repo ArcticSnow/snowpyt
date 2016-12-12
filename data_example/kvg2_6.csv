@@ -1,0 +1,34 @@
+Glacier	Kongsvegen		Weather Conditions	little to medium wind, 17 minus, partly cloudy, nice day in general, but cold, sampling for C2S3 project										
+Area	Equilibirum, Stake 6		Coordinates/GPS	North	8746108.482	78.78049								
+Date	11.04.16			East	459897.92	13.15344								
+Time	afternoon			Altitude (m a.s.l.)	533.966									
+Observer(s)	TM, JCG													
+General comments	little wind, partly cloudy, 162 cm snowpit, few ice lenses at the bottom but little metl refrozen, quite some facetted strong layers, most likely old refrozen stuff that metamorphosed													
+	Sampling for Iso, Ions, Bio and BC													
+														
+Temperatures:														
+Air temp 1m [°C]		-17.5												
+Air/snow temp [°C]		-18.2												
+Snow/ice temp [°C]		-7.2												
+Comments		stratigraphy by JCG												
+														
+Layer, from top to bottom	Top [cm]	Bottom [cm]	Type 1	Type 2	Diameter min [mm]	Diameter max [mm]	Hardness	Hardness code		Depth Center [cm]	Snow Density [g/cm³]		Depth [cm]	Temp [deg C]
+1	0	10	wind broken		0.2	0.5	4 f	2		5	118		3	15.5
+2	10	47	faceted		0.2	0.3	1f	3		25	281		8	13.1
+3	47	67	wind packed		0.1	0.2	knife	5		57	396		10	12.8
+4	67	76	faceted		0.2	0.3	pencil	4		71	415		20	10.4
+5	76	89	faceted		0.2	0.3	pencil	4		83	346		30	9.7
+6	89	94	faceted		0.3	0.5	pencil	4		92	381		40	9.2
+7	94	103	faceted		0.3	0.5	pencil	4		99	344		47	9
+8	103	117	faceted		1	2	pencil	4		110	458		55	9
+9	117	118	horizontal ice layer				ice	6		123	377		67	8.9
+10	118	127	faceted		2	2	pencil	4		132	400		76	8.8
+11	127	128	horizontal ice layer				ice	6		146	383		89	8.6
+12	128	137	melt refreeze		2	3	pencil	4					94	8.6
+13	137	138	horizontal ice layer				ice	6					103	8.6
+14	138	162	faceted		2	3	pencil	4					110	8.4
+													117	8.4
+													127	8.1
+													137	7.9
+													147	7.6
+													162	7.2
