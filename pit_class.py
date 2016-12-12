@@ -134,7 +134,7 @@ class Snowpit_standard(Snowpit):
         right = left + width
         top = bottom + height
 
-        plt.figtext(0.08, 0.15 , metadata,
+        plt.figtext(0.08, 0.12 , metadata,
                 horizontalalignment='left',
                 verticalalignment='center',wrap=True, fontsize=8)
         fig.autofmt_xdate()
@@ -245,6 +245,8 @@ class Snowpit_standard(Snowpit):
         print "Glacier: " + self.glacier
         print "Weather conditions: " + self.weather_conditions
         print "Comments: " + self.comments
+
+
 class Snowpit_svalbard_JC(Snowpit):
     '''
     Class for snowpit data as sorted by JC about Snow Svalbard Research
@@ -339,7 +341,7 @@ class Snowpit_svalbard_JC(Snowpit):
 
         plt.figtext(0.08, 0.15 , metadata,
                 horizontalalignment='left',
-                verticalalignment='center',wrap=True, fontsize=8)
+                verticalalignment='center',wrap=True, fontsize=6)
         fig.autofmt_xdate()
 
         plt.tight_layout()

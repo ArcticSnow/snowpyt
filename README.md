@@ -1,7 +1,14 @@
 # Snowpyt: a library to visualize snowpits
 Simon Filhol, November 2016, copyright under the MIT license
 
-Feel free to contribute to the project!!!!
+Feel free to contribute to the project!!!! Many new features can be added...
+
+To do:
+- add more crystal symbols
+- improve the final layout (e.g. overlapping snowflake symbol)
+- specify the figure size and adjust font size in respect
+- render the medatadata text better
+- create new plot combination
 
 
 ## Objective
@@ -20,6 +27,14 @@ The International Classification for Seasonal Snow on the Ground. IHP-VII Techni
 Hydrology N°83, IACS Contribution N°1, UNESCO-IHP, Paris. 
 
 ## Installation
+Clone the github repository to a local directory using the following command in your terminal
+
+```bash
+git clone https://github.com/ArcticSnow/snowpyt.git
+```
+or by downloading the package
+
+The package contains all the functions to plot the snowpit if library requirements are met. It also contains data samples to test the library.
 
 ### requirements
 
@@ -31,9 +46,11 @@ required library:
 - pandas
 
 ## Use
+Individual snowpits have to be loaded into python class object from which the user can easily access information. See the file Example.py for an example of a basic use.
+
 
 ## Example
-![test.png](kvg2_3.png)
+![test.png](Standard_pit.png)
 
 
 
