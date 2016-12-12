@@ -439,11 +439,6 @@ class Snowpit_svalbard_JC(Snowpit):
         print "Weather conditions: " + self.weather_conditions
         print "Comments: " + self.comments
 
-filename = '/home/arcticsnow/github/snowpyt/data_example/Standard_pit.csv'
-a = Snowpit_standard(filename)
-a.filename = filename
-a.load_csv()
-a.summary_plot(save=False)
 
 
 
