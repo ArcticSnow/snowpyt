@@ -6,7 +6,8 @@ Simon Filhol, December 2016
 '''
 
 filename = 'data_example/Standard_pit.csv'  #[insert path to file]
-a = Snowpit_standard(filename)
-a.filename = filename
-a.load_csv()
-a.summary_plot(save=True)
+mypit = Snowpit_standard(filename)
+mypit.filename = filename
+mypit.load_csv()
+mypit.summary_plot(save=True, metadata=True)
+mypit.print_metadata()

@@ -12,6 +12,7 @@ from matplotlib import pyplot as plt
 import matplotlib.cm as cm
 from matplotlib.offsetbox import AnnotationBbox, OffsetImage
 from matplotlib._png import read_png
+from matplotlib.ticker import MaxNLocator
 
 
 snowflake_dict = {'faceted':'snowflake/faceted.png',
@@ -44,25 +45,33 @@ class Snowpit(object):
 
 class Snowpit_standard(Snowpit):
     '''
-    Class for snowpit data as sorted by JC about Snow Svalbard Research
+    Class for snowpit data formated as in Standard_pit.csv (tab delimiter)
     '''
 
     def __init__(self, filename):
         super(Snowpit, self).__init__()
         self.filename = 'example.txt'
 
-    def summary_plot(self, save=False):
+    def summary_plot(self, save=False, metadata=True):
         '''
-        plot general snowpit plot
+        Function to plot a summary of snowpit data
+
+        :param save: save figure to hardrive as png
+        :param metadata: boolean to include or not metadata information to figure
         :return:
         '''
 
         fig = plt.figure(figsize=(10, 10), dpi=150)
-        # fig = plt.figure()
-        ax1 = plt.subplot2grid((4,4),(0,0),rowspan = 3)
-        ax2 = plt.subplot2grid((4,4),(0,1),rowspan = 3, sharey=ax1)  # Share y-axes with subplot 1
-        ax3 = plt.subplot2grid((4,4),(0,2),rowspan = 3, sharey=ax2)
-        ax4 = plt.subplot2grid((4,4),(0,3),rowspan = 3, sharey=ax3)
+
+        if metadata:
+            my_rowspan = 3
+        else:
+            my_rowspan = 4
+
+        ax1 = plt.subplot2grid((4,4),(0,0),rowspan = my_rowspan)
+        ax2 = plt.subplot2grid((4,4),(0,1),rowspan = my_rowspan, sharey=ax1)  # Share y-axes with subplot 1
+        ax3 = plt.subplot2grid((4,4),(0,2),rowspan = my_rowspan, sharey=ax2)
+        ax4 = plt.subplot2grid((4,4),(0,3),rowspan = my_rowspan, sharey=ax3)
 
         # Set y-ticks of subplot 2 invisible
         plt.setp(ax2.get_yticklabels(), visible=False)
@@ -105,7 +114,7 @@ class Snowpit_standard(Snowpit):
                 ax2.add_artist(ab)
 
         im3 = ax3.barh(self.layer_top, self.hardness_code, self.layer_bot - self.layer_top, color=cm.Blues(self.hardness_code / 6))
-        ax3.set_xlim(0, 7)
+        ax3.set_xlim(0, 8)
 
         im4 = ax4.plot(self.density, self.depth_density)
         ax4.yaxis.tick_right()
@@ -117,33 +126,38 @@ class Snowpit_standard(Snowpit):
         ax4.set_title("Density")
         ax1.set_ylabel("Depth (cm)")
 
+        for tick in ax1.get_xticklabels():
+            tick.set_rotation(45)
+
+        labels_ax3 = ['','Feast', '4F', '3F','2F','1F','P','K']
+        ax3.set_xticklabels(labels_ax3,rotation=45)
+        ax3.xaxis.set_major_locator(MaxNLocator(integer=True,prune='upper'))
+
+
         ax1.grid()
         ax4.grid()
 
-        metadata = "Date: " + self.date + '; Time [24hr]: ' + self.Time + '\n' + \
-                   "Observer: " + self.Observer + '\n' + \
-                   "Location description: " + self.General_loc + '\n' + \
-                   "East : " + self.East + ' ' + self.East_unit + '\n' + \
-                   "North: " + self.North + ' ' + self.North_unit + '\n' + \
-                   "Elevation: " + self.Elevation + ' ' + self.Elevation_unit + '\n' + \
-                   "Weather Conditions: " + self.weather_conditions + '\n' + \
-                   "Air temperature: " + self.AirTemp + '$^{\circ}C$' '\n' + \
-                   "Comments: " + self.comments + '\n'
-        left, width = .25, .5
-        bottom, height = .25, .5
-        right = left + width
-        top = bottom + height
+        if metadata:
+            metadata_text = "Date: " + self.date + '; Time [24hr]: ' + self.Time + '\n' + \
+                       "Observer: " + self.Observer + '\n' + \
+                       "Location description: " + self.General_loc + '\n' + \
+                       "East : " + self.East + ' ' + self.East_unit + '\n' + \
+                       "North: " + self.North + ' ' + self.North_unit + '\n' + \
+                       "Elevation: " + self.Elevation + ' ' + self.Elevation_unit + '\n' + \
+                       "Weather Conditions: " + self.weather_conditions + '\n' + \
+                       "Air temperature: " + self.AirTemp + '$^{\circ}C$' '\n' + \
+                       "Comments: " + self.comments + '\n'
 
-        plt.figtext(0.08, 0.12 , metadata,
-                horizontalalignment='left',
-                verticalalignment='center',wrap=True, fontsize=8)
-        fig.autofmt_xdate()
+            plt.figtext(0.08, 0.12 , metadata_text,
+                    horizontalalignment='left',
+                    verticalalignment='center',wrap=True, fontsize=8)
 
         plt.tight_layout()
         plt.subplots_adjust(wspace=0)
+
         if save==True:
             fig.savefig(self.filename.split('/')[-1][0:-4])
-
+            print 'Figure saved as ' + self.filename.split('/')[-1][0:-4] + '.png'
 
     def plot_temperature(self):
         '''
@@ -236,15 +250,20 @@ class Snowpit_standard(Snowpit):
         f.close()
 
     def print_metadata(self):
+        print "===================================="
         print "Date: " + self.date
-        print "East [deg]: " + self.East
-        print "North [deg]: " + self.North
-        print "Elevation [m]: " + self.Elevation
         print "Observer: " + self.Observer
+        print "------------------------------------"
+        print "Location: " + self.General_loc
+        print "East: " + self.East + ' ' + self.East_unit
+        print "North: " + self.North + ' ' + self.North_unit
+        print "Elevation: " + self.Elevation + ' ' + self.Elevation_unit
+        print "------------------------------------"
         print "Air temperature [C]: " + self.AirTemp
-        print "Glacier: " + self.glacier
         print "Weather conditions: " + self.weather_conditions
+        print "------------------------------------"
         print "Comments: " + self.comments
+        print "===================================="
 
 
 class Snowpit_svalbard_JC(Snowpit):
@@ -342,7 +361,7 @@ class Snowpit_svalbard_JC(Snowpit):
         plt.figtext(0.08, 0.15 , metadata,
                 horizontalalignment='left',
                 verticalalignment='center',wrap=True, fontsize=6)
-        fig.autofmt_xdate()
+        #fig.autofmt_xdate()
 
         plt.tight_layout()
         plt.subplots_adjust(wspace=0)
