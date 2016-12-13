@@ -10,7 +10,8 @@ To do:
 - render the medatadata text better
 - create new plot combination
 - put option to adjust figure size to desired size and dpi
-
+- add option to save pits in Pickle format or CSV
+- 
 
 ## Objective
 The objective of this library is to provide visualization tool for snowpit data. 
