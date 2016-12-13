@@ -36,9 +36,7 @@ The package contains all the functions to plot the snowpit if library requiremen
 
 ### requirements
 
-Python 2.7.9
-
-required library:
+Python 2.7.9 with the following libraries:
 - [numpy](http://www.numpy.org/)
 - [matplotlib](http://matplotlib.org/)
 - [pandas](http://pandas.pydata.org/)
