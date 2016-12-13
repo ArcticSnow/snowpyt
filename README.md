@@ -39,9 +39,9 @@ The package contains all the functions to plot the snowpit if library requiremen
 Python 2.7.9
 
 required library:
-- numpy
-- matplotlib
-- pandas
+- [numpy](http://www.numpy.org/)
+- [matplotlib](http://matplotlib.org/)
+- [pandas](http://pandas.pydata.org/)
 
 ## Use
 
