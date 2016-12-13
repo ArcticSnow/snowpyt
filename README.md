@@ -9,6 +9,7 @@ To do:
 - specify the figure size and adjust font size in respect
 - render the medatadata text better
 - create new plot combination
+- put option to adjust figure size to desired size and dpi
 
 
 ## Objective
@@ -18,7 +19,7 @@ Started for the need of the Svalbard Snow Research group, this package should ev
  
 The snow grain classification follows the guidelines provided by the UNESCO 
 [International Classification for Seasonal Snow on the Ground](http://unesdoc.unesco.org/images/0018/001864/186462e.pdf) 
-(Fierx et al., 2009)
+(Fierz et al., 2009)
 
 Fierz, C., Amstrong, R.L., Durand, Y., Etchevers, P., Greene, E., McClung, D.M., Nishimura, K., Satyawali, P.K. and Sokratov, S.A. 2009.The International Classification for Seasonal Snow on the Ground. IHP-VII Technical Documents in 
 Hydrology N°83, IACS Contribution N°1, UNESCO-IHP, Paris. 
