@@ -1,0 +1,25 @@
+Glacier	Kongsvegen		Weather Conditions	Little wind, 13 minus, almost fully clear, nice day in general, sampling for C2S3 project										
+Area	Ablation, Stake 3		Coordinates/GPS	North	8749931.242	78.81288								
+Date	13.04.16			East	453860.377	12.86925								
+Time	afternoon			Altitude (m a.s.l.)	325.997									
+Observer(s)	TM, JCG, AS, EB, HH													
+General comments	little wind, partly cloudy, 75 cm snowpit													
+	Sampling for Iso, Ions, Bio and BC													
+														
+Temperatures:														
+Air temp 1m [°C]		-13.9												
+Air/snow temp [°C]														
+Snow/ice temp [°C]		-8.2												
+Comments		stratigraphy by AS and JCG												
+														
+Layer, from top to bottom	Top [cm]	Bottom [cm]	Type 1	Type 2	Diameter min [mm]	Diameter max [mm]	Hardness	Hardness code		Depth Center [cm]	Snow Density [g/cm³]		Depth [cm]	Temp [deg C]
+1	0	1	wind broken		0.5	0.5	4 f	2		2	130		5	14.8
+2	1	5	wind broken	rounded	1	1	4f	2		8	341		10	14.8
+3	5	6	melt refreeze crust				pencil	4		15	255		20	13.4
+4	6	10	faceted	depth hoar	1	1	1f	3		25	269		30	11.1
+5	10	30	faceted	clustered rounded	1	1	4f	2		35	364		40	9.8
+6	30	40	clustered rounded		0.1	0.1	pencil	4		48	296		55	9.1
+7	40	55	faceted		0.5	0.5	4f	2		67	304		60	8.6
+8	55	57	melt refreeze crust										75	8.2
+9	57	60	faceted											
+10	60	75	melt refreeze crust											
