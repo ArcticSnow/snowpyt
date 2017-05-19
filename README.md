@@ -3,15 +3,25 @@ Simon Filhol, November 2016, copyright under the MIT license terms, see the Lice
 
 Feel free to contribute to the project!!!! Many new features can be added...
 
-To do:
-- add more crystal symbols
+## To do:
+
+### High Priority
+- scale crystal symbole to figure size
+- blue bar plot not located properly vertically
+- Include ice layer capabilities for stratigraphy
+- Check if the list of symbols is complete in reference to Fierz et al. 2009
+- reorganize package example, standard excel and csv snowpit file
+- format package as an actual Python package, and make it available on Pipy
+
+### Low priority 
 - improve the final layout (e.g. overlapping snowflake symbol)
 - specify the figure size and adjust font size in respect
 - render the medatadata text better
 - create new plot combination
 - put option to adjust figure size to desired size and dpi
 - add option to save pits in Pickle format or CSV
-- 
+- add option to save figure in matplotlib format
+
 
 ## Objective
 The objective of this library is to provide visualization tool for snowpit data. 
@@ -49,8 +59,11 @@ Python 2.7.9 with the following libraries:
 3. Individual snowpits have to be loaded into python class object from which the user can easily access information. See the file Example.py for an example of a basic use.
 
 ## Want to contribute?
-Once you have cloned the project to your home directory, create a git branch and here you go. When your edits are stable, merge with the master branch. See this nice tutorial about git branching and merging, [here](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging)
+Once you have cloned the project to your home directory, create a git branch and here you go. When your edits are stable, merge with the master branch. See this neat tutorial about git branching and merging, [here](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging)
 
+### List of Contributor
+- Simon Filhol
+- [add your name]
 
 ## Example
 ![test.png](Standard_pit.png)

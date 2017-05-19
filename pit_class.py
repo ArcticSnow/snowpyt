@@ -18,6 +18,7 @@ from matplotlib.ticker import MaxNLocator
 snowflake_dict = {'faceted':'snowflake/faceted.png',
                     'wind packed':'snowflake/wind_packed.png',
                     'horizontal ice layer':'snowflake/ice.png',
+                    'ice layer':'snowflake/ice.png',
                     'clustered rounded':'snowflake/cluster_rounded.png',
                     'wind broken':'snowflake/wind_broken_precip.png',
                     'rounded':'snowflake/large_rounded.png',
@@ -29,6 +30,7 @@ snowflake_dict = {'faceted':'snowflake/faceted.png',
                     'melt refreeze':'snowflake/melt_freeze_crust.png',
                     'melt refreeze crust':'snowflake/melt_freeze_crust.png',
                     'partly decomposed': 'snowflake/partly_decomposed.png',
+                    'recent snow':'snowflake/recent_snow.png',
                     'dendrites':'snowflake/'}
 
 class Snowpit(object):
@@ -43,13 +45,18 @@ class Snowpit(object):
         self.filename = 'example.txt'
 
 
-class Snowpit_standard(Snowpit):
+class Snowpit_standard(object):
     '''
     Class for snowpit data formated as in Standard_pit.csv (tab delimiter)
     '''
 
-    def __init__(self, filename):
-        super(Snowpit, self).__init__()
+    def __init__(self):
+        self.date = '2001/08/10'
+        self.East = 0
+        self.North = 0
+        self.Elevation = 0
+        self.Observer = 'Bob'
+        self.AirTemp = np.nan
         self.filename = 'example.txt'
 
     def summary_plot(self, save=False, metadata=True):
@@ -91,6 +98,8 @@ class Snowpit_standard(Snowpit):
 
         for i, flake in enumerate(self.grain_type1.astype(str)):
             if flake != 'nan':
+                print 'flake 2'
+                print flake
                 im = plt.imread(snowflake_dict.get(flake))
                 im[im == 0] = np.nan
                 imagebox = OffsetImage(im, zoom=.02)
@@ -105,6 +114,8 @@ class Snowpit_standard(Snowpit):
 
         for i, flake in enumerate(self.grain_type2.astype(str)):
             if flake != 'nan':
+                print 'flake 2'
+                print flake
                 im = plt.imread(snowflake_dict.get(flake))
                 im[im == 0] = np.nan
                 imagebox = OffsetImage(im, zoom=.02)
@@ -131,8 +142,7 @@ class Snowpit_standard(Snowpit):
 
         labels_ax3 = ['','Feast', '4F', '3F','2F','1F','P','K']
         ax3.set_xticklabels(labels_ax3,rotation=45)
-        ax3.xaxis.set_major_locator(MaxNLocator(integer=True,prune='upper'))
-
+        ax3.xaxis.set_major_locator(MaxNLocator(integer=True, prune='upper'))
 
         ax1.grid()
         ax4.grid()
@@ -150,7 +160,7 @@ class Snowpit_standard(Snowpit):
 
             plt.figtext(0.08, 0.12 , metadata_text,
                     horizontalalignment='left',
-                    verticalalignment='center',wrap=True, fontsize=8)
+                    verticalalignment='center', wrap=True, fontsize=4)
 
         plt.tight_layout()
         plt.subplots_adjust(wspace=0)

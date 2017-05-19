@@ -5,7 +5,9 @@ Simon Filhol, December 2016
 
 '''
 
-filename = 'data_example/Standard_pit.csv'  #[insert path to file]
+filename = '/home/arcticsnow/Escymo/Snowprofiles Finse/20170321_snowdrfit.csv'  #[insert path to file]
+
+filename = '/home/arcticsnow/Github/snowpyt/data_example/Standard_pit.csv'
 mypit = Snowpit_standard(filename)
 mypit.filename = filename
 mypit.load_csv()
