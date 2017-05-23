@@ -7,7 +7,6 @@ Feel free to contribute to the project!!!! Many new features can be added...
 
 ### High Priority
 - scale crystal symbole to figure size
-- blue bar plot not located properly vertically
 - Include ice layer capabilities for stratigraphy
 - Check if the list of symbols is complete in reference to Fierz et al. 2009
 - reorganize package example, standard excel and csv snowpit file

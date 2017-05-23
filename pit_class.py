@@ -68,7 +68,7 @@ class Snowpit_standard(object):
         :return:
         '''
 
-        fig = plt.figure(figsize=(10, 10), dpi=150)
+        fig = plt.figure(figsize=(8, 4), dpi=150)
 
         if metadata:
             my_rowspan = 3
@@ -90,9 +90,10 @@ class Snowpit_standard(object):
         fig.gca().invert_yaxis()
         im1 = ax1.plot(-self.snow_temperature, self.depth_temperature)
 
-        im2 = ax2.barh(self.layer_top, np.repeat(1, self.layer_top.__len__()), self.layer_bot - self.layer_top,
+        im2 = ax2.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, np.repeat(1, self.layer_top.__len__()), - (self.layer_bot - self.layer_top),
                        color=cm.Blues(self.hardness_code / 6))
         ax2.set_xlim(0, 1)
+        ax2.plot((0,1),)
 
         # include symbols
 
@@ -102,7 +103,7 @@ class Snowpit_standard(object):
                 print flake
                 im = plt.imread(snowflake_dict.get(flake))
                 im[im == 0] = np.nan
-                imagebox = OffsetImage(im, zoom=.02)
+                imagebox = OffsetImage(im, zoom=.01)
                 if self.grain_type2.astype(str)[i] == 'nan':
                     hloc = 0.5
                 else:
@@ -118,13 +119,13 @@ class Snowpit_standard(object):
                 print flake
                 im = plt.imread(snowflake_dict.get(flake))
                 im[im == 0] = np.nan
-                imagebox = OffsetImage(im, zoom=.02)
+                imagebox = OffsetImage(im, zoom=.01)
                 xy = [0.66,
                       ((self.layer_top[i] - self.layer_bot[i]) / 2 + self.layer_bot[i])]  # coordinates to position this image
                 ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
                 ax2.add_artist(ab)
 
-        im3 = ax3.barh(self.layer_top, self.hardness_code, self.layer_bot - self.layer_top, color=cm.Blues(self.hardness_code / 6))
+        im3 = ax3.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, self.hardness_code, self.layer_bot - self.layer_top, color=cm.Blues(self.hardness_code / 6))
         ax3.set_xlim(0, 8)
 
         im4 = ax4.plot(self.density, self.depth_density)
