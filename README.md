@@ -16,7 +16,7 @@ Feel free to contribute to the project!!!! Many new features can be added...
 - improve the final layout (e.g. overlapping snowflake symbol)
 - specify the figure size and adjust font size in respect
 - render the medatadata text better
-- create new plot combination
+- create new plot combination (include grain diameter plot)
 - put option to adjust figure size to desired size and dpi
 - add option to save pits in Pickle format or CSV
 - add option to save figure in matplotlib format

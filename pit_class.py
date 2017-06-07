@@ -91,15 +91,14 @@ class Snowpit_standard(object):
         im1 = ax1.plot(-self.snow_temperature, self.depth_temperature)
 
         im2 = ax2.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, np.repeat(1, self.layer_top.__len__()), - (self.layer_bot - self.layer_top),
-                       color=cm.Blues(self.hardness_code / 6))
+                       color=cm.Blues(self.hardness_code / 6), edgecolor='k', linewidth=0.5)
         ax2.set_xlim(0, 1)
-        ax2.plot((0,1),)
 
         # include symbols
 
         for i, flake in enumerate(self.grain_type1.astype(str)):
             if flake != 'nan':
-                print 'flake 2'
+                print 'flake 1'
                 print flake
                 im = plt.imread(snowflake_dict.get(flake))
                 im[im == 0] = np.nan
@@ -125,7 +124,7 @@ class Snowpit_standard(object):
                 ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
                 ax2.add_artist(ab)
 
-        im3 = ax3.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, self.hardness_code, self.layer_bot - self.layer_top, color=cm.Blues(self.hardness_code / 6))
+        im3 = ax3.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, self.hardness_code, self.layer_bot - self.layer_top, color=cm.Blues(self.hardness_code / 6), edgecolor='k', linewidth=0.5)
         ax3.set_xlim(0, 8)
 
         im4 = ax4.plot(self.density, self.depth_density)
