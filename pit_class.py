@@ -17,9 +17,12 @@ from matplotlib.ticker import MaxNLocator
 
 snowflake_dict = {'faceted':'snowflake/faceted.png',
                     'wind packed':'snowflake/wind_packed.png',
+                    'wind slab':'snowflake/wind_packed.png',
+                    'windslab':'snowflake/wind_packed.png',
                     'horizontal ice layer':'snowflake/ice.png',
                     'ice layer':'snowflake/ice.png',
                     'clustered rounded':'snowflake/cluster_rounded.png',
+                    'cluster rounded':'snowflake/cluster_rounded.png',
                     'wind broken':'snowflake/wind_broken_precip.png',
                     'rounded':'snowflake/large_rounded.png',
                     'faceted and rounded':'snowflake/faceted_rounded.png',
@@ -27,11 +30,28 @@ snowflake_dict = {'faceted':'snowflake/faceted.png',
                     'rounded and faceted':'snowflake/rounding_faceted.png',
                     'rounded faceted':'snowflake/rounding_faceted.png',
                     'depth hoar':'snowflake/hollow_cups.png',
+                    'hollow cups':'snowflake/hollow_cups.png',
+                    'hollow prism':'snowflake/hollow_prism.png',
                     'melt refreeze':'snowflake/melt_freeze_crust.png',
                     'melt refreeze crust':'snowflake/melt_freeze_crust.png',
                     'partly decomposed': 'snowflake/partly_decomposed.png',
                     'recent snow':'snowflake/recent_snow.png',
-                    'dendrites':'snowflake/'}
+                    'ice column':'snowflake/ice_column.png',
+                    'percolation column':'snowflake/ice_column.png',
+                    'percolation':'snowflake/ice_column.png',
+                    'rounding depth hoar':'snowflake/rounding_depth_hoar.png',
+                    'cavity crevasse hoar':'snowflake/cavity_crevasse_hoar.png',
+                    'rounding surface hoar':'snowflake/rounding_surface_hoar.png',
+                    'basal ice':'snowflake/basal_ice.png',
+                    'rain crust':'snowflake/rain_crust.png',
+                    'sun crust':'snowflake/sun_crust.png',
+                    'surface hoar':'snowflake/surface_hoar.png',
+                    'hoar frost':'snowflake/surface_hoar.png',
+                    'rounded polycrystals':'snowflake/rounded_polycrystals.png',
+
+                    'slush':'snowflake/slush.png',
+                    'chains of depth hoar':'snowflake/chains_of_depth_hoar.png',
+                    'near surface faceted':'snowflake/near_surface_faceted.png'}
 
 class Snowpit(object):
 
@@ -43,6 +63,7 @@ class Snowpit(object):
         self.Observer = 'Bob'
         self.AirTemp = np.nan
         self.filename = 'example.txt'
+        self.snowflakeDICT = snowflake_dict
 
 
 class Snowpit_standard(object):
@@ -58,6 +79,7 @@ class Snowpit_standard(object):
         self.Observer = 'Bob'
         self.AirTemp = np.nan
         self.filename = 'example.txt'
+        self.snowflakeDICT = snowflake_dict
 
     def summary_plot(self, save=False, metadata=True):
         '''
@@ -225,24 +247,28 @@ class Snowpit_standard(object):
         f.close()
 
         self.profile_raw_table = pd.read_csv(self.filename, sep='\t', skiprows=k+1)
-        self.layerID = self.profile_raw_table['Layer']
-        self.layer_top = self.profile_raw_table[''].astype(float)
-        self.layer_bot = self.profile_raw_table.ix[:, 2].astype(float)
+        self.layerID = self.profile_raw_table['Layer ID']
+        self.layer_top = self.profile_raw_table['Top [cm]']
+        self.layer_bot = self.profile_raw_table['Bottom [cm]']
 
-        self.grain_type1 = self.profile_raw_table.ix[:,3]
-        self.grain_type2 = self.profile_raw_table.ix[:, 4]
-        self.grain_type3 = self.profile_raw_table.ix[:, 4]
-        self.grain_size_min = self.profile_raw_table.ix[:, 5].astype(float)
-        self.grain_size_max = self.profile_raw_table.ix[:, 6].astype(float)
+        self.grain_type1 = self.profile_raw_table['Type 1']
+        self.grain_type2 = self.profile_raw_table['Type 2']
+        self.grain_type3 = self.profile_raw_table['Type 3']
+        self.grain_size_min = self.profile_raw_table['Diameter min [mm]']
+        self.grain_size_max = self.profile_raw_table['Diameter max [mm]']
 
-        self.hardness = self.profile_raw_table.ix[:, 7]
-        self.hardness_code = self.profile_raw_table.ix[:, 8].astype(float)
+        self.hardness = self.profile_raw_table['Hardness']
+        self.hardness_code = self.profile_raw_table['Hardness code']
 
-        self.depth_density = self.profile_raw_table.ix[:, 10].astype(float)
-        self.density = self.profile_raw_table.ix[:, 11].astype(float)
+        self.depth_density = self.profile_raw_table['Depth Center [cm]']
+        self.density = self.profile_raw_table['Snow Density [g/cm3]']
 
-        self.depth_temperature = self.profile_raw_table.ix[:,13].astype(float)
-        self.snow_temperature = self.profile_raw_table.ix[:, 14].astype(float)
+        self.depth_temperature = self.profile_raw_table['Depth [cm]']
+        self.snow_temperature = self.profile_raw_table['Temp [deg C]']
+
+        self.depth_sample = self.profile_raw_table['Depth Center [cm].1']
+        self.name_sample = self.profile_raw_table['ID_sample']
+
 
     def load_metadata(self):
         f = open(self.filename)
@@ -444,12 +470,12 @@ class Snowpit_svalbard_JC(Snowpit):
         self.hardness_code = self.profile_raw_table['Hardness code']
 
         self.depth_density = self.profile_raw_table['Depth Center [cm]']
-        self.density = self.profile_raw_table['Snow Density [g/cm³]']
+        self.density = self.profile_raw_table['Snow Density [g/cm3]']
 
         self.depth_temperature = self.profile_raw_table['Depth [cm]']
         self.snow_temperature = self.profile_raw_table['Temp [deg C]']
 
-        self.depth_sample = self.prof ile_raw_table['Depth Center [cm].1']
+        self.depth_sample = self.profile_raw_table['Depth Center [cm].1']
         self.name_sample = self.profile_raw_table['ID_sample']
 
 
