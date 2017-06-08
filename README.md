@@ -6,8 +6,11 @@ Feel free to contribute to the project!!!! Many new features can be added...
 ## To do:
 
 ### High Priority
-- scale crystal symbole to figure size
-- Include ice layer capabilities for stratigraphy
+- scale crystal symbole to figure size (zoom parameter currently set at 0.01)
+- Include ice layer capabilities for stratigraphy:
+    - type 1: thin ice layer. use symbole
+    - type 2: thick ice layer. use black barh()
+- Include option to add chemical sample name to pit
 - Check if the list of symbols is complete in reference to Fierz et al. 2009
 - reorganize package example, standard excel and csv snowpit file
 - format package as an actual Python package, and make it available on Pipy

@@ -103,10 +103,13 @@ class Snowpit_standard(object):
                 im = plt.imread(snowflake_dict.get(flake))
                 im[im == 0] = np.nan
                 imagebox = OffsetImage(im, zoom=.01)
-                if self.grain_type2.astype(str)[i] == 'nan':
+                if (self.grain_type2.astype(str)[i] == 'nan') and (self.grain_type3.astype(str)[i] == 'nan'):
                     hloc = 0.5
-                else:
+                elif (self.grain_type2.astype(str)[i] != 'nan') and (self.grain_type3.astype(str)[i] == 'nan'):
                     hloc = 0.33
+                else:
+                    hloc = 0.25
+
                 xy = [hloc,
                       ((self.layer_top[i] - self.layer_bot[i]) / 2 + self.layer_bot[i])]  # coordinates to position this image
                 ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
@@ -115,6 +118,18 @@ class Snowpit_standard(object):
         for i, flake in enumerate(self.grain_type2.astype(str)):
             if flake != 'nan':
                 print 'flake 2'
+                print flake
+                im = plt.imread(snowflake_dict.get(flake))
+                im[im == 0] = np.nan
+                imagebox = OffsetImage(im, zoom=.01)
+                xy = [0.66,
+                      ((self.layer_top[i] - self.layer_bot[i]) / 2 + self.layer_bot[i])]  # coordinates to position this image
+                ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
+                ax2.add_artist(ab)
+
+        for i, flake in enumerate(self.grain_type3.astype(str)):
+            if flake != 'nan':
+                print 'flake 3'
                 print flake
                 im = plt.imread(snowflake_dict.get(flake))
                 im[im == 0] = np.nan
@@ -210,12 +225,13 @@ class Snowpit_standard(object):
         f.close()
 
         self.profile_raw_table = pd.read_csv(self.filename, sep='\t', skiprows=k+1)
-        self.layerID = self.profile_raw_table.ix[:,0]
-        self.layer_top = self.profile_raw_table.ix[:,1].astype(float)
+        self.layerID = self.profile_raw_table['Layer']
+        self.layer_top = self.profile_raw_table[''].astype(float)
         self.layer_bot = self.profile_raw_table.ix[:, 2].astype(float)
 
         self.grain_type1 = self.profile_raw_table.ix[:,3]
         self.grain_type2 = self.profile_raw_table.ix[:, 4]
+        self.grain_type3 = self.profile_raw_table.ix[:, 4]
         self.grain_size_min = self.profile_raw_table.ix[:, 5].astype(float)
         self.grain_size_max = self.profile_raw_table.ix[:, 6].astype(float)
 
@@ -414,23 +430,27 @@ class Snowpit_svalbard_JC(Snowpit):
 
     def load_profile(self):
         self.profile_raw_table = pd.read_csv(self.filename, sep='\t', skiprows=14)
-        self.layerID = self.profile_raw_table.ix[:,0]
-        self.layer_top = self.profile_raw_table.ix[:,1]
-        self.layer_bot = self.profile_raw_table.ix[:, 2]
+        self.layerID = self.profile_raw_table['Layer']
+        self.layer_top = self.profile_raw_table['Top [cm]']
+        self.layer_bot = self.profile_raw_table['Bottom [cm]']
 
-        self.grain_type1 = self.profile_raw_table.ix[:,3]
-        self.grain_type2 = self.profile_raw_table.ix[:, 4]
-        self.grain_size_min = self.profile_raw_table.ix[:, 5]
-        self.grain_size_max = self.profile_raw_table.ix[:, 6]
+        self.grain_type1 = self.profile_raw_table['Type 1']
+        self.grain_type2 = self.profile_raw_table['Type 2']
+        self.grain_type2 = self.profile_raw_table['Type 3']
+        self.grain_size_min = self.profile_raw_table['Diameter min [mm]']
+        self.grain_size_max = self.profile_raw_table['Diameter max [mm]']
 
-        self.hardness = self.profile_raw_table.ix[:, 7]
-        self.hardness_code = self.profile_raw_table.ix[:, 8]
+        self.hardness = self.profile_raw_table['Hardness']
+        self.hardness_code = self.profile_raw_table['Hardness code']
 
-        self.depth_density = self.profile_raw_table.ix[:, 10]
-        self.density = self.profile_raw_table.ix[:, 11]
+        self.depth_density = self.profile_raw_table['Depth Center [cm]']
+        self.density = self.profile_raw_table['Snow Density [g/cm³]']
 
-        self.depth_temperature = self.profile_raw_table.ix[:,13]
-        self.snow_temperature = self.profile_raw_table.ix[:, 14]
+        self.depth_temperature = self.profile_raw_table['Depth [cm]']
+        self.snow_temperature = self.profile_raw_table['Temp [deg C]']
+
+        self.depth_sample = self.profile_raw_table['Depth Center [cm].1']
+        self.name_sample = self.profile_raw_table['ID_sample']
 
 
 
