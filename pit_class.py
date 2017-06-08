@@ -161,7 +161,7 @@ class Snowpit_standard(object):
                 ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
                 ax2.add_artist(ab)
 
-        im3 = ax3.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, self.hardness_code, self.layer_bot - self.layer_top, color=cm.Blues(self.hardness_code / 6), edgecolor='k', linewidth=0.5)
+        im3 = ax3.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, self.hardness_code, self.layer_bot - self.layer_top, color=cm.Blues(self.hardness_code / 7), edgecolor='k', linewidth=0.5)
         ax3.set_xlim(0, 8)
 
         im4 = ax4.plot(self.density, self.depth_density)
