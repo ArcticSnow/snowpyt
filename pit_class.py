@@ -449,7 +449,7 @@ class Snowpit_svalbard_JC(Snowpit):
         self.depth_temperature = self.profile_raw_table['Depth [cm]']
         self.snow_temperature = self.profile_raw_table['Temp [deg C]']
 
-        self.depth_sample = self.profile_raw_table['Depth Center [cm].1']
+        self.depth_sample = self.prof ile_raw_table['Depth Center [cm].1']
         self.name_sample = self.profile_raw_table['ID_sample']
 
 
