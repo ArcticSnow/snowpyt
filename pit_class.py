@@ -113,7 +113,7 @@ class Snowpit_standard(object):
         im1 = ax1.plot(-self.snow_temperature, self.depth_temperature)
 
         im2 = ax2.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, np.repeat(1, self.layer_top.__len__()), - (self.layer_bot - self.layer_top),
-                       color=cm.Blues(self.hardness_code / 6), edgecolor='k', linewidth=0.5)
+                       color=cm.Blues(self.hardness_code / 7), edgecolor='k', linewidth=0.5)
         ax2.set_xlim(0, 1)
 
         # include symbols
@@ -351,7 +351,7 @@ class Snowpit_svalbard_JC(Snowpit):
         im1 = ax1.plot(-self.snow_temperature, self.depth_temperature)
 
         im2 = ax2.barh(self.layer_top, np.repeat(1, self.layer_top.__len__()), self.layer_bot - self.layer_top,
-                       color=cm.Blues(self.hardness_code / 6))
+                       color=cm.Blues(self.hardness_code / 7))
         ax2.set_xlim(0, 1)
 
         # include symbols

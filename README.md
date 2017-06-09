@@ -19,6 +19,7 @@ Feel free to contribute to the project!!!! Many new features can be added...
 - format package as an actual Python package, and make it available on Pipy
 
 ### Low priority 
+- add option to load pit directly from excel file .xslx
 - improve the final layout (e.g. overlapping snowflake symbol)
 - specify the figure size and adjust font size in respect
 - render the medatadata text better
