@@ -110,14 +110,17 @@ class Snowpit_standard(object):
 
         # Plot data
         fig.gca().invert_yaxis()
-        im1 = ax1.plot(-self.snow_temperature, self.depth_temperature)
+        im1 = ax1.plot(-self.temperature_snow, self.temperature_depth)
 
         im2 = ax2.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, np.repeat(1, self.layer_top.__len__()), - (self.layer_bot - self.layer_top),
                        color=cm.Blues(self.hardness_code / 7), edgecolor='k', linewidth=0.5)
         ax2.set_xlim(0, 1)
 
-        # include symbols
+        # include sample name on pit face
+        for i, sample in enumerate(self.sample_name):
 
+
+        # include snowflake symbols
         for i, flake in enumerate(self.grain_type1.astype(str)):
             if flake != 'nan':
                 print 'flake 1'
@@ -144,7 +147,11 @@ class Snowpit_standard(object):
                 im = plt.imread(snowflake_dict.get(flake))
                 im[im == 0] = np.nan
                 imagebox = OffsetImage(im, zoom=.01)
-                xy = [0.66,
+                if (self.grain_type2.astype(str)[i] != 'nan') and (self.grain_type3.astype(str)[i] == 'nan'):
+                    hloc2 = 0.66
+                else:
+                    hloc2 = 0.5
+                xy = [hloc2,
                       ((self.layer_top[i] - self.layer_bot[i]) / 2 + self.layer_bot[i])]  # coordinates to position this image
                 ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
                 ax2.add_artist(ab)
@@ -156,7 +163,7 @@ class Snowpit_standard(object):
                 im = plt.imread(snowflake_dict.get(flake))
                 im[im == 0] = np.nan
                 imagebox = OffsetImage(im, zoom=.01)
-                xy = [0.66,
+                xy = [0.75,
                       ((self.layer_top[i] - self.layer_bot[i]) / 2 + self.layer_bot[i])]  # coordinates to position this image
                 ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
                 ax2.add_artist(ab)
@@ -164,7 +171,7 @@ class Snowpit_standard(object):
         im3 = ax3.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, self.hardness_code, self.layer_bot - self.layer_top, color=cm.Blues(self.hardness_code / 7), edgecolor='k', linewidth=0.5)
         ax3.set_xlim(0, 8)
 
-        im4 = ax4.plot(self.density, self.depth_density)
+        im4 = ax4.plot(self.density, self.density_depth)
         ax4.yaxis.tick_right()
 
         # add
@@ -214,7 +221,7 @@ class Snowpit_standard(object):
             - reverse depth axis
         '''
         plt.figure()
-        plt.plot(self.snow_temperature, self.depth_temperature)
+        plt.plot(self.temperature_snow, self.temperature_depth)
         plt.gca().invert_yaxis()
         plt.xlabel('Temperature (C)')
         plt.ylabel('Depth (cm)')
@@ -229,7 +236,7 @@ class Snowpit_standard(object):
             - reverse depth axis
         '''
         plt.figure()
-        plt.plot(self.density, self.depth_density)
+        plt.plot(self.density, self.density_depth)
         plt.xlabel('Density (kg/m3)')
         plt.ylabel('Depth (cm)')
         plt.title('Density profile')
@@ -260,14 +267,14 @@ class Snowpit_standard(object):
         self.hardness = self.profile_raw_table['Hardness']
         self.hardness_code = self.profile_raw_table['Hardness code']
 
-        self.depth_density = self.profile_raw_table['Depth Center [cm]']
+        self.density_depth = self.profile_raw_table['Depth Center [cm]']
         self.density = self.profile_raw_table['Snow Density [g/cm3]']
 
-        self.depth_temperature = self.profile_raw_table['Depth [cm]']
-        self.snow_temperature = self.profile_raw_table['Temp [deg C]']
+        self.temperature_depth = self.profile_raw_table['Depth [cm]']
+        self.temperature_snow = self.profile_raw_table['Temp [deg C]']
 
-        self.depth_sample = self.profile_raw_table['Depth Center [cm].1']
-        self.name_sample = self.profile_raw_table['ID_sample']
+        self.sample_depth = self.profile_raw_table['Depth Center [cm].1']
+        self.sample_name = self.profile_raw_table['ID_sample'].astype(str)
 
 
     def load_metadata(self):
@@ -348,7 +355,7 @@ class Snowpit_svalbard_JC(Snowpit):
 
         # Plot data
         fig.gca().invert_yaxis()
-        im1 = ax1.plot(-self.snow_temperature, self.depth_temperature)
+        im1 = ax1.plot(-self.temperature_snow, self.temperature_depth)
 
         im2 = ax2.barh(self.layer_top, np.repeat(1, self.layer_top.__len__()), self.layer_bot - self.layer_top,
                        color=cm.Blues(self.hardness_code / 7))
@@ -383,7 +390,7 @@ class Snowpit_svalbard_JC(Snowpit):
         im3 = ax3.barh(self.layer_top, self.hardness_code, self.layer_bot - self.layer_top, color=cm.Blues(self.hardness_code / 6))
         ax3.set_xlim(0, 7)
 
-        im4 = ax4.plot(self.density, self.depth_density)
+        im4 = ax4.plot(self.density, self.density_depth)
         ax4.yaxis.tick_right()
 
         # add
@@ -429,7 +436,7 @@ class Snowpit_svalbard_JC(Snowpit):
             - reverse depth axis
         '''
         plt.figure()
-        plt.plot(self.snow_temperature, self.depth_temperature)
+        plt.plot(self.temperature_snow, self.temperature_depth)
         plt.gca().invert_yaxis()
         plt.xlabel('Temperature (C)')
         plt.ylabel('Depth (cm)')
@@ -444,7 +451,7 @@ class Snowpit_svalbard_JC(Snowpit):
             - reverse depth axis
         '''
         plt.figure()
-        plt.plot(self.density, self.depth_density)
+        plt.plot(self.density, self.density_depth)
         plt.xlabel('Density (kg/m3)')
         plt.ylabel('Depth (cm)')
         plt.title('Density profile')
@@ -469,11 +476,11 @@ class Snowpit_svalbard_JC(Snowpit):
         self.hardness = self.profile_raw_table['Hardness']
         self.hardness_code = self.profile_raw_table['Hardness code']
 
-        self.depth_density = self.profile_raw_table['Depth Center [cm]']
+        self.density_depth = self.profile_raw_table['Depth Center [cm]']
         self.density = self.profile_raw_table['Snow Density [g/cm3]']
 
-        self.depth_temperature = self.profile_raw_table['Depth [cm]']
-        self.snow_temperature = self.profile_raw_table['Temp [deg C]']
+        self.temperature_depth = self.profile_raw_table['Depth [cm]']
+        self.temperature_snow = self.profile_raw_table['Temp [deg C]']
 
         self.depth_sample = self.profile_raw_table['Depth Center [cm].1']
         self.name_sample = self.profile_raw_table['ID_sample']

@@ -6,13 +6,7 @@ Feel free to contribute to the project!!!! Many new features can be added...
 ## To do:
 
 ### High Priority
-- color knife hard not different!!! PROBLEM
-- three crystal type not showing
 
-- scale crystal symbole to figure size (zoom parameter currently set at 0.01)
-- Include ice layer capabilities for stratigraphy:
-    - type 1: thin ice layer. use symbole
-    - type 2: thick ice layer. use black barh()
 - Include option to add chemical sample name to pit
 - Check if the list of symbols is complete in reference to Fierz et al. 2009
 - reorganize package example, standard excel and csv snowpit file

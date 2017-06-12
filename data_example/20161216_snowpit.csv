@@ -1,66 +1,62 @@
-Snowpit form for Snowpyt package																		
-																		
-Method:	1. Input values in green. If no value, leave cell empty																	
-	2. make sure spelling of snowflakes is correct, and hardness code is computed																	
-	3. save as csv file with tab delimiting fields																	
-	4. ready to import with Snowpyt package!																	
-																		
-Supported snowflake names		Hardness coding																
-chain of depth hoar		feast	1															
-depth hoar		4 finger	2															
-faceted		3 finger	3															
-faceted rounded		2 finger	4															
-ice		1 finger	5															
-melt refreeze		pencil	6															
-partly decomposed		knife	7															
-recent snow																		
-rounded																		
-rounded faceted																		
-wind broken																		
-wind packed																		
-clustered rounded																		
-dendrites																		
-ice layer	add it!!!!!																	
-slush	add it!!!!!																	
-																		
-																		
-																		
-																		
-																		
-Metadata																		
-Snowpit Name																		
-Date [YYYY-mm-dd]	2016-12-16																	
-Time [24hr]	10																	
-Observer	Simon F, Sven D, Thomas S.																	
-General location	Finse Research Station																	
-East [deg]	7.52568333	º																
-North [deg]	60.5943166	º																
-Elevation [m]	1214	m																
-Weather conditions	Sunny, sunrise. 																	
-Comments	Snowpit close to previous one. Thomas took many pictures, backlit ones. Rain and above freezing temperature the previous day. Liquide water at the bottom																	
-Air temperature [degC]	-8																	
-																		
-Stratigraphy											Density			Temperature			Sample	
-Layer ID	Top [cm]	Bottom [cm]	Type 1	Type 2	Type 3	Diameter min [mm]	Diameter max [mm]	Hardness	Hardness code		Depth Center [cm]	Snow Density [g/cm3]		Depth [cm]	Temp [deg C]		Depth Center [cm]	ID_sample
-1	0		ice layer					Naaa	NaN		5	18.4		0	-8		5	1
-2	0	2	rounded polycrystals					nan	NaN		8	38.1		1	-8.7		8	2
-3	2	6	faceted	hoar frost		0.5	1	nan	NaN		12	38		4	-3		11	3
-4	6	8.5	melt refreeze			1	4	nan	NaN		21	42.4		8	-2		14	4
-5	8.5	10	faceted			0.5	1	nan	NaN		24	38.8		11.5	-1.2		21	5
-6	10		ice layer					nan	NaN		30	38.3		15	-0.9		24	6
-7	10	11	melt refreeze	rounded faceted		0.5	1	nan	NaN					17	-0.7		30	7
-8	11		ice layer					nan	NaN					23	-0.5		36	8
-9	11	12	melt refreeze	rounded faceted		0.5	1	nan	NaN					38	-0.6			
-10	12		ice layer					nan	NaN					39	0			
-11	12	13.5	melt refreeze	rounded faceted		0.5	1	nan	NaN									
-12	13.5		ice layer					nan	NaN									
-13	13.5	15	melt refreeze	rounded faceted		0.5	1	nan	NaN									
-14	15		ice layer					nan	NaN									
-15	15	16.5	melt refreeze	rounded faceted		0.5	1	nan	NaN									
-16	16.5		ice layer				4	nan	NaN									
-17	16.5	18	melt refreeze	rounded faceted		0.2	0.5	nan	NaN									
-18	18		ice layer			3	4	nan	NaN									
-19	18	22	melt refreeze	rounded faceted		0.2	0.5	nan	NaN									
-20	22	27	rounded polycrystals			0.5	1	nan	NaN									
-21	27	38	rounded polycrystals			2	4	nan	NaN									
-22	38	39	slush					nan	NaN									
+Snowpit form for Snowpyt package,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+Method:,1. Input values in green. If no value, leave cell empty,,,,,,,,,,,,,,,,
+,2. make sure spelling of snowflakes is correct, and hardness code is computed,,,,,,,,,,,,,,,,
+,3. save as csv file with tab delimiting fields,,,,,,,,,,,,,,,,,
+,4. ready to import with Snowpyt package!,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+Supported snowflake names,,Hardness coding,,,,,,,,,,,,,,,,
+chain of depth hoar,,feast,1,,,,,,,,,,,,,,,
+depth hoar,,4 finger,2,,,,,,,,,,,,,,,
+faceted,,3 finger,3,,,,,,,,,,,,,,,
+faceted rounded,,2 finger,4,,,,,,,,,,,,,,,
+ice,,1 finger,5,,,,,,,,,,,,,,,
+melt refreeze,,pencil,6,,,,,,,,,,,,,,,
+partly decomposed,,knife,7,,,,,,,,,,,,,,,
+recent snow,,,,,,,,,,,,,,,,,,
+rounded,,,,,,,,,,,,,,,,,,
+rounded faceted,,,,,,,,,,,,,,,,,,
+wind broken,,,,,,,,,,,,,,,,,,
+wind packed,,,,,,,,,,,,,,,,,,
+clustered rounded,,,,,,,,,,,,,,,,,,
+dendrites,,,,,,,,,,,,,,,,,,
+ice layer,add it!!!!!,,,,,,,,,,,,,,,,,
+slush,add it!!!!!,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+Metadata,,,,,,,,,,,,,,,,,,
+Snowpit Name,,,,,,,,,,,,,,,,,,
+Date [YYYY-mm-dd],2016-02-09,,,,,,,,,,,,,,,,,
+Time [24hr],10,,,,,,,,,,,,,,,,,
+Observer,Simon F, Sven D,,,,,,,,,,,,,,,,
+General location,Finse, 1*1 km grid,,,,,,,,,,,,,,,,
+East [deg],7.5382278522,1 finger,,,,,,,,,,,,,,,,
+North [deg],60.578945,1 finger,,,,,,,,,,,,,,,,
+Elevation [m],1300,m,,,,,,,,,,,,,,,,
+Weather conditions,Overcast with sun, wind from ESE triggering saltation,,,,,,,,,,,,,,,,
+Comments,Snow pit aside the Thomas weather station. ,,,,,,,,,,,,,,,,,
+Air temperature [degC],-18,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+Stratigraphy,,,,,,,,,,,Density,,,Temperature,,,Sample,
+Layer ID,Top [cm],Bottom [cm],Type 1,Type 2,Type 3,Diameter min [mm],Diameter max [mm],Hardness,Hardness code,,Depth Center [cm],Snow Density [g/cm3],,Depth [cm],Temp [deg C],,Depth Center [cm],ID_sample
+1,0,12,windslab,faceted,,0.1,0.5,3f,3,,5,24,,3,-15,,5,1
+2,12,13,ice layer,,,,,k,7,,17,28,,15,-10.6,,17,2
+3,13,22,faceted,,,0.2,0.5,3f,3,,30,34,,35,-6.7,,30,3
+4,22,23,ice layer,,,,,k,7,,40,35,,65,-3.2,,40,4
+5,23,37,windslab,faceted rounded,cluster rounded,0.2,1,1f,5,,48,36,,85,-2.1,,48,5
+6,37,37,ice layer,,,,,k,7,,52,30,,113,-1,,52,6
+7,37,43,windslab,cluster rounded,,0.5,1,p,6,,59,38,,145,-0.6,,59,7
+8,43,43,ice layer,,,,,k,7,,67,40,,,,,67,8
+9,43,50,windslab,cluster rounded,,0.5,1,1f,5,,80,48,,,,,80,9
+10,50,54,faceted rounded,cluster rounded,,1,2,2f,4,,120,50,,,,,120,10
+11,54,62,faceted rounded,cluster rounded,,1,,p,6,,,,,,,,95,11
+12,62,63,melt refreeze,,,,,p,6,,,,,,,,110,12
+13,63,72,faceted rounded,cluster rounded,,0.5,1.5,p,6,,,,,,,,127,13
+14,72,74,ice layer,,,,,k,7,,,,,,,,,
+15,74,135,cluster rounded,rounded,percolation,,,p,6,,,,,,,,,
+16,135,140,melt refreeze,,,,,k,7,,,,,,,,,
+17,140,145,ice layer,melt refreeze,,,,k,7,,,,,,,,,
+18,145,,basal ice,,,,,,,,,,,,,,,

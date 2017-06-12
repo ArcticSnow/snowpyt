@@ -17,9 +17,13 @@ pit1 = pc.Snowpit_standard()
 
 pit1.filename = path + fname_20170209
 pit1.load_csv()
+pit1.sample_name
 #pit1.plot_temperature()
 #pit1.plot_density()
 pit1.summary_plot(metadata=False)
+
+
+
 pit2 = pc.Snowpit_standard(path + fname_20161216)
 pit2.load_csv()
 

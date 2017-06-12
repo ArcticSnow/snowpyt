@@ -20,7 +20,7 @@
    sodipodi:docname="snowflake.svg"><metadata
      id="metadata3342"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
      id="defs3340"><clipPath
        clipPathUnits="userSpaceOnUse"
        id="clipPath3350"><path
@@ -328,12 +328,16 @@
        id="path3472-3"
        style="fill:none;stroke:#000000;stroke-width:8.94568634;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
        d="m 836.652,932.67248 c 60.8901,112.89702 60.9182,113.21472 118.6481,0"
-       sodipodi:nodetypes="cc" /><path
+       sodipodi:nodetypes="cc"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" /><path
        inkscape:connector-curvature="0"
        id="path3472-3-6"
        style="fill:none;stroke:#000000;stroke-width:8.94568634;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
        d="m 955.348,471.5004 c -60.8901,-112.89704 -60.9182,-113.21471 -118.64806,0"
-       sodipodi:nodetypes="cc" /><g
+       sodipodi:nodetypes="cc"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" /><g
        id="g4736"
        transform="matrix(0.68893012,0,0,0.68893012,-689.47038,-642.12826)"><path
          inkscape:connector-curvature="0"
@@ -345,7 +349,9 @@
          d="m 1120,1328 96,-96"
          style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:12.98480034;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" /></g><g
        id="g4770"
-       transform="matrix(0.68893012,0,0,0.68893012,732.20841,628.36343)"><path
+       transform="matrix(0.68893012,0,0,0.68893012,732.20841,628.36343)"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><path
          inkscape:connector-curvature="0"
          id="path3558-5"
          style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:12.98480034;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -450,7 +456,9 @@
        style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:12.98489666;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
        d="m 136.04853,1010.8568 c 0,-11.5142 -9.33419,-20.8485 -20.84855,-20.8485 -11.51431,0 -20.8485,9.3343 -20.8485,20.8485 0,11.5143 9.33419,20.8486 20.8485,20.8486 11.51436,0 20.84855,-9.3343 20.84855,-20.8486 z" /><g
        id="g4306"
-       transform="translate(-479.3688,-215.35406)"><g
+       transform="translate(-479.3688,-215.35406)"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><g
          transform="matrix(0.47082559,0,0,0.47082559,1316.3942,825.54132)"
          id="g3482-6"><path
            inkscape:connector-curvature="0"
@@ -465,9 +473,13 @@
        d="m 1540.2602,897.82162 0,-121.6952 -50.8543,0 0,121.6952 50.8543,0 z"
        style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="path3558-8"
-       inkscape:connector-curvature="0" /><g
+       inkscape:connector-curvature="0"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" /><g
        id="g4343"
-       transform="translate(70.83301,46.55434)"><path
+       transform="translate(70.83301,46.55434)"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><path
          inkscape:connector-curvature="0"
          id="path4326"
          d="m 1378,604 132,0"
@@ -479,7 +491,9 @@
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:8.94559956;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 1448.833,557.08221 132,0"
        id="path4326-9"
-       inkscape:connector-curvature="0" /><g
+       inkscape:connector-curvature="0"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" /><g
        id="g4484"
        transform="translate(283.2,51.2)"
        inkscape:export-xdpi="300.05972"
@@ -684,7 +698,7 @@
          x="1625.4036"
          y="-1418.4374"
          id="tspan4243-2-37"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif">Clustered rouded grains</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif">Clustered rounded grains</tspan></text>
 <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:32px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
