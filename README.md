@@ -77,7 +77,7 @@ Once you have cloned the project to your home directory, create a git branch and
 - [add your name]
 
 ## Example
-![test.png](Standard_pit.png)
+![Example snowpit](snowpyt/Standard_pit.png)
 
 
 
