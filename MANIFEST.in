@@ -1,0 +1,25 @@
+include README.md
+include snowpyt/Standard_pit.png
+
+include snowpyt/snowflake/chains_of_depth_hoar.png
+include snowpyt/snowflake/ice.png
+include snowpyt/snowflake/slush.png
+include snowpyt/snowflake/cluster_rounded.png
+include snowpyt/snowflake/large_rounded.png
+include snowpyt/snowflake/snowflake.ai
+include snowpyt/snowflake/faceted.png
+include snowpyt/snowflake/melt_freeze_crust.png
+include snowpyt/snowflake/snowflake.svg
+include snowpyt/snowflake/faceted_rounded.png
+include snowpyt/snowflake/partly_decomposed.png
+include snowpyt/snowflake/surface_hoar.png
+include snowpyt/snowflake/hollow_cups.png
+include snowpyt/snowflake/rounded_polycrystals.png
+include snowpyt/snowflake/wind_broken_precip.png
+include snowpyt/snowflake/hollow_prism.png
+include snowpyt/snowflake/rounding_faceted.png
+include snowpyt/snowflake/wind_packed.png
+
+include snowpyt/data_example/20161216_snowpit.csv
+include snowpyt/data_example/20161216_snowpit.xlsx
+include snowpyt/data_example/Standard_pit.xlsx

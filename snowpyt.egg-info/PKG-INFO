@@ -1,0 +1,94 @@
+Metadata-Version: 1.1
+Name: snowpyt
+Version: 0.0.1
+Summary: A Python project to visualize snowpit
+Home-page: https://github.com/ArcticSnow/snowpyt.git
+Author: Simon Filhol
+Author-email: simon.filhol@geo.uio.no
+License: MIT
+Description: # Snowpyt: an open-source library to visualize snowpits in Python
+        Simon Filhol, November 2016, copyright under the MIT license terms, see the License.txt file
+        
+        Feel free to contribute to the project!!!! Many new features can be added...
+        
+        ## To do:
+        
+        ### High Priority
+        
+        - Include option to add chemical sample name to pit
+        - Check if the list of symbols is complete in reference to Fierz et al. 2009
+        - reorganize package example, standard excel and csv snowpit file
+        - format package as an actual Python package, and make it available on Pipy
+        - make ground appear to comfirm the user thayt the pit reached ground. add note about ground type.
+        
+        ### Low priority 
+        - add option to load pit directly from excel file .xslx
+        - improve the final layout (e.g. overlapping snowflake symbol)
+        - specify the figure size and adjust font size in respect
+        - render the medatadata text better
+        - create new plot combination (include grain diameter plot)
+        - put option to adjust figure size to desired size and dpi
+        - add option to save pits in Pickle format or CSV
+        - add option to save figure in matplotlib format
+        
+        
+        
+        ## Objective
+        The objective of this library is to provide visualization tool for snowpit data. 
+        Started for the need of the Svalbard Snow Research group, this package should evolve
+         to include more snowpit type and visualization scheme. 
+         
+        The snow grain classification follows the guidelines provided by the UNESCO 
+        [International Classification for Seasonal Snow on the Ground](http://unesdoc.unesco.org/images/0018/001864/186462e.pdf) 
+        (Fierz et al., 2009)
+        
+        Fierz, C., Amstrong, R.L., Durand, Y., Etchevers, P., Greene, E., McClung, D.M., Nishimura, K., Satyawali, P.K. and Sokratov, S.A. 2009.The International Classification for Seasonal Snow on the Ground. IHP-VII Technical Documents in 
+        Hydrology N°83, IACS Contribution N°1, UNESCO-IHP, Paris. 
+        
+        ## Installation
+        Clone the github repository to a local directory using the following command in your terminal
+        
+        ```bash
+        git clone https://github.com/ArcticSnow/snowpyt.git
+        ```
+        or by downloading the package
+        
+        The package contains all the functions to plot the snowpit if library requirements are met. It also contains data samples to test the library.
+        
+        ### requirements
+        
+        Python 2.7.9 with the following libraries:
+        - [numpy](http://www.numpy.org/)
+        - [matplotlib](http://matplotlib.org/)
+        - [pandas](http://pandas.pydata.org/)
+        
+        ## Use
+        
+        1. Snowpit must be formated following the template file "Standard_pit.xlsx"
+        2. Export the snowpit to a csv file using tab as delimiter
+        3. Individual snowpits have to be loaded into python class object from which the user can easily access information. See the file Example.py for an example of a basic use.
+        
+        ## Want to contribute?
+        Once you have cloned the project to your home directory, create a git branch and here you go. When your edits are stable, merge with the master branch. See this neat tutorial about git branching and merging, [here](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging)
+        
+        ### List of Contributor
+        - Simon Filhol
+        - [add your name]
+        
+        ## Example
+        ![test.png](Standard_pit.png)
+        
+        
+        
+        
+        
+        
+        
+        
+Keywords: Plotting,snow,glaciology,science
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering :: Visualization
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 2.7

@@ -11,6 +11,7 @@ Feel free to contribute to the project!!!! Many new features can be added...
 - Check if the list of symbols is complete in reference to Fierz et al. 2009
 - reorganize package example, standard excel and csv snowpit file
 - format package as an actual Python package, and make it available on Pipy
+- make ground appear to comfirm the user thayt the pit reached ground. add note about ground type.
 
 ### Low priority 
 - add option to load pit directly from excel file .xslx
@@ -21,6 +22,7 @@ Feel free to contribute to the project!!!! Many new features can be added...
 - put option to adjust figure size to desired size and dpi
 - add option to save pits in Pickle format or CSV
 - add option to save figure in matplotlib format
+
 
 
 ## Objective
@@ -36,6 +38,15 @@ Fierz, C., Amstrong, R.L., Durand, Y., Etchevers, P., Greene, E., McClung, D.M.,
 Hydrology N°83, IACS Contribution N°1, UNESCO-IHP, Paris. 
 
 ## Installation
+
+### Last version from the Pypi repository
+
+Simply run the following in your terminal:
+```bash
+pip install snowpyt
+```
+### Last development version for contributing to the project:
+
 Clone the github repository to a local directory using the following command in your terminal
 
 ```bash
