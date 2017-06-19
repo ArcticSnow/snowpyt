@@ -3,6 +3,8 @@ Simon Filhol, November 2016, copyright under the MIT license terms, see the Lice
 
 Feel free to contribute to the project!!!! Many new features can be added...
 
+WARNING: will not compile. create new branch for development!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 ## To do:
 
 ### High Priority
