@@ -12,6 +12,7 @@ Feel free to contribute to the project!!!! Many new features can be added...
 - reorganize package example, standard excel and csv snowpit file
 - format package as an actual Python package, and make it available on Pipy
 - make ground appear to comfirm the user thayt the pit reached ground. add note about ground type.
+- in the summary plot only display panels for the variable available in the input data file
 
 ### Low priority 
 - add option to load pit directly from excel file .xslx

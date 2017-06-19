@@ -5,9 +5,18 @@ Simon Filhol, December 2016
 
 '''
 
+import pit_class as pc
+
 filename = 'data_example/20161216_snowpit.csv'  #[insert path to file]
 
-mypit = Snowpit_standard(filename)
+pit1 = pc.Snowpit_standard()
+pit1.filename = filename
+pit1.load_csv()
+pit1.summary_plot(metadata=False)
+
+
+
+mypit = pc.Snowpit_standard(filename)
 mypit.filename = filename
 mypit.load_csv()
 mypit.summary_plot(save=True, metadata=True)
