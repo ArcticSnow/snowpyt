@@ -21,3 +21,9 @@ mypit.filename = filename
 mypit.load_csv()
 mypit.summary_plot(save=True, metadata=True)
 mypit.print_metadata()
+
+
+pit1 = Snowpit_standard()
+pit1.filename = filename
+pit1.load_csv()
+pit1.summary_plot(metadata=False)

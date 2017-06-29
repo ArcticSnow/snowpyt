@@ -6,6 +6,7 @@ File defining a python class for snowpit data
 November 2016, Simon Filhol
 '''
 from __future__ import division
+import pickle
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -13,7 +14,7 @@ import matplotlib.cm as cm
 from matplotlib.offsetbox import AnnotationBbox, OffsetImage
 from matplotlib._png import read_png
 from matplotlib.ticker import MaxNLocator
-from openpyxl import load_workbook
+import xlrd
 
 
 snowflake_dict = {'faceted':'snowflake/faceted.png',
@@ -141,8 +142,8 @@ class Snowpit_standard(object):
             ax5 = plt.subplot2grid((4, ncol), (0, ncol-2), rowspan=my_rowspan, sharey=ax1)
             ax6 = plt.subplot2grid((4, ncol), (0, ncol-1), rowspan=my_rowspan, sharey=ax1)
 
-
-        def check_data_availability():
+        '''
+        def check_data_availability(self):
             # Function to check if data for the plot indicatted are available. If not only select plot where data exist form the list indicated
 
             if plot_all:
@@ -152,7 +153,7 @@ class Snowpit_standard(object):
             else:
                 for data_type in plots_order:
                     # check the self. are not nan
-
+        '''
 
         def to_plot(plots_order):
             # function to plot plots based on the order indicated in plots_order
@@ -167,7 +168,7 @@ class Snowpit_standard(object):
 
         def plot_density(ax):
             plt.setp(ax.get_yticklabels(), visible=False)
-            im = ax_dens.plot(self.density, self.density_depth)
+            im = ax.plot(self.density, self.density_depth)
             ax.yaxis.tick_right()
             ax.grid()
             ax.set_title("Density")
@@ -179,7 +180,7 @@ class Snowpit_standard(object):
             ax.set_title("Temperature ($^\circ$C)")
             ax.grid()
 
-            for tick in ax_temp.get_xticklabels():
+            for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
             return im
 
@@ -265,6 +266,7 @@ class Snowpit_standard(object):
 
         def plot_sample_name(ax):
             # add here code for plotting column of sample names
+            print self.hardness_code
 
 
 
@@ -422,14 +424,7 @@ class Snowpit_standard(object):
         self.load_metadata()
         self.load_profile()
 
-    def load_profile(self):
-        f = open(self.filename)
-        for k,line in enumerate(f):
-            if line[0:12] == 'Stratigraphy':
-                break
-        f.close()
-
-        self.profile_raw_table = pd.read_csv(self.filename, sep='\t', skiprows=k+1)
+    def load_profile_from_raw_table(self):
         self.layerID = self.profile_raw_table['Layer ID']
         self.layer_top = self.profile_raw_table['Top [cm]']
         self.layer_bot = self.profile_raw_table['Bottom [cm]']
@@ -451,6 +446,17 @@ class Snowpit_standard(object):
 
         self.sample_depth = self.profile_raw_table['Depth Center [cm].1']
         self.sample_name = self.profile_raw_table['ID_sample'].astype(str)
+
+    def load_profile(self):
+        f = open(self.filename)
+        for k,line in enumerate(f):
+            if line[0:12] == 'Stratigraphy':
+                break
+        f.close()
+
+        self.profile_raw_table = pd.read_csv(self.filename, sep='\t', skiprows=k+1)
+        load_profile_from_raw_table(self)
+
 
     def load_metadata(self):
         f = open(self.filename)
@@ -483,9 +489,88 @@ class Snowpit_standard(object):
             print "Could not load metadata. Check file formating"
         f.close()
 
-    def load_xslx_pit():
-        # library openpyxl can do the work. Pandas also has a read_excel() function
-        # https://openpyxl.readthedocs.io/en/default/usage.html
+    def load_xslx_pit(self, path=None, sheet=None):
+        '''
+        Fucntion to load pit directly from a sheet of a xlsx file
+        :param path: path to the file
+        :param sheet: indicate the name of the sheet to load
+        :return:
+        '''
+
+        def find_row_with_values(sh, val):
+            '''
+            Function to find cell location of particular values indicated by a field
+            :param sh: excel sheet (open with xlrd library)
+            :param val: values of the fields (the first 4 character for each field) in a list format
+            :return: return a dictionnary of the row where the value wanted is
+            '''
+
+            rows = []
+            values = []
+            for row_index in xrange(sh.nrows):
+                for value in val:
+                    if value == (str(sh.row(row_index)[0].value)[:4]):
+                        rows.append(row_index)
+                        values.append(value)
+            print val
+            print rows
+            return dict(zip(values, rows))
+
+        def get_cell_val_str(sh, cRrow, cCol):
+            '''
+            Function to grab cell value as str
+            :param sh:
+            :param cRrow:
+            :param cCol:
+            :return:
+            '''
+            value = sh.cell(cRrow, cCol)
+            if value.value.__len__() == 0:
+                value.value = np.nan
+            return str(value.value)
+
+        if path is None:
+            path = self.filename
+
+        wb = xlrd.open_workbook(path)
+        if sheet is None:
+            sheet = wb.sheet_names()[0]
+        sh = wb.sheet_by_name(sheet)
+
+        # Load metadata:
+        fields = ['East', 'Nort', 'Elev', 'Date', 'Obse', 'Loca', 'Air ', 'Weat', 'Comm', 'Snow', 'Time', 'Gene',
+                  'Stra']
+        values = find_row_with_values(sh, fields)
+        self.date = get_cell_val_str(sheet, values.get('Date'), 1)
+        self.Time = get_cell_val_str(sheet, values.get('Time'), 1)
+        self.General_loc = get_cell_val_str(sheet, values.get('Gene'), 1)
+        self.East = get_cell_val_str(sheet, values.get('East'), 1)
+        self.East_unit = get_cell_val_str(sheet, values.get('East'), 2)
+        self.North = get_cell_val_str(sheet, values.get('Nort'), 1)
+        self.North_unit = get_cell_val_str(sheet, values.get('Nort'), 2)
+        self.Elevation = get_cell_val_str(sheet, values.get('Elev'), 1)
+        self.Elevation_unit = get_cell_val_str(sheet, values.get('Elev'), 2)
+        self.Observer = get_cell_val_str(sheet, values.get('Obse'), 1)
+        self.AirTemp = get_cell_val_str(sheet, values.get('Air '), 1)
+        self.weather_condition = get_cell_val_str(sheet, values.get('Weat'), 1)
+        self.comments = get_cell_val_str(sheet, values.get('Comm'), 1)
+
+        # Load data:
+        self.profile_raw_table =pd.read_excel(path, skiprows=int(values.get('Stra')), header=int(values.get('Stra'))+1)
+        load_profile_from_raw_table(self)
+
+    def sheet_names_xlsx(self, path=None):
+        '''
+        Functiont to print and return the list of sheet included in an excel file
+        :param path:
+        :return:
+        '''
+        if path is None:
+            path = self.filename
+        wb = xlrd.open_workbook(path)
+        print wb.sheet_names()
+        return wb.sheet_names()
+
 
     def print_metadata(self):
         print "===================================="
@@ -503,12 +588,14 @@ class Snowpit_standard(object):
         print "Comments: " + self.comments
         print "===================================="
 
-    def save_pickle_pit(self):
+    def save_pickle_pit(self, path):
         # search how to save a python class to pickle
-        self.
+        with open(path, 'w') as f:
+            pickle.dump(self, f)
 
-    def load_pickle_pit(self):
+    def load_pickle_pit(self, path):
         # search how to read pickle file
-
+        with open(path, 'r') as f:
+            self.__dict__.update(pickle.load(f).__dict__)
 
 

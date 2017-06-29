@@ -8,7 +8,89 @@ from openpyxl import load_workbook
 file = '/snowpyt/data_example/20170209_Finse_snowpit.xlsx'
 
 # 1. try using pandas (intall xlrd)
-xl = pd.read_excel(file)
+xl = pd.read_excel(file, sheetname=, header=, skiprows=)
+
+
+
+import openpyxl as xl
+
+a = xl.load_workbook('data_example/20170209_Finse_snowpit.xlsx')
+s = a.get_sheet_by_name('Sheet1')
+
+
+
+def csv_from_excel():
+    wb = xlrd.open_workbook('your_workbook.xls')
+    sh = wb.sheet_by_name('Sheet1')
+    your_csv_file = open('your_csv_file.csv', 'wb')
+    wr = csv.writer(your_csv_file, quoting=csv.QUOTE_ALL)
+
+    for rownum in xrange(sh.nrows):
+        wr.writerow(sh.row_values(rownum))
+
+    your_csv_file.close()
+
+
+import xlrd
+
+
+def find_row_with_values(sheet, val):
+    '''
+    Function to find cell location of particular values indicated by a field
+    :param sheet: excel sheet (open with xlrd library)
+    :param val: values of the fields (the first 4 character for each field) in a list format
+    :return: return a dictionnary of the row where the value wanted is
+    '''
+
+    rows = []
+    values = []
+    for row_index in xrange(sheet.nrows):
+        for value in val:
+            if value == (str(sheet.row(row_index)[0].value)[:4]):
+                rows.append(row_index)
+                values.append(value)
+    print val
+    print rows
+    return dict(zip(values, rows))
+
+def get_cell_val(sheet, cRrow, cCol):
+    value = sheet.cell(cRrow, cCol)
+    if value.value.__len__() == 0:
+        value = np.nan
+    return str(value)
+
+wb = xlrd.open_workbook('data_example/20170209_Finse_snowpit.xlsx')
+sh = wb.sheet_by_name('Sheet1')
+
+fields = ['East', 'Nort','Elev', 'Date', 'Obse', 'Loca', 'Air ', 'Weat', 'Comm', 'Snow', 'Time', 'Gene', 'Stra']
+values = find_cell_with_values(sh, fields)
+
+for field, val in values.iteritems():
+    print field, val
+
+
+
+
+
+import csv
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # 2. try unsing openpyxl
