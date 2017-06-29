@@ -11,6 +11,7 @@ WARNING: will not compile. create new branch for development!!!!!!!!!!!!!!!!!!!!
 
 ### High Priority
 
+- write function to save and load pit to and from pickle format
 - Include option to add chemical sample name to pit
 - Check if the list of symbols is complete in reference to Fierz et al. 2009
 - reorganize package example, standard excel and csv snowpit file

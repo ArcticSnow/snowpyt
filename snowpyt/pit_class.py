@@ -71,7 +71,6 @@ class Snowpit_standard(object):
     '''
     Class for snowpit data formated as in Standard_pit.csv (tab delimiter)
     '''
-
     def __init__(self):
         self.date = '2001/08/10'
         self.East = 0
@@ -390,9 +389,6 @@ class Snowpit_standard(object):
         # ax_temp.grid()
         # ax_dens.grid()
 
-
-
-
     def plot_temperature(self):
         '''
         Plot temperature profile
@@ -456,7 +452,6 @@ class Snowpit_standard(object):
         self.sample_depth = self.profile_raw_table['Depth Center [cm].1']
         self.sample_name = self.profile_raw_table['ID_sample'].astype(str)
 
-
     def load_metadata(self):
         f = open(self.filename)
         try:
@@ -492,7 +487,6 @@ class Snowpit_standard(object):
         # library openpyxl can do the work. Pandas also has a read_excel() function
         # https://openpyxl.readthedocs.io/en/default/usage.html
 
-
     def print_metadata(self):
         print "===================================="
         print "Date: " + self.date
@@ -509,6 +503,12 @@ class Snowpit_standard(object):
         print "Comments: " + self.comments
         print "===================================="
 
+    def save_pickle_pit(self):
+        # search how to save a python class to pickle
+        self.
+
+    def load_pickle_pit(self):
+        # search how to read pickle file
 
 
 
