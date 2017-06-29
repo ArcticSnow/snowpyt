@@ -13,6 +13,7 @@ import matplotlib.cm as cm
 from matplotlib.offsetbox import AnnotationBbox, OffsetImage
 from matplotlib._png import read_png
 from matplotlib.ticker import MaxNLocator
+from openpyxl import load_workbook
 
 
 snowflake_dict = {'faceted':'snowflake/faceted.png',
@@ -87,7 +88,7 @@ class Snowpit_standard(object):
         self.crystalsize_plot = False
         self.hardness_plot = False
 
-    def summary_plot(self, save=False, metadata=True):
+    def summary_plot(self, save=False, metadata=True, plot_all=False, plots_order=['temperature', 'stratigraphy', 'hardness', 'crystal size', 'density']):
         '''
         Function to plot a summary of snowpit data
 
@@ -97,156 +98,181 @@ class Snowpit_standard(object):
         '''
 
         fig = plt.figure(figsize=(8, 4), dpi=150)
+        fig.gca().invert_yaxis()
 
         if metadata:
             my_rowspan = 3
         else:
             my_rowspan = 4
 
+        # ===========================================================
         # Automatically adjust summary plot based on data available
-        ncol=0
-        if (~np.isnan(self.temperature_snow)).sum() != 0:
-            ncol += 1
-            self.temp_plot = True
-        try:
-            np.isnan(self.grain_type1)
-        except:
-            ncol += 1
-            self.stratigraphy_plot = False
+        ncol = plots_order.__len__()
 
-        if (~np.isnan(self.hardness_code)).sum() != 0:
-            ncol += 1
-            self.hardness_plot = False
+        if ncol == 1:
+            plt.subplot2grid((4, ncol), (0, ncol-1), rowspan=my_rowspan)
 
-        if (~np.isnan(self.grain_size_max)).sum() != 0:
-            ncol += 1
-            self.crystalsize_plot = False
+        if ncol == 2:
+            ax1 = plt.subplot2grid((4, ncol), (0, ncol-2), rowspan=my_rowspan)
+            ax2 = plt.subplot2grid((4, ncol), (0, ncol-1), rowspan=my_rowspan, sharey=ax1)
 
-        if (~np.isnan(self.density)).sum() != 0:
-            ncol += 1
-            self.density_plot = False
+        if ncol == 3:
+            ax1 = plt.subplot2grid((4, ncol), (0, ncol-3), rowspan=my_rowspan)
+            ax2 = plt.subplot2grid((4, ncol), (0, ncol-2), rowspan=my_rowspan, sharey=ax1)
+            ax3 = plt.subplot2grid((4, ncol), (0, ncol-1), rowspan=my_rowspan, sharey=ax1)
 
-        if self.dens:
-            ax_dens = plt.subplot2grid((4, ncol), (0, ncol-1), rowspan=my_rowspan, sharey=ax_temp)
-            if self.crystalsize_plot:
-                ax_csize = plt.subplot2grid((4, ncol), (0, ncol-2), rowspan=my_rowspan, sharey=ax_temp)
-                if self.hardness_plot:
-                    ax_hard = plt.subplot2grid((4, ncol), (0, ncol-3), rowspan=my_rowspan, sharey=ax_temp)
+        if ncol == 4:
+            ax1 = plt.subplot2grid((4, ncol), (0, ncol-4), rowspan=my_rowspan)
+            ax2 = plt.subplot2grid((4, ncol), (0, ncol-3), rowspan=my_rowspan, sharey=ax1)
+            ax3 = plt.subplot2grid((4, ncol), (0, ncol-2), rowspan=my_rowspan, sharey=ax1)
+            ax4 = plt.subplot2grid((4, ncol), (0, ncol-1), rowspan=my_rowspan, sharey=ax1)
+
+        if ncol == 5:
+            ax1 = plt.subplot2grid((4, ncol), (0, ncol-5), rowspan=my_rowspan)
+            ax2 = plt.subplot2grid((4, ncol), (0, ncol-4), rowspan=my_rowspan, sharey=ax1)
+            ax3 = plt.subplot2grid((4, ncol), (0, ncol-3), rowspan=my_rowspan, sharey=ax1)
+            ax4 = plt.subplot2grid((4, ncol), (0, ncol-2), rowspan=my_rowspan, sharey=ax1)
+            ax5 = plt.subplot2grid((4, ncol), (0, ncol-1), rowspan=my_rowspan, sharey=ax1)
+
+        if ncol == 6:
+            ax1 = plt.subplot2grid((4, ncol), (0, ncol-6), rowspan=my_rowspan)
+            ax2 = plt.subplot2grid((4, ncol), (0, ncol-5), rowspan=my_rowspan, sharey=ax1)
+            ax3 = plt.subplot2grid((4, ncol), (0, ncol-4), rowspan=my_rowspan, sharey=ax1)
+            ax4 = plt.subplot2grid((4, ncol), (0, ncol-3), rowspan=my_rowspan, sharey=ax1)
+            ax5 = plt.subplot2grid((4, ncol), (0, ncol-2), rowspan=my_rowspan, sharey=ax1)
+            ax6 = plt.subplot2grid((4, ncol), (0, ncol-1), rowspan=my_rowspan, sharey=ax1)
+
+
+        def check_data_availability():
+            # Function to check if data for the plot indicatted are available. If not only select plot where data exist form the list indicated
+
+            if plot_all:
+                # create a list with plots using all types of data available
+
 
             else:
-
-        else:
-            if self.crystalsize_plot:
-                ax_csize = plt.subplot2grid((4, ncol), (0, ncol-1), rowspan=my_rowspan, sharey=ax_temp)
+                for data_type in plots_order:
+                    # check the self. are not nan
 
 
+        def to_plot(plots_order):
+            # function to plot plots based on the order indicated in plots_order
+            axs_dict = ['ax1', 'ax2', 'ax3', 'ax4', 'ax5']
+            plots_dict = {'temperature':plot_temperature(),
+                            'density':plot_density(),
+                            'stratigraphy':plot_stratigraphy(),
+                            'hardness':plot_hardness(),
+                            'crystal size':plot_crystalSize()}
+            for i,axs in enumerate(axs_dict[0:ncol-1]):
+                plots_dict
 
-        if self.temp_plot:
-            ax_temp = plt.subplot2grid((4,ncol),(0,0),rowspan = my_rowspan)
-            ax_strat = plt.subplot2grid((4, ncol), (0, 1), rowspan=my_rowspan,sharey=ax_temp)  # Share y-axes with subplot 1
-            ax_hard = plt.subplot2grid((4, ncol), (0, 2), rowspan=my_rowspan, sharey=ax_temp)
-            ax_csize = plt.subplot2grid((4, ncol), (0, 3), rowspan=my_rowspan, sharey=ax_temp)
+        def plot_density(ax):
+            plt.setp(ax.get_yticklabels(), visible=False)
+            im = ax_dens.plot(self.density, self.density_depth)
+            ax.yaxis.tick_right()
+            ax.grid()
+            ax.set_title("Density")
+            return im
 
-        else:
-            if self.
+        def plot_temperature(ax):
+            im = ax.plot(-self.temperature_snow, self.temperature_depth)
+            ax.set_ylabel("Depth (cm)")
+            ax.set_title("Temperature ($^\circ$C)")
+            ax.grid()
 
-        ax_strat = plt.subplot2grid((4,ncol),(0,1),rowspan = my_rowspan, sharey=ax_temp)  # Share y-axes with subplot 1
-        ax_hard = plt.subplot2grid((4,ncol),(0,2),rowspan = my_rowspan, sharey=ax_temp)
-        ax_csize = plt.subplot2grid((4,ncol),(0,3),rowspan = my_rowspan, sharey=ax_temp)
-        ax_dens = plt.subplot2grid((4,ncol),(0,4),rowspan = my_rowspan, sharey=ax_temp)
+            for tick in ax_temp.get_xticklabels():
+                tick.set_rotation(45)
+            return im
 
-        # Set y-ticks of subplot 2 invisible
-        plt.setp(ax_strat.get_yticklabels(), visible=False)
-        plt.setp(ax_strat.get_xticklabels(), visible=False)
-        plt.setp(ax_hard.get_yticklabels(), visible=False)
-        plt.setp(ax_csize.get_yticklabels(), visible=False)
-        plt.setp(ax_dens.get_yticklabels(), visible=False)
+        def plot_stratigraphy(ax):
+            plt.setp(ax.get_yticklabels(), visible=False)
+            plt.setp(ax.get_xticklabels(), visible=False)
 
-        # Plot data
-        fig.gca().invert_yaxis()
-        im1 = ax_temp.plot(-self.temperature_snow, self.temperature_depth)
-
-        im2 = ax_strat.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, np.repeat(1, self.layer_top.__len__()), - (self.layer_bot - self.layer_top),
+            im2 = ax.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, np.repeat(1, self.layer_top.__len__()), - (self.layer_bot - self.layer_top),
                        color=cm.Blues(self.hardness_code / 7), edgecolor='k', linewidth=0.5)
-        ax_strat.set_xlim(0, 1)
+            ax.set_xlim(0, 1)
 
-        # include sample name on pit face
-        # for i, sample in enumerate(self.sample_name):
+            # include sample name on pit face
+            # for i, sample in enumerate(self.sample_name):
 
 
-        # include snowflake symbols
-        for i, flake in enumerate(self.grain_type1.astype(str)):
-            if flake != 'nan':
-                print 'flake 1'
-                print flake
-                im = plt.imread(snowflake_dict.get(flake))
-                im[im == 0] = np.nan
-                imagebox = OffsetImage(im, zoom=.01)
-                if (self.grain_type2.astype(str)[i] == 'nan') and (self.grain_type3.astype(str)[i] == 'nan'):
-                    hloc = 0.5
-                elif (self.grain_type2.astype(str)[i] != 'nan') and (self.grain_type3.astype(str)[i] == 'nan'):
-                    hloc = 0.33
-                else:
-                    hloc = 0.25
+            # include snowflake symbols
+            for i, flake in enumerate(self.grain_type1.astype(str)):
+                if flake != 'nan':
+                    print 'flake 1'
+                    print flake
+                    im = plt.imread(snowflake_dict.get(flake))
+                    im[im == 0] = np.nan
+                    imagebox = OffsetImage(im, zoom=.01)
+                    if (self.grain_type2.astype(str)[i] == 'nan') and (self.grain_type3.astype(str)[i] == 'nan'):
+                        hloc = 0.5
+                    elif (self.grain_type2.astype(str)[i] != 'nan') and (self.grain_type3.astype(str)[i] == 'nan'):
+                        hloc = 0.33
+                    else:
+                        hloc = 0.25
 
-                xy = [hloc,
-                      ((self.layer_top[i] - self.layer_bot[i]) / 2 + self.layer_bot[i])]  # coordinates to position this image
-                ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
-                ax_strat.add_artist(ab)
+                    xy = [hloc,
+                          ((self.layer_top[i] - self.layer_bot[i]) / 2 + self.layer_bot[i])]  # coordinates to position this image
+                    ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
+                    ax.add_artist(ab)
 
-        for i, flake in enumerate(self.grain_type2.astype(str)):
-            if flake != 'nan':
-                print 'flake 2'
-                print flake
-                im = plt.imread(snowflake_dict.get(flake))
-                im[im == 0] = np.nan
-                imagebox = OffsetImage(im, zoom=.01)
-                if (self.grain_type2.astype(str)[i] != 'nan') and (self.grain_type3.astype(str)[i] == 'nan'):
-                    hloc2 = 0.66
-                else:
-                    hloc2 = 0.5
-                xy = [hloc2,
-                      ((self.layer_top[i] - self.layer_bot[i]) / 2 + self.layer_bot[i])]  # coordinates to position this image
-                ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
-                ax_strat.add_artist(ab)
+            for i, flake in enumerate(self.grain_type2.astype(str)):
+                if flake != 'nan':
+                    print 'flake 2'
+                    print flake
+                    im = plt.imread(snowflake_dict.get(flake))
+                    im[im == 0] = np.nan
+                    imagebox = OffsetImage(im, zoom=.01)
+                    if (self.grain_type2.astype(str)[i] != 'nan') and (self.grain_type3.astype(str)[i] == 'nan'):
+                        hloc2 = 0.66
+                    else:
+                        hloc2 = 0.5
+                    xy = [hloc2,
+                          ((self.layer_top[i] - self.layer_bot[i]) / 2 + self.layer_bot[i])]  # coordinates to position this image
+                    ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
+                    ax.add_artist(ab)
 
-        for i, flake in enumerate(self.grain_type3.astype(str)):
-            if flake != 'nan':
-                print 'flake 3'
-                print flake
-                im = plt.imread(snowflake_dict.get(flake))
-                im[im == 0] = np.nan
-                imagebox = OffsetImage(im, zoom=.01)
-                xy = [0.75,
-                      ((self.layer_top[i] - self.layer_bot[i]) / 2 + self.layer_bot[i])]  # coordinates to position this image
-                ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
-                ax_strat.add_artist(ab)
+            for i, flake in enumerate(self.grain_type3.astype(str)):
+                if flake != 'nan':
+                    print 'flake 3'
+                    print flake
+                    im = plt.imread(snowflake_dict.get(flake))
+                    im[im == 0] = np.nan
+                    imagebox = OffsetImage(im, zoom=.01)
+                    xy = [0.75,
+                          ((self.layer_top[i] - self.layer_bot[i]) / 2 + self.layer_bot[i])]  # coordinates to position this image
+                    ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
+                    ax.add_artist(ab)
 
-        im3 = ax_hard.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, self.hardness_code, self.layer_bot - self.layer_top, color=cm.Blues(self.hardness_code / 7), edgecolor='k', linewidth=0.5)
-        ax_hard.set_xlim(0, 8)
+            ax.set_title("Stratigraphy")
+            return im2
 
-        im4 = ax_csize.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, self.grain_size_max-self.grain_size_min, 1, self.grain_size_min)
+        def plot_hardness(ax):
+            plt.setp(ax.get_yticklabels(), visible=False)
+            im = ax.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, self.hardness_code, self.layer_bot - self.layer_top, color=cm.Blues(self.hardness_code / 7), edgecolor='k', linewidth=0.5)
+            ax.set_xlim(0, 8)
+            ax.set_title("Hardness")
+            labels_ax = ['','Feast', '4F', '3F','2F','1F','P','K']
+            ax.set_xticklabels(labels_ax,rotation=45)
+            ax.xaxis.set_major_locator(MaxNLocator(integer=True, prune='upper'))
+            return im
 
-        im5 = ax_dens.plot(self.density, self.density_depth)
-        ax_dens.yaxis.tick_right()
 
-        # add
-        ax_temp.set_title("Temperature ($^\circ$C)")
-        ax_strat.set_title("Stratigraphy")
-        ax_hard.set_title("Hardness")
-        ax_csize.set_title("Crystal size (mm)")
-        ax_dens.set_title("Density")
-        ax_temp.set_ylabel("Depth (cm)")
+        def plot_crystalSize(ax):
+            plt.setp(ax.get_yticklabels(), visible=False)
+            im = ax.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, self.grain_size_max-self.grain_size_min, 1, self.grain_size_min)
+            ax.set_title("Crystal size (mm)")
+            return im
 
-        for tick in ax_temp.get_xticklabels():
-            tick.set_rotation(45)
+        def plot_sample_name(ax):
+            # add here code for plotting column of sample names
 
-        labels_ax_hard = ['','Feast', '4F', '3F','2F','1F','P','K']
-        ax_hard.set_xticklabels(labels_ax_hard,rotation=45)
-        ax_hard.xaxis.set_major_locator(MaxNLocator(integer=True, prune='upper'))
 
-        ax_temp.grid()
-        ax_dens.grid()
+
+        #====================================
+        # INCLUDE HERE code to plot 
+        #====================================
+
 
         if metadata:
             metadata_text = "Date: " + self.date + '; Time [24hr]: ' + self.Time + '\n' + \
@@ -266,9 +292,106 @@ class Snowpit_standard(object):
         plt.tight_layout()
         plt.subplots_adjust(wspace=0)
 
+
         if save==True:
             fig.savefig(self.filename.split('/')[-1][0:-4])
             print 'Figure saved as ' + self.filename.split('/')[-1][0:-4] + '.png'
+
+        # # Set y-ticks of subplot 2 invisible
+        # plt.setp(ax_strat.get_yticklabels(), visible=False)
+        # plt.setp(ax_strat.get_xticklabels(), visible=False)
+        # plt.setp(ax_hard.get_yticklabels(), visible=False)
+        # plt.setp(ax_csize.get_yticklabels(), visible=False)
+        # plt.setp(ax_dens.get_yticklabels(), visible=False)
+
+        # # Plot data
+        # fig.gca().invert_yaxis()
+        # im1 = ax_temp.plot(-self.temperature_snow, self.temperature_depth)
+
+        # im2 = ax_strat.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, np.repeat(1, self.layer_top.__len__()), - (self.layer_bot - self.layer_top),
+        #                color=cm.Blues(self.hardness_code / 7), edgecolor='k', linewidth=0.5)
+        # ax_strat.set_xlim(0, 1)
+
+        # # include sample name on pit face
+        # # for i, sample in enumerate(self.sample_name):
+
+
+        # # include snowflake symbols
+        # for i, flake in enumerate(self.grain_type1.astype(str)):
+        #     if flake != 'nan':
+        #         print 'flake 1'
+        #         print flake
+        #         im = plt.imread(snowflake_dict.get(flake))
+        #         im[im == 0] = np.nan
+        #         imagebox = OffsetImage(im, zoom=.01)
+        #         if (self.grain_type2.astype(str)[i] == 'nan') and (self.grain_type3.astype(str)[i] == 'nan'):
+        #             hloc = 0.5
+        #         elif (self.grain_type2.astype(str)[i] != 'nan') and (self.grain_type3.astype(str)[i] == 'nan'):
+        #             hloc = 0.33
+        #         else:
+        #             hloc = 0.25
+
+        #         xy = [hloc,
+        #               ((self.layer_top[i] - self.layer_bot[i]) / 2 + self.layer_bot[i])]  # coordinates to position this image
+        #         ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
+        #         ax_strat.add_artist(ab)
+
+        # for i, flake in enumerate(self.grain_type2.astype(str)):
+        #     if flake != 'nan':
+        #         print 'flake 2'
+        #         print flake
+        #         im = plt.imread(snowflake_dict.get(flake))
+        #         im[im == 0] = np.nan
+        #         imagebox = OffsetImage(im, zoom=.01)
+        #         if (self.grain_type2.astype(str)[i] != 'nan') and (self.grain_type3.astype(str)[i] == 'nan'):
+        #             hloc2 = 0.66
+        #         else:
+        #             hloc2 = 0.5
+        #         xy = [hloc2,
+        #               ((self.layer_top[i] - self.layer_bot[i]) / 2 + self.layer_bot[i])]  # coordinates to position this image
+        #         ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
+        #         ax_strat.add_artist(ab)
+
+        # for i, flake in enumerate(self.grain_type3.astype(str)):
+        #     if flake != 'nan':
+        #         print 'flake 3'
+        #         print flake
+        #         im = plt.imread(snowflake_dict.get(flake))
+        #         im[im == 0] = np.nan
+        #         imagebox = OffsetImage(im, zoom=.01)
+        #         xy = [0.75,
+        #               ((self.layer_top[i] - self.layer_bot[i]) / 2 + self.layer_bot[i])]  # coordinates to position this image
+        #         ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
+        #         ax_strat.add_artist(ab)
+
+        # im3 = ax_hard.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, self.hardness_code, self.layer_bot - self.layer_top, color=cm.Blues(self.hardness_code / 7), edgecolor='k', linewidth=0.5)
+        # ax_hard.set_xlim(0, 8)
+
+        # im4 = ax_csize.barh(self.layer_bot-(self.layer_bot-self.layer_top)/2, self.grain_size_max-self.grain_size_min, 1, self.grain_size_min)
+
+        # im5 = ax_dens.plot(self.density, self.density_depth)
+        # ax_dens.yaxis.tick_right()
+
+        # # add
+        # ax_temp.set_title("Temperature ($^\circ$C)")
+        # ax_strat.set_title("Stratigraphy")
+        # ax_hard.set_title("Hardness")
+        # ax_csize.set_title("Crystal size (mm)")
+        # ax_dens.set_title("Density")
+        # ax_temp.set_ylabel("Depth (cm)")
+
+        # for tick in ax_temp.get_xticklabels():
+        #     tick.set_rotation(45)
+
+        # labels_ax_hard = ['','Feast', '4F', '3F','2F','1F','P','K']
+        # ax_hard.set_xticklabels(labels_ax_hard,rotation=45)
+        # ax_hard.xaxis.set_major_locator(MaxNLocator(integer=True, prune='upper'))
+
+        # ax_temp.grid()
+        # ax_dens.grid()
+
+
+
 
     def plot_temperature(self):
         '''
@@ -364,6 +487,11 @@ class Snowpit_standard(object):
         except ValueError:
             print "Could not load metadata. Check file formating"
         f.close()
+
+    def load_xslx_pit():
+        # library openpyxl can do the work. Pandas also has a read_excel() function
+        # https://openpyxl.readthedocs.io/en/default/usage.html
+
 
     def print_metadata(self):
         print "===================================="

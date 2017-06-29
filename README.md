@@ -1,6 +1,8 @@
 # Snowpyt: an open-source library to visualize snowpits in Python
 Simon Filhol, November 2016, copyright under the MIT license terms, see the License.txt file
 
+LAST MODIFIED: June 2017 (or see date on github file history)
+
 Feel free to contribute to the project!!!! Many new features can be added...
 
 WARNING: will not compile. create new branch for development!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -12,8 +14,7 @@ WARNING: will not compile. create new branch for development!!!!!!!!!!!!!!!!!!!!
 - Include option to add chemical sample name to pit
 - Check if the list of symbols is complete in reference to Fierz et al. 2009
 - reorganize package example, standard excel and csv snowpit file
-- format package as an actual Python package, and make it available on Pipy
-- make ground appear to comfirm the user thayt the pit reached ground. add note about ground type.
+- make ground appear to comfirm the user that the pit reached ground. add note about ground type.
 - in the summary plot only display panels for the variable available in the input data file
 
 ### Low priority 
@@ -21,7 +22,6 @@ WARNING: will not compile. create new branch for development!!!!!!!!!!!!!!!!!!!!
 - improve the final layout (e.g. overlapping snowflake symbol)
 - specify the figure size and adjust font size in respect
 - render the medatadata text better
-- create new plot combination (include grain diameter plot)
 - put option to adjust figure size to desired size and dpi
 - add option to save pits in Pickle format or CSV
 - add option to save figure in matplotlib format
@@ -56,6 +56,8 @@ Clone the github repository to a local directory using the following command in 
 git clone https://github.com/ArcticSnow/snowpyt.git
 ```
 or by downloading the package
+
+The branch 'master' consists of the latest stable version. Other develepment versions are included in other git branches.
 
 The package contains all the functions to plot the snowpit if library requirements are met. It also contains data samples to test the library.
 
