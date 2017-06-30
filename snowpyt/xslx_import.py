@@ -53,26 +53,32 @@ def find_row_with_values(sheet, val):
     print rows
     return dict(zip(values, rows))
 
-def get_cell_val(sheet, cRrow, cCol):
-    value = sheet.cell(cRrow, cCol)
-    if value.value.__len__() == 0:
-        value = np.nan
-    return str(value)
 
-wb = xlrd.open_workbook('data_example/20170209_Finse_snowpit.xlsx')
+def get_cell_val_str(sh, cRrow, cCol):
+    '''
+    Function to grab cell value as str
+    :param sh:
+    :param cRrow:
+    :param cCol:
+    :return:
+    '''
+    value = sh.cell(cRrow, cCol)
+    if value.value.__len__() == 0:
+        value.value = np.nan
+    return str(value.value)
+
+file = 'snowpyt/data_example/20170209_Finse_snowpit.xlsx'
+wb = xlrd.open_workbook(file)
 sh = wb.sheet_by_name('Sheet1')
 
 fields = ['East', 'Nort','Elev', 'Date', 'Obse', 'Loca', 'Air ', 'Weat', 'Comm', 'Snow', 'Time', 'Gene', 'Stra']
-values = find_cell_with_values(sh, fields)
+values = find_row_with_values(sh, fields)
 
-for field, val in values.iteritems():
-    print field, val
-
-
-
+get_cell_val_str(sh, 0, 1)
+import pandas as pd
+profile_raw_table = pd.read_excel(file,sheet=sh, skiprows=int(values.get('Stra'))+1, engine='xlrd')
 
 
-import csv
 
 
 

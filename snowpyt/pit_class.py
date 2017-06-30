@@ -421,6 +421,11 @@ class Snowpit_standard(object):
         plt.grid()
 
     def load_csv(self):
+
+        if self.filename[-3:] != 'csv':
+            print 'Input file is not of .csv file format.'
+            return
+
         self.load_metadata()
         self.load_profile()
 
@@ -455,8 +460,7 @@ class Snowpit_standard(object):
         f.close()
 
         self.profile_raw_table = pd.read_csv(self.filename, sep='\t', skiprows=k+1)
-        load_profile_from_raw_table(self)
-
+        self.load_profile_from_raw_table()
 
     def load_metadata(self):
         f = open(self.filename)
@@ -525,12 +529,16 @@ class Snowpit_standard(object):
             :return:
             '''
             value = sh.cell(cRrow, cCol)
-            if value.value.__len__() == 0:
-                value.value = np.nan
+            #if value.value.__len__() == 0:
+                #value.value = np.nan
             return str(value.value)
 
         if path is None:
             path = self.filename
+
+            if path[-4:] != 'xlsx':
+                print 'Input file is not of .xlsx format'
+                return
 
         wb = xlrd.open_workbook(path)
         if sheet is None:
@@ -541,23 +549,24 @@ class Snowpit_standard(object):
         fields = ['East', 'Nort', 'Elev', 'Date', 'Obse', 'Loca', 'Air ', 'Weat', 'Comm', 'Snow', 'Time', 'Gene',
                   'Stra']
         values = find_row_with_values(sh, fields)
-        self.date = get_cell_val_str(sheet, values.get('Date'), 1)
-        self.Time = get_cell_val_str(sheet, values.get('Time'), 1)
-        self.General_loc = get_cell_val_str(sheet, values.get('Gene'), 1)
-        self.East = get_cell_val_str(sheet, values.get('East'), 1)
-        self.East_unit = get_cell_val_str(sheet, values.get('East'), 2)
-        self.North = get_cell_val_str(sheet, values.get('Nort'), 1)
-        self.North_unit = get_cell_val_str(sheet, values.get('Nort'), 2)
-        self.Elevation = get_cell_val_str(sheet, values.get('Elev'), 1)
-        self.Elevation_unit = get_cell_val_str(sheet, values.get('Elev'), 2)
-        self.Observer = get_cell_val_str(sheet, values.get('Obse'), 1)
-        self.AirTemp = get_cell_val_str(sheet, values.get('Air '), 1)
-        self.weather_condition = get_cell_val_str(sheet, values.get('Weat'), 1)
-        self.comments = get_cell_val_str(sheet, values.get('Comm'), 1)
+        print values
+        self.date = get_cell_val_str(sh, values.get('Date'), 1)
+        self.Time = get_cell_val_str(sh, values.get('Time'), 1)
+        self.General_loc = get_cell_val_str(sh, values.get('Gene'), 1)
+        self.East = get_cell_val_str(sh, values.get('East'), 1)
+        self.East_unit = get_cell_val_str(sh, values.get('East'), 2)
+        self.North = get_cell_val_str(sh, values.get('Nort'), 1)
+        self.North_unit = get_cell_val_str(sh, values.get('Nort'), 2)
+        self.Elevation = get_cell_val_str(sh, values.get('Elev'), 1)
+        self.Elevation_unit = get_cell_val_str(sh, values.get('Elev'), 2)
+        self.Observer = get_cell_val_str(sh, values.get('Obse'), 1)
+        self.AirTemp = get_cell_val_str(sh, values.get('Air '), 1)
+        self.weather_conditions = get_cell_val_str(sh, values.get('Weat'), 1)
+        self.comments = get_cell_val_str(sh, values.get('Comm'), 1)
 
         # Load data:
-        self.profile_raw_table =pd.read_excel(path, skiprows=int(values.get('Stra')), header=int(values.get('Stra'))+1)
-        load_profile_from_raw_table(self)
+        self.profile_raw_table =pd.read_excel(path, sheet=sh, skiprows=int(values.get('Stra'))+1, engine='xlrd')
+        self.load_profile_from_raw_table()
 
     def sheet_names_xlsx(self, path=None):
         '''
