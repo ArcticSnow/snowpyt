@@ -1,0 +1,66 @@
+Snowpit form for Snowpyt package																		
+																		
+Method:	1. Input values in green. If no value, leave cell empty																	
+	2. make sure spelling of snowflakes is correct, and hardness code is computed																	
+	3. save as csv file with tab delimiting fields																	
+	4. ready to import with Snowpyt package!																	
+																		
+Supported snowflake names		Hardness coding																
+chain of depth hoar		feast	1															
+depth hoar		4 finger	2															
+faceted		3 finger	3															
+faceted rounded		2 finger	4															
+ice		1 finger	5															
+melt refreeze		pencil	6															
+partly decomposed		knife	7															
+recent snow																		
+rounded																		
+rounded faceted																		
+wind broken																		
+wind packed																		
+clustered rounded																		
+dendrites																		
+ice layer	add it!!!!!																	
+slush	add it!!!!!																	
+																		
+																		
+																		
+																		
+																		
+Metadata																		
+Snowpit Name																		
+Date [YYYY-mm-dd]	2016-12-16																	
+Time [24hr]	10																	
+Observer	Simon F, Sven D, Thomas S.																	
+General location	Finse Research Station																	
+East [deg]	7.52568333																	
+North [deg]	60.5943166																	
+Elevation [m]	1214	m																
+Weather conditions	Sunny, sunrise. 																	
+Comments	Snowpit close to previous one. Thomas took many pictures, backlit ones. Rain and above freezing temperature the previous day. Liquide water at the bottom																	
+Air temperature [degC]	-8																	
+																		
+Stratigraphy											Density			Temperature			Sample	
+Layer ID	Top [cm]	Bottom [cm]	Type 1	Type 2	Type 3	Diameter min [mm]	Diameter max [mm]	Hardness	Hardness code		Depth Center [cm]	Snow Density [g/cm3]		Depth [cm]	Temp [deg C]		Depth Center [cm]	ID_sample
+1	0		ice layer					Naaa	NaN		5	18.4		0	-8		5	1
+2	0	2	rounded polycrystals					nan	NaN		8	38.1		1	-8.7		8	2
+3	2	6	faceted	hoar frost		0.5	1	nan	NaN		12	38		4	-3		11	3
+4	6	8.5	melt refreeze			1	4	nan	NaN		21	42.4		8	-2		14	4
+5	8.5	10	faceted			0.5	1	nan	NaN		24	38.8		11.5	-1.2		21	5
+6	10		ice layer					nan	NaN		30	38.3		15	-0.9		24	6
+7	10	11	melt refreeze	rounded faceted		0.5	1	nan	NaN					17	-0.7		30	7
+8	11		ice layer					nan	NaN					23	-0.5		36	8
+9	11	12	melt refreeze	rounded faceted		0.5	1	nan	NaN					38	-0.6			
+10	12		ice layer					nan	NaN					39	0			
+11	12	13.5	melt refreeze	rounded faceted		0.5	1	nan	NaN									
+12	13.5		ice layer					nan	NaN									
+13	13.5	15	melt refreeze	rounded faceted		0.5	1	nan	NaN									
+14	15		ice layer					nan	NaN									
+15	15	16.5	melt refreeze	rounded faceted		0.5	1	nan	NaN									
+16	16.5		ice layer				4	nan	NaN									
+17	16.5	18	melt refreeze	rounded faceted		0.2	0.5	nan	NaN									
+18	18		ice layer			3	4	nan	NaN									
+19	18	22	melt refreeze	rounded faceted		0.2	0.5	nan	NaN									
+20	22	27	rounded polycrystals			0.5	1	nan	NaN									
+21	27	38	rounded polycrystals			2	4	nan	NaN									
+22	38	39	slush					nan	NaN									

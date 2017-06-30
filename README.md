@@ -5,8 +5,6 @@ LAST MODIFIED: June 2017 (or see date on github file history)
 
 Feel free to contribute to the project!!!! Many new features can be added...
 
-WARNING: will not compile. create new branch for development!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 ## To do:
 
 ### High Priority
@@ -28,7 +26,7 @@ WARNING: will not compile. create new branch for development!!!!!!!!!!!!!!!!!!!!
 The objective of this library is to provide visualization tool for snowpit data. 
 Started for the need of the Svalbard Snow Research group, this package should evolve
  to include more snowpit type and visualization scheme. 
- 
+
 The snow grain classification follows the guidelines provided by the UNESCO 
 [International Classification for Seasonal Snow on the Ground](http://unesdoc.unesco.org/images/0018/001864/186462e.pdf) 
 (Fierz et al., 2009)
@@ -63,6 +61,7 @@ Python 2.7.9 with the following libraries:
 - [numpy](http://www.numpy.org/)
 - [matplotlib](http://matplotlib.org/)
 - [pandas](http://pandas.pydata.org/)
+- xlrd
 
 ## Use
 

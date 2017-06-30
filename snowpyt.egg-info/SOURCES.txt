@@ -3,9 +3,11 @@ README.md
 setup.cfg
 setup.py
 snowpyt/Example.py
+snowpyt/JC_pit_class.py
 snowpyt/Standard_pit.png
 snowpyt/__init__.py
 snowpyt/pit_class.py
+snowpyt/xslx_import.py
 snowpyt.egg-info/PKG-INFO
 snowpyt.egg-info/SOURCES.txt
 snowpyt.egg-info/dependency_links.txt
@@ -13,6 +15,8 @@ snowpyt.egg-info/requires.txt
 snowpyt.egg-info/top_level.txt
 snowpyt/data_example/20161216_snowpit.csv
 snowpyt/data_example/20161216_snowpit.xlsx
+snowpyt/data_example/20170209_Finse_snowpit.csv
+snowpyt/data_example/20170209_Finse_snowpit.xlsx
 snowpyt/data_example/Standard_pit.xlsx
 snowpyt/snowflake/chains_of_depth_hoar.png
 snowpyt/snowflake/cluster_rounded.png
