@@ -11,16 +11,11 @@ WARNING: will not compile. create new branch for development!!!!!!!!!!!!!!!!!!!!
 
 ### High Priority
 
-- write function to save and load pit to and from pickle format
-- Include option to add chemical sample name to pit
-- Check if the list of symbols is complete in reference to Fierz et al. 2009
+- write function to save and load pit to and from pickle format (currently not working)
 - reorganize package example, standard excel and csv snowpit file
 - make ground appear to comfirm the user that the pit reached ground. add note about ground type.
-- in the summary plot only display panels for the variable available in the input data file
 
 ### Low priority 
-- add option to load pit directly from excel file .xslx
-- improve the final layout (e.g. overlapping snowflake symbol)
 - specify the figure size and adjust font size in respect
 - render the medatadata text better
 - put option to adjust figure size to desired size and dpi

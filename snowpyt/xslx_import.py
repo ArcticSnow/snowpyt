@@ -78,6 +78,12 @@ get_cell_val_str(sh, 0, 1)
 import pandas as pd
 profile_raw_table = pd.read_excel(file,sheet=sh, skiprows=int(values.get('Stra'))+1, engine='xlrd')
 
+plots_order=['temperature', 'stratigraphy', 'hardness', 'crystal size', 'density']
+plots_dict = {'temperature':1,
+                            'density':2,
+                            'stratigraphy':3,
+                            'hardness':4,
+                            'crystal size':5}
 
 
 
