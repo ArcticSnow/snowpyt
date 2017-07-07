@@ -74,6 +74,7 @@ Once you have cloned the project to your home directory, create a git branch and
 
 ### List of Contributor
 - Simon Filhol
+- Guillaume Sutter
 - [add your name]
 
 ## Example

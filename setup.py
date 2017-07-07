@@ -26,7 +26,7 @@ setup(
     url='https://github.com/ArcticSnow/snowpyt.git',
 
     # Author details
-    author='Simon Filhol',
+    author='Simon Filhol','Guillaume Sutter'
     author_email='simon.filhol@geo.uio.no',
 
     # Choose your license
@@ -67,7 +67,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['matplotlib', 'pandas', 'numpy', 'xlrd'],
+    install_requires=['matplotlib', 'pandas', 'numpy', 'xlrd', 'xml'],
 
     include_package_data=True
 

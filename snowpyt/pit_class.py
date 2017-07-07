@@ -54,17 +54,126 @@ snowflake_dict = {'faceted':'snowpyt/snowflake/faceted.png',
                   'chains of depth hoar':'snowpyt/snowflake/chains_of_depth_hoar.png',
                   'near surface faceted':'snowpyt/snowflake/near_surface_faceted.png'}
 
+class layer(object):
+    def __init__(self):
+        self.dtop = None
+        self.dtop_unit = None
+        self.dbot = None
+        self.thickness = None
+        self.thickness_unit = None
+        self.grain_type1 = None
+        self.grain_type2 = None
+        self.grain_type3 = None
+        self.grain_size_unit = None
+        self.grain_size_avg = None
+        self.grain_size_max = None
+        self.hardness = None
+        self.lwc = None
+        self.id = None
+
+        # # wrong syntax. Check how to have a automatic update of the following fields within the class:
+        # if (self.dtop is not None) and (self.thickness is not None):
+        #     self.dbot = self.dtop - self.thickness
+        #
+        # if (self.dtop is not None) and (self.dbot is not None):
+        #     self.thickness = self.dtop - self.dbot
+
+        # derive hardness code automatically
+
+    def __str__(self):
+        return "-----layer object-----\ndepthTop={}{}\nthickness={}{}\ngrainFormPrimary={}\ngrainFormSecondary={}\ngrainSize\n\tavg={}{}\n\tavgMax={}{}\nhardness={}\nlwc={}".format(
+            self.dtop, self.dtop_unit, self.thickness, self.thickness_unit, self.grain_type1, self.grain_type2,
+            self.grain_size_avg, self.grain_size_unit, self.grain_size_max, self.grain_size_unit, self.hardness,
+            self.lwc)
+
+class temperature_profile(object):
+    def __init__(self):
+        self.depth = []
+        self.depth_unit = None
+        self.temp = []
+        self.temp_unit = None
+
+    def __str__(self):
+        return "-----temperature profile-----\ndepth={} {}\ntemp={} {}".format(self.depth, self.depth_unit, self.temp,
+                                                                               self.temp_unit)
+
+class density_profile(object):
+    def __init__(self):
+        self.depth = []
+        self.depth_unit = None
+        self.thickness = []
+        self.thickness_unit = None
+        self.density = []
+        self.density_unit = None
+
+    def __str__(self):
+        return "-----density profile-----\ndepth={} {}\nthickness={} {}\ndensity={} {}".format(self.depth,
+                                                                                               self.depth_unit,
+                                                                                               self.thickness,
+                                                                                               self.thickness_unit,
+                                                                                               self.density,
+                                                                                               self.density_unit)
+
+class metadata(object):
+    def __init__(self):
+        self.date = None
+        self.time = None
+        self.operation = None
+        self.observer = None
+        self.profile_depth = None
+        self.profile_depth_unit = None
+        self.location_description = None
+        self.srsName = None
+        self.east = None
+        self.north = None
+        self.elevation = None
+        self.elevation_unit = None
+        self.sky_condition = None
+        self.precipitation = None
+        self.air_temperature = None
+        self.air_temperature_unit = None
+        self.windspeed = None
+        self.windspeed_unit = None
+        self.comments = None
+
+    def __str__(self):
+        return "-----metadata-----\ndate={}\noperation={}\nobserver={}\nprofile depth={} {}\nlocation description={}\nsrs name={}\nE={}\nN={}\nelevation={} {}\nsky condition={}\nprecipitation={}\nair temperature={} {}\nwindspeed={} {}\ncomments={}".format(
+            self.date, self.operation, self.observer, self.profile_depth, self.profile_depth_unit,
+            self.location_description, self.srsName, self.east, self.north, self.elevation, self.elevation_unit,
+            self.sky_condition, self.precipitation, self.air_temperature, self.air_temperature_unit, self.windspeed,
+            self.windspeed_unit, self.comments)
+
+
 class Snowpit(object):
 
+    # try to modify the snowpit class to use medata, layers and profile as class object
     def __init__(self):
-        self.date = '2001/08/10'
-        self.East = 0
-        self.North = 0
-        self.Elevation = 0
-        self.Observer = 'Bob'
-        self.AirTemp = np.nan
-        self.filename = 'example.txt'
         self.snowflakeDICT = snowflake_dict
+        self.filename = None
+
+    def load_metadata(self):
+
+    def load_temperature(self):
+
+    def load_density(self):
+
+    def load_layers(self):
+
+    def import_xml(self):
+        # Load data using functions
+
+    def import_csv(self):
+
+    def import_xlsx(self):
+
+    #==========================
+
+    def plot(self):
+
+    def print_metadata(self):
+
+    def print_layers(self):
+
 
 class Snowpit_standard(object):
     '''

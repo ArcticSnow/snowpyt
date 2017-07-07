@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SnowProfile xmlns="http://caaml.org/Schemas/V5.0/Profiles/SnowProfileIACS" xmlns:gml="http://www.opengis.net/gml" xmlns:app="http://www.snowpilot.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://caaml.org/Schemas/V5.0/Profiles/SnowProfileIACS http://caaml.avisualanche.ca/Schemas/V5.0/Profiles/SnowprofileIACS/CAAMLv5_SnowProfileIACS.xsd" gml:id="SLF7245">
+  <metaDataProperty>
+    <MetaData>
+      <!--NEW: dateTimeReport new required element-->
+      <dateTimeReport>Thu Jun 30 13:12:50 CEST 2016</dateTimeReport>
+      <srcRef>
+        <Operation>
+          <name>SnowPilot</name>
+          <contactPerson>
+            -
+            <Person gml:id="PersonID01">
+              <name>Sigurd Jordet</name>
+            </Person>
+          </contactPerson>
+        </Operation>
+      </srcRef>
+    </MetaData>
+  </metaDataProperty>
+  <!--Observation time-->
+  <validTime>
+    <TimeInstant>
+      <timePosition>Thu Mar 31 17:00:00 CEST 2016</timePosition>
+    </TimeInstant>
+  </validTime>
+  <!--Observation elements-->
+  <snowProfileResultsOf>
+    <SnowProfileMeasurements dir="top down">
+      <!--General Comment-->
+      <comment />
+      <!--Header information-->
+      <profileDepth uom="cm">116.0</profileDepth>
+      <skyCond>SCT</skyCond>
+      <precipTI>SCT</precipTI>
+      <airTempPres uom="degC">-6.8</airTempPres>
+      <windSpd uom="mph">20</windSpd>
+      <windDir>
+        <AspectPosition>
+          <position>S</position>
+        </AspectPosition>
+      </windDir>
+      <hS>
+        <Components>
+          <snowHeight uom="cm">221</snowHeight>
+        </Components>
+      </hS>
+      <penetrationSki uom="cm" />
+      <penetrationBoot uom="cm" />
+      <stratProfile dir="bottom up">
+        <Layer>
+          <depthTop uom="cm">88.0</depthTop>
+          <thickness uom="cm">88.0</thickness>
+          <grainFormPrimary />
+          <grainSize uom="mm">
+            <Components>
+              <avg>1.0</avg>
+              <avgMax>1.0</avgMax>
+            </Components>
+          </grainSize>
+          <hardness>K-P</hardness>
+          <lwc>D</lwc>
+        </Layer>
+        <Layer>
+          <depthTop uom="cm">94.0</depthTop>
+          <thickness uom="cm">6.0</thickness>
+          <grainFormPrimary>RG</grainFormPrimary>
+          <grainSize uom="mm">
+            <Components>
+              <avg>1.5</avg>
+              <avgMax>2.0</avgMax>
+            </Components>
+          </grainSize>
+          <hardness>P</hardness>
+          <lwc>D</lwc>
+        </Layer>
+        <Layer>
+          <depthTop uom="cm">110.0</depthTop>
+          <thickness uom="cm">16.0</thickness>
+          <grainFormPrimary>RG</grainFormPrimary>
+          <grainSize uom="mm">
+            <Components>
+              <avg>0.75</avg>
+              <avgMax>1.0</avgMax>
+            </Components>
+          </grainSize>
+          <hardness>P</hardness>
+          <lwc>D</lwc>
+        </Layer>
+        <Layer>
+          <depthTop uom="cm">111.0</depthTop>
+          <thickness uom="cm">1.0</thickness>
+          <grainFormPrimary />
+          <hardness>K</hardness>
+          <lwc>D</lwc>
+        </Layer>
+        <Layer>
+          <depthTop uom="cm">143.0</depthTop>
+          <thickness uom="cm">32.0</thickness>
+          <grainFormPrimary>RG</grainFormPrimary>
+          <grainSize uom="mm">
+            <Components>
+              <avg>0.4</avg>
+              <avgMax>0.5</avgMax>
+            </Components>
+          </grainSize>
+          <hardness>P</hardness>
+          <lwc>D</lwc>
+        </Layer>
+        <Layer>
+          <depthTop uom="cm">145.0</depthTop>
+          <thickness uom="cm">2.0</thickness>
+          <grainFormPrimary />
+          <hardness>K</hardness>
+          <lwc>D</lwc>
+        </Layer>
+        <Layer>
+          <depthTop uom="cm">169.0</depthTop>
+          <thickness uom="cm">24.0</thickness>
+          <grainFormPrimary>RG</grainFormPrimary>
+          <grainSize uom="mm">
+            <Components>
+              <avg>0.4</avg>
+              <avgMax>0.5</avgMax>
+            </Components>
+          </grainSize>
+          <hardness>P</hardness>
+          <lwc>D</lwc>
+        </Layer>
+        <Layer>
+          <depthTop uom="cm">205.0</depthTop>
+          <thickness uom="cm">36.0</thickness>
+          <grainFormPrimary>RG</grainFormPrimary>
+          <grainSize uom="mm">
+            <Components>
+              <avg>0.5</avg>
+              <avgMax>0.5</avgMax>
+            </Components>
+          </grainSize>
+          <hardness>1F</hardness>
+          <lwc>D</lwc>
+        </Layer>
+        <Layer>
+          <depthTop uom="cm">207.0</depthTop>
+          <thickness uom="cm">2.0</thickness>
+          <grainFormPrimary />
+          <hardness>K</hardness>
+          <lwc>D</lwc>
+        </Layer>
+        <Layer>
+          <depthTop uom="cm">210.0</depthTop>
+          <thickness uom="cm">3.0</thickness>
+          <grainFormPrimary>RG</grainFormPrimary>
+          <grainSize uom="mm">
+            <Components>
+              <avg>0.5</avg>
+              <avgMax>0.5</avgMax>
+            </Components>
+          </grainSize>
+          <hardness>1F</hardness>
+          <lwc>D</lwc>
+        </Layer>
+        <Layer>
+          <depthTop uom="cm">212.0</depthTop>
+          <thickness uom="cm">2.0</thickness>
+          <grainFormPrimary>IMil</grainFormPrimary>
+          <hardness>K</hardness>
+          <lwc>D</lwc>
+        </Layer>
+        <Layer>
+          <depthTop uom="cm">221.0</depthTop>
+          <thickness uom="cm">9.0</thickness>
+          <grainFormPrimary />
+          <grainSize uom="mm">
+            <Components>
+              <avg>0.2</avg>
+              <avgMax>0.3</avgMax>
+            </Components>
+          </grainSize>
+          <hardness>F</hardness>
+          <lwc>D</lwc>
+        </Layer>
+      </stratProfile>
+      <!--Temperature profile-->
+      <tempProfile uomDepth="cm" uomTemp="degC">
+        <Obs>
+          <depth>0</depth>
+          <snowTemp>-1</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>221</depth>
+          <snowTemp>-7</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>190</depth>
+          <snowTemp>-4.5</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>160</depth>
+          <snowTemp>-3</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>130</depth>
+          <snowTemp>-3</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>100</depth>
+          <snowTemp>-2.5</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>70</depth>
+          <snowTemp>-2</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>40</depth>
+          <snowTemp>-2</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>10</depth>
+          <snowTemp>-1</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>200</depth>
+          <snowTemp>-5</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>170</depth>
+          <snowTemp>-3.5</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>140</depth>
+          <snowTemp>-3</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>110</depth>
+          <snowTemp>-3</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>80</depth>
+          <snowTemp>-2.5</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>50</depth>
+          <snowTemp>-2</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>20</depth>
+          <snowTemp>-1.5</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>210</depth>
+          <snowTemp>-4.5</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>180</depth>
+          <snowTemp>-4</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>150</depth>
+          <snowTemp>-3</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>120</depth>
+          <snowTemp>-3</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>90</depth>
+          <snowTemp>-2.5</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>60</depth>
+          <snowTemp>-2</snowTemp>
+        </Obs>
+        <Obs>
+          <depth>30</depth>
+          <snowTemp>-2</snowTemp>
+        </Obs>
+      </tempProfile>
+      <!--Density Profile-->
+      <densityProfile uomDepthTop="cm" uomThickness="cm" uomDensity="kgm-3">
+        <Layer>
+          <depthTop />
+          <thickness />
+          <density />
+        </Layer>
+        <Layer>
+          <depthTop />
+          <thickness />
+          <density />
+        </Layer>
+      </densityProfile>
+      <stbTests xmlns="">
+        <ExtColumnTest>
+          <noFailure />
+        </ExtColumnTest>
+      </stbTests>
+    </SnowProfileMeasurements>
+  </snowProfileResultsOf>
+  <!--Location information-->
+  <locRef>
+    <ObsPoint>
+      <name>Finse (Berndt)</name>
+      <validElevation>
+        <ElevationPosition uom="m">
+          <position>1336</position>
+        </ElevationPosition>
+      </validElevation>
+      <validAspect>
+        <AspectPosition>
+          <position>S</position>
+        </AspectPosition>
+      </validAspect>
+      <validSlopeAngle>
+        <SlopeAnglePosition uom="deg">
+          <position>15</position>
+        </SlopeAnglePosition>
+      </validSlopeAngle>
+      <!--GML compliant encoded location coordinates in lat-lon-->
+      <pointLocation>
+        <!--NEW: srsDimension attribute now required-->
+        <gml:Point srsDimension="2">
+          <gml:pos />
+        </gml:Point>
+      </pointLocation>
+    </ObsPoint>
+  </locRef>
+</SnowProfile>
+
