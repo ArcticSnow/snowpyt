@@ -5,16 +5,18 @@ File defining a python class for snowpit data
 
 November 2016, Simon Filhol
 '''
+
 from __future__ import division
 import pickle
 import numpy as np
 import pandas as pd
+import xlrd
+import CAAML_xml as cx
+
 from matplotlib import pyplot as plt
 import matplotlib.cm as cm
 from matplotlib.offsetbox import AnnotationBbox, OffsetImage
-from matplotlib._png import read_png
 from matplotlib.ticker import MaxNLocator
-import xlrd
 
 snowflake_dict = {'faceted':'snowpyt/snowflake/faceted.png',
                   'wind packed':'snowpyt/snowflake/wind_packed.png',
@@ -112,7 +114,13 @@ class density_profile(object):
                                                                                                self.thickness,
                                                                                                self.thickness_unit,
                                                                                                self.density,
-                                                                                               self.density_unit)
+                                                                                    self.density_unit)
+
+class sample_profile(object):
+    def __init__(self):
+        self.depth = []
+        self.sample_name = []
+        self.comments = None
 
 class metadata(object):
     def __init__(self):
@@ -125,7 +133,9 @@ class metadata(object):
         self.location_description = None
         self.srsName = None
         self.east = None
+        self.east_unit = None
         self.north = None
+        self.north_unit = None
         self.elevation = None
         self.elevation_unit = None
         self.sky_condition = None
@@ -143,13 +153,33 @@ class metadata(object):
             self.sky_condition, self.precipitation, self.air_temperature, self.air_temperature_unit, self.windspeed,
             self.windspeed_unit, self.comments)
 
-
 class Snowpit(object):
 
     # try to modify the snowpit class to use medata, layers and profile as class object
     def __init__(self):
         self.snowflakeDICT = snowflake_dict
         self.filename = None
+        self.metadata = metadata()
+        self.temperature_profile = temperature_profile()
+        self.density_profile = density_profile()
+        self.sample_profile = sample_profile()
+
+    def import_xml(self):
+        # Load metadata
+        self.metadata = cx.get_metadata(self.filename)
+
+        # load temperature profile
+        self.temperature_profile = cx.get_temperature(self.filename)
+
+        # load density profile
+        self.density_profile = cx.get_density()
+
+        # load layers
+        self.layers = cx.get_layers(self.filename)
+
+    def import_xlsx(self):
+
+    def import_csv(self):
 
     def load_metadata(self):
 
@@ -159,12 +189,6 @@ class Snowpit(object):
 
     def load_layers(self):
 
-    def import_xml(self):
-        # Load data using functions
-
-    def import_csv(self):
-
-    def import_xlsx(self):
 
     #==========================
 

@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="290ef6ec-b4b7-4c98-964b-6c2005758c8f" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/snowpyt/data_example/20160331_finse.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/snowpyt/CAAML_xml.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/snowpyt/data_example/20160331_finse.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/snowpyt/data_example/test_xml_loading.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/snowpyt/snowpyt_xlsx.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/snowpyt/parse_xlsx.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/setup.py" afterPath="$PROJECT_DIR$/setup.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/snowpyt/CAAML_xml.py" afterPath="$PROJECT_DIR$/snowpyt/CAAML_xml.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/snowpyt/data_example/20160331_finse.xml" afterPath="$PROJECT_DIR$/snowpyt/data_example/20160331_finse.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/snowpyt/pit_class.py" afterPath="$PROJECT_DIR$/snowpyt/pit_class.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -53,32 +49,33 @@
           <file leaf-file-name="pit_class.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/snowpyt/pit_class.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="375">
-                  <caret line="175" column="0" lean-forward="false" selection-start-line="175" selection-start-column="0" selection-end-line="175" selection-end-column="0" />
+                <state relative-caret-position="1675">
+                  <caret line="637" column="5" lean-forward="true" selection-start-line="637" selection-start-column="5" selection-end-line="638" selection-end-column="42" />
                   <folding>
-                    <element signature="e#102#133#0" expanded="true" />
-                    <element signature="e#421#3050#0" expanded="false" />
-                    <element signature="e#4418#4783#0" expanded="false" />
-                    <element signature="e#4820#5709#0" expanded="false" />
-                    <element signature="e#5739#7022#0" expanded="false" />
-                    <element signature="e#7053#7585#0" expanded="false" />
-                    <element signature="e#7743#8159#0" expanded="false" />
-                    <element signature="e#8361#20402#0" expanded="false" />
-                    <element signature="e#11761#12600#0" expanded="false" />
-                    <element signature="e#12648#13520#0" expanded="false" />
-                    <element signature="e#13569#16583#0" expanded="false" />
-                    <element signature="e#16628#17162#0" expanded="false" />
-                    <element signature="e#17210#18243#0" expanded="false" />
-                    <element signature="e#18292#19144#0" expanded="false" />
-                    <element signature="e#19179#20097#0" expanded="false" />
-                    <element signature="e#20444#20789#0" expanded="false" />
-                    <element signature="e#20827#21118#0" expanded="false" />
-                    <element signature="e#22477#22749#0" expanded="false" />
-                    <element signature="e#22788#24111#0" expanded="false" />
-                    <element signature="e#25521#25659#0" expanded="false" />
-                    <element signature="e#27473#28204#0" expanded="false" />
-                    <element signature="e#28251#28364#0" expanded="false" />
-                    <element signature="e#28411#28536#0" expanded="false" />
+                    <element signature="e#103#134#0" expanded="true" />
+                    <element signature="e#409#3038#0" expanded="false" />
+                    <element signature="e#3065#4365#0" expanded="false" />
+                    <element signature="e#4808#5686#0" expanded="false" />
+                    <element signature="e#5722#5824#0" expanded="false" />
+                    <element signature="e#5854#7198#0" expanded="false" />
+                    <element signature="e#7344#7596#0" expanded="false" />
+                    <element signature="e#8409#8825#0" expanded="false" />
+                    <element signature="e#9027#21068#0" expanded="false" />
+                    <element signature="e#12427#13266#0" expanded="false" />
+                    <element signature="e#13314#14186#0" expanded="false" />
+                    <element signature="e#14235#17249#0" expanded="false" />
+                    <element signature="e#17294#17828#0" expanded="false" />
+                    <element signature="e#17876#18909#0" expanded="false" />
+                    <element signature="e#18958#19810#0" expanded="false" />
+                    <element signature="e#19845#20763#0" expanded="false" />
+                    <element signature="e#21110#21455#0" expanded="false" />
+                    <element signature="e#21493#21784#0" expanded="false" />
+                    <element signature="e#21819#21986#0" expanded="false" />
+                    <element signature="e#23143#23415#0" expanded="false" />
+                    <element signature="e#23454#24777#0" expanded="false" />
+                    <element signature="e#28139#28870#0" expanded="false" />
+                    <element signature="e#28917#29030#0" expanded="false" />
+                    <element signature="e#29077#29202#0" expanded="false" />
                   </folding>
                 </state>
               </provider>
@@ -94,27 +91,42 @@
               </provider>
             </entry>
           </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
           <file leaf-file-name="CAAML_xml.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/snowpyt/CAAML_xml.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="240">
-                  <caret line="16" column="4" lean-forward="false" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="28" />
+                <state relative-caret-position="267">
+                  <caret line="80" column="4" lean-forward="true" selection-start-line="80" selection-start-column="4" selection-end-line="80" selection-end-column="39" />
                   <folding>
                     <element signature="e#182#204#0" expanded="true" />
-                    <element signature="e#2309#4487#0" expanded="false" />
-                    <element signature="e#4524#5377#0" expanded="false" />
-                    <element signature="e#5410#6505#0" expanded="false" />
-                    <element signature="e#6526#6729#0" expanded="false" />
+                    <element signature="e#261#2278#0" expanded="false" />
+                    <element signature="e#2310#4488#0" expanded="false" />
+                    <element signature="e#5411#6506#0" expanded="false" />
+                    <element signature="e#6527#6730#0" expanded="false" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="snowpyt_xlsx.py" pinned="false" current-in-tab="true">
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="parse_xlsx.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/snowpyt/parse_xlsx.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="197">
+                  <caret line="93" column="0" lean-forward="true" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#262#293#0" expanded="true" />
+                    <element signature="e#389#963#0" expanded="false" />
+                    <element signature="e#1291#1565#0" expanded="false" />
+                    <element signature="e#1597#2980#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="snowpyt_xlsx.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/snowpyt/snowpyt_xlsx.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="522">
@@ -162,9 +174,10 @@
         <option value="$PROJECT_DIR$/setup.py" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/snowpyt/data_example/test_xml_loading.py" />
-        <option value="$PROJECT_DIR$/snowpyt/CAAML_xml.py" />
         <option value="$PROJECT_DIR$/snowpyt/snowpyt_xlsx.py" />
+        <option value="$PROJECT_DIR$/snowpyt/CAAML_xml.py" />
         <option value="$PROJECT_DIR$/snowpyt/pit_class.py" />
+        <option value="$PROJECT_DIR$/snowpyt/parse_xlsx.py" />
       </list>
     </option>
   </component>
@@ -212,24 +225,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="snowpyt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="snowpyt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="snowpyt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="snowpyt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data_example" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -426,7 +421,14 @@
       <option name="project" value="LOCAL" />
       <updated>1496993189987</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="broke main class to multiple small one: Layer, metadata ...&#10;====&#10;work in progress">
+      <created>1499434248216</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1499434248216</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TodoView">
@@ -440,8 +442,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="4" y="23" width="1276" height="777" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24878444" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11264182" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34014598" sideWeight="0.512966" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -469,47 +472,16 @@
     <MESSAGE value="more ribust column reading from csv file" />
     <MESSAGE value="column name" />
     <MESSAGE value="not much" />
-    <option name="LAST_COMMIT_MESSAGE" value="not much" />
+    <MESSAGE value="broke main class to multiple small one: Layer, metadata ...&#10;====&#10;work in progress" />
+    <option name="LAST_COMMIT_MESSAGE" value="broke main class to multiple small one: Layer, metadata ...&#10;====&#10;work in progress" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="10" />
+      <option name="time" value="11" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/snowpyt/pit_class.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2178">
-          <caret line="121" column="10" lean-forward="false" selection-start-line="121" selection-start-column="10" selection-end-line="121" selection-end-column="10" />
-          <folding>
-            <element signature="e#102#133#0" expanded="true" />
-            <element signature="e#421#3050#0" expanded="false" />
-            <element signature="e#4418#4783#0" expanded="false" />
-            <element signature="e#4820#5709#0" expanded="false" />
-            <element signature="e#5739#7022#0" expanded="false" />
-            <element signature="e#7053#7585#0" expanded="false" />
-            <element signature="e#7743#8159#0" expanded="false" />
-            <element signature="e#8361#20402#0" expanded="false" />
-            <element signature="e#11761#12600#0" expanded="false" />
-            <element signature="e#12648#13520#0" expanded="false" />
-            <element signature="e#13569#16583#0" expanded="false" />
-            <element signature="e#16628#17162#0" expanded="false" />
-            <element signature="e#17210#18243#0" expanded="false" />
-            <element signature="e#18292#19144#0" expanded="false" />
-            <element signature="e#19179#20097#0" expanded="false" />
-            <element signature="e#20444#20789#0" expanded="false" />
-            <element signature="e#20827#21118#0" expanded="false" />
-            <element signature="e#22477#22749#0" expanded="false" />
-            <element signature="e#22788#24111#0" expanded="false" />
-            <element signature="e#25521#25659#0" expanded="false" />
-            <element signature="e#27473#28204#0" expanded="false" />
-            <element signature="e#28251#28364#0" expanded="false" />
-            <element signature="e#28411#28536#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/snowpyt/data_example/finse_pit.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="108">
@@ -767,20 +739,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/snowpyt/CAAML_xml.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="4" lean-forward="false" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="28" />
-          <folding>
-            <element signature="e#182#204#0" expanded="true" />
-            <element signature="e#2309#4487#0" expanded="false" />
-            <element signature="e#4524#5377#0" expanded="false" />
-            <element signature="e#5410#6505#0" expanded="false" />
-            <element signature="e#6526#6729#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/snowpyt/snowpyt_xlsx.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="522">
@@ -794,34 +752,62 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/snowpyt/CAAML_xml.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="80" column="4" lean-forward="true" selection-start-line="80" selection-start-column="4" selection-end-line="80" selection-end-column="39" />
+          <folding>
+            <element signature="e#182#204#0" expanded="true" />
+            <element signature="e#261#2278#0" expanded="false" />
+            <element signature="e#2310#4488#0" expanded="false" />
+            <element signature="e#5411#6506#0" expanded="false" />
+            <element signature="e#6527#6730#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/snowpyt/pit_class.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="175" column="0" lean-forward="false" selection-start-line="175" selection-start-column="0" selection-end-line="175" selection-end-column="0" />
+        <state relative-caret-position="1675">
+          <caret line="637" column="5" lean-forward="true" selection-start-line="637" selection-start-column="5" selection-end-line="638" selection-end-column="42" />
           <folding>
-            <element signature="e#102#133#0" expanded="true" />
-            <element signature="e#421#3050#0" expanded="false" />
-            <element signature="e#4418#4783#0" expanded="false" />
-            <element signature="e#4820#5709#0" expanded="false" />
-            <element signature="e#5739#7022#0" expanded="false" />
-            <element signature="e#7053#7585#0" expanded="false" />
-            <element signature="e#7743#8159#0" expanded="false" />
-            <element signature="e#8361#20402#0" expanded="false" />
-            <element signature="e#11761#12600#0" expanded="false" />
-            <element signature="e#12648#13520#0" expanded="false" />
-            <element signature="e#13569#16583#0" expanded="false" />
-            <element signature="e#16628#17162#0" expanded="false" />
-            <element signature="e#17210#18243#0" expanded="false" />
-            <element signature="e#18292#19144#0" expanded="false" />
-            <element signature="e#19179#20097#0" expanded="false" />
-            <element signature="e#20444#20789#0" expanded="false" />
-            <element signature="e#20827#21118#0" expanded="false" />
-            <element signature="e#22477#22749#0" expanded="false" />
-            <element signature="e#22788#24111#0" expanded="false" />
-            <element signature="e#25521#25659#0" expanded="false" />
-            <element signature="e#27473#28204#0" expanded="false" />
-            <element signature="e#28251#28364#0" expanded="false" />
-            <element signature="e#28411#28536#0" expanded="false" />
+            <element signature="e#103#134#0" expanded="true" />
+            <element signature="e#409#3038#0" expanded="false" />
+            <element signature="e#3065#4365#0" expanded="false" />
+            <element signature="e#4808#5686#0" expanded="false" />
+            <element signature="e#5722#5824#0" expanded="false" />
+            <element signature="e#5854#7198#0" expanded="false" />
+            <element signature="e#7344#7596#0" expanded="false" />
+            <element signature="e#8409#8825#0" expanded="false" />
+            <element signature="e#9027#21068#0" expanded="false" />
+            <element signature="e#12427#13266#0" expanded="false" />
+            <element signature="e#13314#14186#0" expanded="false" />
+            <element signature="e#14235#17249#0" expanded="false" />
+            <element signature="e#17294#17828#0" expanded="false" />
+            <element signature="e#17876#18909#0" expanded="false" />
+            <element signature="e#18958#19810#0" expanded="false" />
+            <element signature="e#19845#20763#0" expanded="false" />
+            <element signature="e#21110#21455#0" expanded="false" />
+            <element signature="e#21493#21784#0" expanded="false" />
+            <element signature="e#21819#21986#0" expanded="false" />
+            <element signature="e#23143#23415#0" expanded="false" />
+            <element signature="e#23454#24777#0" expanded="false" />
+            <element signature="e#28139#28870#0" expanded="false" />
+            <element signature="e#28917#29030#0" expanded="false" />
+            <element signature="e#29077#29202#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/snowpyt/parse_xlsx.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="197">
+          <caret line="93" column="0" lean-forward="true" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
+          <folding>
+            <element signature="e#262#293#0" expanded="true" />
+            <element signature="e#389#963#0" expanded="false" />
+            <element signature="e#1291#1565#0" expanded="false" />
+            <element signature="e#1597#2980#0" expanded="false" />
           </folding>
         </state>
       </provider>

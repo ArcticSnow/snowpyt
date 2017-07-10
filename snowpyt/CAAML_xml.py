@@ -15,6 +15,7 @@ def get_metadata(path_xml):
     DOMTree = xml.dom.minidom.parse(path_xml)
     Tree = DOMTree.documentElement
     Metadata = pc.metadata()
+
     Metadata.date = Tree.getElementsByTagName("timePosition")[0].firstChild.nodeValue
     Metadata.operation = Tree.getElementsByTagName("Operation")[0].childNodes[1].firstChild.nodeValue
     Metadata.observer = Tree.getElementsByTagName("Operation")[0].childNodes[3].childNodes[1].childNodes[
