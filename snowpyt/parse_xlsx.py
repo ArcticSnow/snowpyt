@@ -12,6 +12,12 @@ Collection of functions to import snowpit data stored in the xlsx file format
 
 """
 from __future__ import division
+import sys
+
+sys.path.append('/Users/tintino/github/snowpyt/snowpyt/')
+
+
+
 import xlrd
 import pit_class as pc
 import pandas as pd
@@ -46,67 +52,108 @@ def get_cell_val_str(sh, cRrow, cCol):
     # value.value = np.nan
     return str(value.value)
 
-def open_xlsx(path_xlsx, sheet=None):
+def open_xlsx(path_xlsx, sheetName=None):
 
     if path_xlsx[-4:] != 'xlsx':
             print 'Input file is not of .xlsx format'
             return
 
     wb = xlrd.open_workbook(path_xlsx)
+    print '.xlsx file contains spreadsheets: '
     print wb.sheet_names()
-    if sheet is None:
-        sheet = wb.sheet_names()[0]
-    sh = wb.sheet_by_name(sheet)
+    if sheetName is None:
+        sheetName = wb.sheet_names()[0]
+    sh = wb.sheet_by_name(sheetName)
 
     return sh
 
-def get_metadata(sheet):
+def get_metadata(sh):
 
     Metadata = pc.metadata()
     # Load metadata:
     fields = ['East', 'Nort', 'Elev', 'Date', 'Obse', 'Loca', 'Air ', 'Weat', 'Comm', 'Snow', 'Time', 'Gene',
               'Stra']
-    values = find_row_with_values(sheet, fields)
+    values = find_row_with_values(sh, fields)
 
-    Metadata.date = get_cell_val_str(sheet, values.get('Date'), 1)
-    Metadata.time = get_cell_val_str(sheet, values.get('Time'), 1)
-    Metadata.location_description = get_cell_val_str(sheet, values.get('Gene'), 1)
-    Metadata.east = get_cell_val_str(sheet, values.get('East'), 1)
-    Metadata.east_unit = get_cell_val_str(sheet, values.get('East'), 2)
-    Metadata.north = get_cell_val_str(sheet, values.get('Nort'), 1)
-    Metadata.north_unit = get_cell_val_str(sheet, values.get('Nort'), 2)
-    Metadata.elevation = get_cell_val_str(sheet, values.get('Elev'), 1)
-    Metadata.elevation_unit = get_cell_val_str(sheet, values.get('Elev'), 2)
-    Metadata.observer = get_cell_val_str(sheet, values.get('Obse'), 1)
-    Metadata.air_temperature = get_cell_val_str(sheet, values.get('Air '), 1)
-    Metadata.air_temperature_unit = get_cell_val_str(sheet, values.get('Air '), 2)
-    Metadata.sky_conditions = get_cell_val_str(sheet, values.get('Weat'), 1)
-    Metadata.comments = get_cell_val_str(sheet, values.get('Comm'), 1)
+    Metadata.date = get_cell_val_str(sh, values.get('Date'), 1)
+    Metadata.time = get_cell_val_str(sh, values.get('Time'), 1)
+    Metadata.location_description = get_cell_val_str(sh, values.get('Gene'), 1)
+    Metadata.east = get_cell_val_str(sh, values.get('East'), 1)
+    Metadata.east_unit = get_cell_val_str(sh, values.get('East'), 2)
+    Metadata.north = get_cell_val_str(sh, values.get('Nort'), 1)
+    Metadata.north_unit = get_cell_val_str(sh, values.get('Nort'), 2)
+    Metadata.elevation = get_cell_val_str(sh, values.get('Elev'), 1)
+    Metadata.elevation_unit = get_cell_val_str(sh, values.get('Elev'), 2)
+    Metadata.observer = get_cell_val_str(sh, values.get('Obse'), 1)
+    Metadata.air_temperature = get_cell_val_str(sh, values.get('Air '), 1)
+    Metadata.air_temperature_unit = get_cell_val_str(sh, values.get('Air '), 2)
+    Metadata.sky_conditions = get_cell_val_str(sh, values.get('Weat'), 1)
+    Metadata.comments = get_cell_val_str(sh, values.get('Comm'), 1)
 
     # Will need to add other fields (wind speed, precipitation, srsName, to be conform to CAAML terminology
 
     return Metadata
 
-def get_table(path_xlsx, sheet):
-    table = pd.read_excel(path_xlsx, sheet=sheet, skiprows=int(values.get('Stra')) + 1, engine='xlrd')
+def get_table(sh, path_xlsx):
+    values = find_row_with_values(sh, ['Stra'])
+    table = pd.read_excel(path_xlsx, sheet=sh.name,header=-1, skiprows=int(values.get('Stra')) + 2, engine='xlrd')
+
+    newCol = []
+    for i, name in enumerate(table.columns):
+        newCol += [name.replace(' ', '_').lower()]
+    table.columns = newCol
+
     return table
 
+def get_layers(table):
+    '''
+    Function returning a list of all the layers of a snowpit
+    :param table: dataframe returned by the function get_table()
+    :return: return a list of layers
+    '''
+    layers = []
+    for line in table.rows:
+        layer = pc.layer()
+        layer.id =
+        layer.dbot =
+        layer.dtop =
+        layer.hardness =
+        layer.dtop_unit =
+        layer.grain_size_max =
+        layer.grain_size_min =
+        layer.grain_type1 =
+        layer.grain_type2 =
+        layer.grain_type3 =
 
-def get_layers(sheet):
+        layers += [layer]
+    return layers
 
-def get_temperature(sheet):
+def get_temperature(table):
     TProfile = pc.temperature_profile()
 
-    TProfile.depth = []
-    TProfile.depth_unit = None
-    TProfile.temp = []
-    TProfile.temp_unit = None
+    TProfile.temp = table.temperature
+    TProfile.depth = table.temperatureDepth
 
-def get_density(sheet):
+    TProfile.depth_unit = 'degC'
+    TProfile.temp_unit = 'degC'
 
+    return TProfile
 
+def get_density(table):
+    Pdensity = pc.density_profile()
 
-def load_xlsx(self, path=None, sheet=None):
+    Pdensity.depth = table.density_depth
+    Pdensity.density = table.density
+
+    Pdensity.density_unit =
+    Pdensity.depth_unit =
+
+    return Pdensity
+
+def get_sample(table, name):
+    print 'Not implemented'
+
+def load_xlsx(path=None, sheet=None):
     '''
     Fucntion to load pit directly from a sheet of a xlsx file
     :param path: path to the file
@@ -178,8 +225,7 @@ def load_xlsx(self, path=None, sheet=None):
     self.profile_raw_table = pd.read_excel(path, sheet=sh, skiprows=int(values.get('Stra')) + 1, engine='xlrd')
     self.load_profile_from_raw_table()
 
-
-def sheet_names_xlsx(self, path=None):
+def sheet_names_xlsx(path=None):
     '''
     Functiont to print and return the list of sheet included in an excel file
     :param path:

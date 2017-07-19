@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 import xlrd
 import CAAML_xml as cx
+import parse_xlsx as px
 
 from matplotlib import pyplot as plt
 import matplotlib.cm as cm
@@ -68,6 +69,7 @@ class layer(object):
         self.grain_type3 = None
         self.grain_size_unit = None
         self.grain_size_avg = None
+        self.gain_size_min = None
         self.grain_size_max = None
         self.hardness = None
         self.lwc = None
@@ -119,7 +121,10 @@ class density_profile(object):
 class sample_profile(object):
     def __init__(self):
         self.depth = []
+        self.depth_unit = None
         self.sample_name = []
+        self.sample_value = []
+        self.sample_value_unit = None
         self.comments = None
 
 class metadata(object):
@@ -163,6 +168,8 @@ class Snowpit(object):
         self.temperature_profile = temperature_profile()
         self.density_profile = density_profile()
         self.sample_profile = sample_profile()
+        self.table = None
+        self.layers = None
 
     def import_xml(self):
         # Load metadata
@@ -177,26 +184,34 @@ class Snowpit(object):
         # load layers
         self.layers = cx.get_layers(self.filename)
 
-    def import_xlsx(self):
+    def import_xlsx(self, sheet=None):
+        if sheet == None:
+            sheets = px.sheet_names_xlsx(self.filename)
+            sheet = sheets[0]
+
+        sh = px.open_xlsx(self.filename, sheetName=sheet)
+        self.table = px.get_table(sh)
+        self.metadata = px.get_metadata(sh)
+        self.density_profile = px.get_density(self.table)
+        self.temperature_profile = px.get_temperature(self.table)
+        self.layers = px.get_layers(self.table)
+        self.sample_profile = px.get_sample(self.table, )
+
+        print 'Snowpit loaded from xlsx file'
 
     def import_csv(self):
-
-    def load_metadata(self):
-
-    def load_temperature(self):
-
-    def load_density(self):
-
-    def load_layers(self):
-
+        print 'Not implemented'
 
     #==========================
 
     def plot(self):
+        print 'Not implemented'
 
     def print_metadata(self):
+        print 'Not implemented'
 
     def print_layers(self):
+        print 'Not implemented'
 
 
 class Snowpit_standard(object):

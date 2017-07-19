@@ -111,13 +111,13 @@ def get_density(path_xml):
                         DProfile.density += [float(child.firstChild.nodeValue)]
     return DProfile
 
-if __main__():
-    # Example on how to use the functions
-    path1 = "snowpyt/data_example/20160331_finse.xml"
-    A = get_layers(path1)
-    B = get_temperature(path1)
-    C = get_density(path1)
-    D = get_metadata(path1)
+# if __main__():
+#     # Example on how to use the functions
+#     path1 = "snowpyt/data_example/20160331_finse.xml"
+#     A = get_layers(path1)
+#     B = get_temperature(path1)
+#     C = get_density(path1)
+#     D = get_metadata(path1)
 
 
 
