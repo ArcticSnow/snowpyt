@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="290ef6ec-b4b7-4c98-964b-6c2005758c8f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/snowpyt/data_example/20161216_snowpit.xlsx" afterPath="$PROJECT_DIR$/snowpyt/data_example/20161216_snowpit.xlsx" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/snowpyt/CAAML_xml.py" afterPath="$PROJECT_DIR$/snowpyt/CAAML_xml.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/snowpyt/data_example/20160331_finse.xml" afterPath="$PROJECT_DIR$/snowpyt/data_example/20160331_finse.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/snowpyt/parse_xlsx.py" afterPath="$PROJECT_DIR$/snowpyt/parse_xlsx.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/snowpyt/pit_class.py" afterPath="$PROJECT_DIR$/snowpyt/pit_class.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -50,7 +47,7 @@
           <file leaf-file-name="pit_class.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/snowpyt/pit_class.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1310">
+                <state relative-caret-position="784">
                   <caret line="518" column="0" lean-forward="true" selection-start-line="518" selection-start-column="0" selection-end-line="518" selection-end-column="0" />
                   <folding>
                     <element signature="e#103#134#0" expanded="true" />
@@ -61,9 +58,7 @@
                     <element signature="e#5780#5982#0" expanded="false" />
                     <element signature="e#6012#7356#0" expanded="false" />
                     <element signature="e#9169#9585#0" expanded="false" />
-                    <element signature="e#9787#21828#0" expanded="false" />
                     <element signature="e#13187#14026#0" expanded="false" />
-                    <element signature="e#14074#14946#0" expanded="false" />
                     <element signature="e#14995#18009#0" expanded="false" />
                     <element signature="e#18054#18588#0" expanded="false" />
                     <element signature="e#18636#19669#0" expanded="false" />
@@ -115,8 +110,8 @@
           <file leaf-file-name="parse_xlsx.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/snowpyt/parse_xlsx.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="146">
-                  <caret line="154" column="0" lean-forward="true" selection-start-line="154" selection-start-column="0" selection-end-line="154" selection-end-column="0" />
+                <state relative-caret-position="356">
+                  <caret line="254" column="0" lean-forward="true" selection-start-line="240" selection-start-column="0" selection-end-line="254" selection-end-column="0" />
                   <folding>
                     <element signature="e#262#293#0" expanded="true" />
                     <element signature="e#462#1036#0" expanded="false" />
@@ -185,8 +180,8 @@
         <option value="$PROJECT_DIR$/snowpyt/data_example/test_xml_loading.py" />
         <option value="$PROJECT_DIR$/snowpyt/snowpyt_xlsx.py" />
         <option value="$PROJECT_DIR$/snowpyt/CAAML_xml.py" />
-        <option value="$PROJECT_DIR$/snowpyt/parse_xlsx.py" />
         <option value="$PROJECT_DIR$/snowpyt/pit_class.py" />
+        <option value="$PROJECT_DIR$/snowpyt/parse_xlsx.py" />
       </list>
     </option>
   </component>
@@ -463,7 +458,14 @@
       <option name="project" value="LOCAL" />
       <updated>1499674961699</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="IN PROGRESS: loading xlsx using classes. new snowpit class object">
+      <created>1500450485153</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1500450485153</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TodoView">
@@ -477,7 +479,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="4" y="23" width="1276" height="777" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2082658" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -485,7 +486,7 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32808155" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32846716" sideWeight="0.48379254" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32846716" sideWeight="0.48379254" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24959481" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329927" sideWeight="0.49027553" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -509,11 +510,12 @@
     <MESSAGE value="not much" />
     <MESSAGE value="broke main class to multiple small one: Layer, metadata ...&#10;====&#10;work in progress" />
     <MESSAGE value="added class. more on the new snowpit class" />
-    <option name="LAST_COMMIT_MESSAGE" value="added class. more on the new snowpit class" />
+    <MESSAGE value="IN PROGRESS: loading xlsx using classes. new snowpit class object" />
+    <option name="LAST_COMMIT_MESSAGE" value="IN PROGRESS: loading xlsx using classes. new snowpit class object" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="13" />
+      <option name="time" value="14" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -786,28 +788,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/snowpyt/parse_xlsx.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="154" column="0" lean-forward="true" selection-start-line="154" selection-start-column="0" selection-end-line="154" selection-end-column="0" />
-          <folding>
-            <element signature="e#262#293#0" expanded="true" />
-            <element signature="e#462#1036#0" expanded="false" />
-            <element signature="e#1081#1319#0" expanded="false" />
-            <element signature="e#1368#1701#0" expanded="false" />
-            <element signature="e#1730#3068#0" expanded="false" />
-            <element signature="e#3104#3420#0" expanded="false" />
-            <element signature="e#3449#3997#0" expanded="false" />
-            <element signature="e#4031#4236#0" expanded="false" />
-            <element signature="e#4266#4452#0" expanded="false" />
-            <element signature="e#4554#7228#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/snowpyt/pit_class.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1310">
+        <state relative-caret-position="784">
           <caret line="518" column="0" lean-forward="true" selection-start-line="518" selection-start-column="0" selection-end-line="518" selection-end-column="0" />
           <folding>
             <element signature="e#103#134#0" expanded="true" />
@@ -818,9 +801,7 @@
             <element signature="e#5780#5982#0" expanded="false" />
             <element signature="e#6012#7356#0" expanded="false" />
             <element signature="e#9169#9585#0" expanded="false" />
-            <element signature="e#9787#21828#0" expanded="false" />
             <element signature="e#13187#14026#0" expanded="false" />
-            <element signature="e#14074#14946#0" expanded="false" />
             <element signature="e#14995#18009#0" expanded="false" />
             <element signature="e#18054#18588#0" expanded="false" />
             <element signature="e#18636#19669#0" expanded="false" />
@@ -836,6 +817,25 @@
             <element signature="e#28899#29630#0" expanded="false" />
             <element signature="e#29677#29790#0" expanded="false" />
             <element signature="e#29837#29962#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/snowpyt/parse_xlsx.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="356">
+          <caret line="254" column="0" lean-forward="true" selection-start-line="240" selection-start-column="0" selection-end-line="254" selection-end-column="0" />
+          <folding>
+            <element signature="e#262#293#0" expanded="true" />
+            <element signature="e#462#1036#0" expanded="false" />
+            <element signature="e#1081#1319#0" expanded="false" />
+            <element signature="e#1368#1701#0" expanded="false" />
+            <element signature="e#1730#3068#0" expanded="false" />
+            <element signature="e#3104#3420#0" expanded="false" />
+            <element signature="e#3449#3997#0" expanded="false" />
+            <element signature="e#4031#4236#0" expanded="false" />
+            <element signature="e#4266#4452#0" expanded="false" />
+            <element signature="e#4554#7228#0" expanded="false" />
           </folding>
         </state>
       </provider>
