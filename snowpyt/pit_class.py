@@ -113,10 +113,7 @@ class density_profile(object):
     def __str__(self):
         return "-----density profile-----\ndepth={} {}\nthickness={} {}\ndensity={} {}".format(self.depth,
                                                                                                self.depth_unit,
-                                                                                               self.thickness,
-                                                                                               self.thickness_unit,
-                                                                                               self.density,
-                                                                                    self.density_unit)
+                                                                                     self.density_unit)
 
 class sample_profile(object):
     def __init__(self):
@@ -170,6 +167,7 @@ class Snowpit(object):
         self.sample_profile = sample_profile()
         self.table = None
         self.layers = None
+        self.units = None
 
     def import_xml(self):
         # Load metadata
@@ -190,12 +188,12 @@ class Snowpit(object):
             sheet = sheets[0]
 
         sh = px.open_xlsx(self.filename, sheetName=sheet)
-        self.table = px.get_table(sh)
+        self.table, self.units = px.get_table(sh, self.filename)
         self.metadata = px.get_metadata(sh)
         self.density_profile = px.get_density(self.table)
         self.temperature_profile = px.get_temperature(self.table)
         self.layers = px.get_layers(self.table)
-        self.sample_profile = px.get_sample(self.table, )
+        #self.sample_profile = px.get_sample(self.table, )
 
         print 'Snowpit loaded from xlsx file'
 

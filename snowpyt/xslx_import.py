@@ -91,20 +91,6 @@ plots_dict = {'temperature':1,
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # 2. try unsing openpyxl
 xlsx = load_workbook(file)
 

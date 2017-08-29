@@ -96,14 +96,20 @@ def get_metadata(sh):
 
 def get_table(sh, path_xlsx):
     values = find_row_with_values(sh, ['Stra'])
-    table = pd.read_excel(path_xlsx, sheet=sh.name,header=-1, skiprows=int(values.get('Stra')) + 2, engine='xlrd')
+
+    rowtoskip = range(0, int(values.get('Stra'))+1)
+    rowtoskip.append(int(values.get('Stra'))+2)
+    table = pd.read_excel(path_xlsx, sheet=sh.name,header=-1, skiprows=rowtoskip, engine='xlrd')
 
     newCol = []
     for i, name in enumerate(table.columns):
         newCol += [name.replace(' ', '_').lower()]
     table.columns = newCol
 
-    return table
+    units = pd.read_excel(path_xlsx, sheet=sh.name,header=-1, skiprows=int(values.get('Stra'))+2, engine='xlrd')
+    units = units.loc[0]
+    # return an extra dataframe containing units only
+    return table, units
 
 def get_layers(table):
     '''
@@ -112,18 +118,18 @@ def get_layers(table):
     :return: return a list of layers
     '''
     layers = []
-    for line in table.rows:
+    for index, line in table.iterrows():
         layer = pc.layer()
-        layer.id =
-        layer.dbot =
-        layer.dtop =
-        layer.hardness =
-        layer.dtop_unit =
-        layer.grain_size_max =
-        layer.grain_size_min =
-        layer.grain_type1 =
-        layer.grain_type2 =
-        layer.grain_type3 =
+        layer.id = line.layer_id
+        layer.dbot = line.layer_top
+        layer.dtop = line.layer_bottom
+        layer.hardness = line.hardness_code
+        #layer.dtop_unit = line
+        layer.grain_size_max = line.diameter_min
+        layer.grain_size_min = line.diameter_max
+        layer.grain_type1 = line.type_1
+        layer.grain_type2 = line.type_2
+        layer.grain_type3 = line.type_3
 
         layers += [layer]
     return layers
@@ -132,7 +138,7 @@ def get_temperature(table):
     TProfile = pc.temperature_profile()
 
     TProfile.temp = table.temperature
-    TProfile.depth = table.temperatureDepth
+    TProfile.depth = table.temp_depth
 
     TProfile.depth_unit = 'degC'
     TProfile.temp_unit = 'degC'
@@ -145,12 +151,16 @@ def get_density(table):
     Pdensity.depth = table.density_depth
     Pdensity.density = table.density
 
-    Pdensity.density_unit =
-    Pdensity.depth_unit =
+    #Pdensity.density_unit =
+    #Pdensity.depth_unit =
 
     return Pdensity
 
 def get_sample(table, name):
+    Sprofile = pc.sample_profile()
+
+    Sprofile.depth = table.sample_depth
+    Sprofile.sample_value = table.sample
     print 'Not implemented'
 
 def load_xlsx(path=None, sheet=None):
@@ -231,26 +241,10 @@ def sheet_names_xlsx(path=None):
     :param path:
     :return:
     '''
-    if path is None:
-        path = self.filename
+
     wb = xlrd.open_workbook(path)
     print wb.sheet_names()
     return wb.sheet_names()
 
-
-
-def gg(a=5, b='fdfd'):
-    '''
-    sidfusidjfbjsdbf
-    sdfsdfdsf
-    sdfsdf
-    
-    :param a: sdsdsd
-    :param b: sdsd
-    :return: sdsdsd
-    '''
-
-    print 'a'
-    return 2
 
 
