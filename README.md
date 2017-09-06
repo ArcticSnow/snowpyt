@@ -1,7 +1,7 @@
 # Snowpyt: an open-source library to visualize snowpits in Python
 Simon Filhol, November 2016, copyright under the MIT license terms, see the License.txt file
 
-LAST MODIFIED: June 2017 (or see date on github file history)
+LAST MODIFIED: September 2017 (or see date on github file history)
 
 Feel free to contribute to the project!!!! Many new features can be added...
 
@@ -36,7 +36,7 @@ Hydrology N°83, IACS Contribution N°1, UNESCO-IHP, Paris.
 
 ## Installation
 
-### Last version from the Pypi repository
+### Last stable version from the Pypi repository
 
 Simply run the following in your terminal:
 ```bash
@@ -66,8 +66,43 @@ Python 2.7.9 with the following libraries:
 ## Use
 
 1. Snowpit must be formated following the template file "Standard_pit.xlsx"
-2. Export the snowpit to a csv file using tab as delimiter
-3. Individual snowpits have to be loaded into python class object from which the user can easily access information. See the file Example.py for an example of a basic use.
+
+2. Save the excel or libreoffice file in .xslx format (default Excel format).
+
+3. Load the snowpit into snowpyt
+
+   ```python
+   from snowpyt import pit_class as pc
+
+   path_to_file = 'snowpyt/data_example/20170209_Finse_snowpit.xlsx'
+
+   mypit = pc.Snowpit()
+   mypit.filename = path_to_file
+   mypit.import_xlsx()
+
+   mypit.plot(metadata=True)
+   mypit.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size'], metadata=True)
+
+   mypit.metadata.__dict__
+   ```
+
+4. It is also possible to load data from an .xml file formatted according to  [CAAML format](http://caaml.org/)
+
+   ```python
+   from snowpyt import pit_class as pc
+
+   path_to_file = 'path to xml file in CAAML format'
+
+   mypit = pc.Snowpit()
+   mypit.filename = path_to_file
+   mypit.import_xml()
+
+   mypit.plot(metadata=True)
+   mypit.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size'], metadata=True)
+
+   ```
+
+   ​
 
 ## Want to contribute?
 Once you have cloned the project to your home directory, create a git branch and here you go. When your edits are stable, merge with the master branch. See this neat tutorial about git branching and merging, [here](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging)

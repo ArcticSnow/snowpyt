@@ -156,12 +156,14 @@ def get_density(table):
 
     return Pdensity
 
-def get_sample(table, name):
+def get_sample(table):
     Sprofile = pc.sample_profile()
 
     Sprofile.depth = table.sample_depth
-    Sprofile.sample_value = table.sample
-    print 'Not implemented'
+    Sprofile.sample_name = table.sample_name
+    Sprofile.sample_value = table.sample_value
+
+    return Sprofile
 
 def load_xlsx(path=None, sheet=None):
     '''

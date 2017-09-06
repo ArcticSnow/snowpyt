@@ -7,21 +7,15 @@ Simon Filhol, December 2016
 
 from snowpyt import pit_class as pc
 
-filename = 'data_example/20161216_snowpit.xlsx'  #[insert path to file]
+filename = '/home/arcticsnow/github/snowpyt/snowpyt/data_example/20170209_Finse_snowpit.xlsx'  #[insert path to file]
 
-
-
-pit1 = pc.Snowpit()
+pit1 = Snowpit()
 pit1.filename = filename
 pit1.import_xlsx()
 
-pit1.summary_plot(metadata=True)
+pit1.plot(metadata=True)
+pit1.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size'])
 
-# change the panel order
-pit1.summary_plot(plots_order=['density', 'temperature', 'hardness', 'stratigraphy'])
-
-# plot less panel
-pit1.summary_plot(plots_order=['stratigraphy', 'hardness'])
 
 
 
