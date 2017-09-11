@@ -23,7 +23,7 @@ setup(
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/ArcticSnow/snowpyt.git',
+    url='https://github.com/ArcticSnow/snowpyt',
 
     # Author details
     author='Simon Filhol',
