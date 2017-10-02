@@ -66,41 +66,45 @@ Python 2.7.9 with the following libraries:
 ## Use
 
 1. Snowpit must be formated following the template file "Standard_pit.xlsx"
+   - requirements:
+      - To see the supported list of snowflakes input, see the python         dictionnary snowflake_dict in the pit_class.py file.
+
+      - Only ASCII characters in fields. Currently not supporting special characters
 
 2. Save the excel or libreoffice file in .xslx format (default Excel format).
 
 3. Load the snowpit into snowpyt
 
-   ```python
-   from snowpyt import pit_class as pc
+```python
+from snowpyt import pit_class as pc
 
-   path_to_file = 'snowpyt/data_example/20170209_Finse_snowpit.xlsx'
+path_to_file = 'snowpyt/data_example/20170209_Finse_snowpit.xlsx'
 
-   mypit = pc.Snowpit()
-   mypit.filename = path_to_file
-   mypit.import_xlsx()
+mypit = pc.Snowpit()
+mypit.filename = path_to_file
+mypit.import_xlsx()
 
-   mypit.plot(metadata=True)
-   mypit.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size'], metadata=True)
+mypit.plot(metadata=True)
+mypit.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size'], metadata=True)
 
-   mypit.metadata.__dict__
-   ```
+mypit.metadata.__dict__
+```
 
 4. It is also possible to load data from an .xml file formatted according to  [CAAML format](http://caaml.org/)
 
-   ```python
-   from snowpyt import pit_class as pc
+```python
+from snowpyt import pit_class as pc
 
-   path_to_file = 'path to xml file in CAAML format'
+path_to_file = 'path to xml file in CAAML format'
 
-   mypit = pc.Snowpit()
-   mypit.filename = path_to_file
-   mypit.import_xml()
+mypit = pc.Snowpit()
+mypit.filename = path_to_file
+mypit.import_xml()
 
-   mypit.plot(metadata=True)
-   mypit.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size'], metadata=True)
+mypit.plot(metadata=True)
+mypit.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size'], metadata=True)
 
-   ```
+```
 
    ​
 

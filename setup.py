@@ -6,9 +6,14 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
+try:
+    import pypandoc
+    long_description = pypandoc.convert('README.md', 'rst')
+except(IOError, ImportError):
+    long_description = open('README.md').read()
 # Get the long description from the README file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+#with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+#    long_description = f.read()
 
 setup(
     name='snowpyt',
@@ -17,7 +22,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.1.58',
+    version='0.1.64',
 
     description='A Python project to visualize snowpit',
     long_description=long_description,

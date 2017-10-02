@@ -21,44 +21,45 @@ from matplotlib.ticker import MaxNLocator
 
 path2snowflake = os.path.dirname(inspect.getfile(px))+'/'
 
-snowflake_dict = {'faceted':'snowflake/faceted.png',
-                  'wind packed':'snowflake/wind_packed.png',
-                  'wind slab':'snowflake/wind_packed.png',
-                  'windslab':'snowflake/wind_packed.png',
-                  'horizontal ice layer':'snowflake/ice.png',
-                  'ice layer':'snowflake/ice.png',
-                  'ice lenses':'snowflake/ice.png',
-                  'clustered rounded':'snowflake/cluster_rounded.png',
-                  'cluster rounded':'snowflake/cluster_rounded.png',
-                  'wind broken':'snowflake/wind_broken_precip.png',
-                  'rounded':'snowflake/large_rounded.png',
-                  'faceted and rounded':'snowflake/faceted_rounded.png',
-                  'faceted rounded':'snowflake/faceted_rounded.png',
-                  'rounded and faceted':'snowflake/rounding_faceted.png',
-                  'rounded faceted':'snowflake/rounding_faceted.png',
-                  'depth hoar':'snowflake/hollow_cups.png',
-                  'hollow cups':'snowflake/hollow_cups.png',
-                  'hollow prism':'snowflake/hollow_prism.png',
-                  'melt refreeze':'snowflake/melt_freeze_crust.png',
-                  'melt refreeze crust':'snowflake/melt_freeze_crust.png',
-                  'partly decomposed': 'snowflake/partly_decomposed.png',
-                  'recent snow':'snowflake/recent_snow.png',
-                  'ice column':'snowflake/ice_column.png',
-                  'percolation column':'snowflake/ice_column.png',
-                  'percolation':'snowflake/ice_column.png',
-                  'rounding depth hoar':'snowflake/rounding_depth_hoar.png',
-                  'cavity crevasse hoar':'snowflake/cavity_crevasse_hoar.png',
-                  'rounding surface hoar':'snowflake/rounding_surface_hoar.png',
-                  'basal ice':'snowflake/basal_ice.png',
-                  'rain crust':'snowflake/rain_crust.png',
-                  'sun crust':'snowflake/sun_crust.png',
-                  'surface hoar':'snowflake/surface_hoar.png',
-                  'hoar frost':'snowflake/surface_hoar.png',
-                  'rounded polycrystals':'snowflake/rounded_polycrystals.png',
-
-                  'slush':'snowflake/slush.png',
-                  'chains of depth hoar':'snowflake/chains_of_depth_hoar.png',
-                  'near surface faceted':'snowflake/near_surface_faceted.png'}
+snowflake_dict = {'basal ice':'snowflake/basal_ice.png',
+                    'cavity crevasse hoar':'snowflake/cavity_crevasse_hoar.png',
+                    'chains of depth hoar':'snowflake/chains_of_depth_hoar.png',
+                    'clustered rounded':'snowflake/cluster_rounded.png',
+                    'cluster rounded':'snowflake/cluster_rounded.png',
+                    'depth hoar':'snowflake/hollow_cups.png',
+                    'faceted':'snowflake/faceted.png',
+                    'faceted and rounded':'snowflake/faceted_rounded.png',
+                    'faceted rounded':'snowflake/faceted_rounded.png',
+                    'hollow cups':'snowflake/hollow_cups.png',
+                    'hollow prism':'snowflake/hollow_prism.png',
+                    'hoar frost':'snowflake/surface_hoar.png',
+                    'horizontal ice layer':'snowflake/ice.png',
+                    'ice':'snowflake/ice.png',
+                    'ice column':'snowflake/ice_column.png',
+                    'ice layer':'snowflake/ice.png',
+                    'ice lenses':'snowflake/ice.png',
+                    'melt refreeze':'snowflake/melt_freeze_crust.png',
+                    'melt refreeze crust':'snowflake/melt_freeze_crust.png',
+                    'melt freeze crust':'snowflake/melt_freeze_crust.png',
+                    'near surface faceted':'snowflake/near_surface_faceted.png',
+                    'partly decomposed': 'snowflake/partly_decomposed.png',
+                    'percolation column':'snowflake/ice_column.png',
+                    'percolation':'snowflake/ice_column.png',
+                    'rain crust':'snowflake/rain_crust.png',
+                    'recent snow':'snowflake/recent_snow.png',
+                    'rounding depth hoar':'snowflake/rounding_depth_hoar.png',
+                    'rounding surface hoar':'snowflake/rounding_surface_hoar.png',
+                    'rounded':'snowflake/large_rounded.png',
+                    'rounded and faceted':'snowflake/rounding_faceted.png',
+                    'rounded faceted':'snowflake/rounding_faceted.png',
+                    'rounded polycrystals':'snowflake/rounded_polycrystals.png',
+                    'slush':'snowflake/slush.png',
+                    'sun crust':'snowflake/sun_crust.png',
+                    'surface hoar':'snowflake/surface_hoar.png',
+                    'wind packed':'snowflake/wind_packed.png',
+                    'wind slab':'snowflake/wind_packed.png',
+                    'windslab':'snowflake/wind_packed.png',
+                    'wind broken':'snowflake/wind_broken_precip.png'}
 
 class layer(object):
     def __init__(self):
@@ -388,44 +389,54 @@ class Snowpit(object):
             # include snowflake symbols
             for i, flake in enumerate(self.layers_grainType1.astype(str)):
                 if flake != 'nan':
-                    im = plt.imread(path2snowflake + snowflake_dict.get(flake))
-                    im[im == 0] = np.nan
-                    imagebox = OffsetImage(im, zoom=.01)
-                    if (self.layers_grainType2.astype(str)[i] == 'nan') and (self.layers_grainType3.astype(str)[i] == 'nan'):
-                        hloc = 0.5
-                    elif (self.layers_grainType2.astype(str)[i] != 'nan') and (self.layers_grainType3.astype(str)[i] == 'nan'):
-                        hloc = 0.33
-                    else:
-                        hloc = 0.25
+                    if snowflake_dict.get(flake) is not None:
 
-                    xy = [hloc,
-                          ((self.layers_top[i] - self.layers_bot[i]) / 2 + self.layers_bot[i])]  # coordinates to position this image
-                    ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
-                    ax.add_artist(ab)
+                        im = plt.imread(path2snowflake + snowflake_dict.get(flake))
+                        im[im == 0] = np.nan
+                        imagebox = OffsetImage(im, zoom=.01)
+                        if (self.layers_grainType2.astype(str)[i] == 'nan') and (self.layers_grainType3.astype(str)[i] == 'nan'):
+                            hloc = 0.5
+                        elif (self.layers_grainType2.astype(str)[i] != 'nan') and (self.layers_grainType3.astype(str)[i] == 'nan'):
+                            hloc = 0.33
+                        else:
+                            hloc = 0.25
+
+                        xy = [hloc,
+                              ((self.layers_top[i] - self.layers_bot[i]) / 2 + self.layers_bot[i])]  # coordinates to position this image
+                        ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
+                        ax.add_artist(ab)
+                    else:
+                        print 'WARNING: [' + flake + '] is not a compatible snowflake type. Check spelling!'
 
             for i, flake in enumerate(self.layers_grainType2.astype(str)):
                 if flake != 'nan':
-                    im = plt.imread(path2snowflake + snowflake_dict.get(flake))
-                    im[im == 0] = np.nan
-                    imagebox = OffsetImage(im, zoom=.01)
-                    if (self.layers_grainType2.astype(str)[i] != 'nan') and (self.layers_grainType3.astype(str)[i] == 'nan'):
-                        hloc2 = 0.66
+                    if snowflake_dict.get(flake) is not None:
+                        im = plt.imread(path2snowflake + snowflake_dict.get(flake))
+                        im[im == 0] = np.nan
+                        imagebox = OffsetImage(im, zoom=.01)
+                        if (self.layers_grainType2.astype(str)[i] != 'nan') and (self.layers_grainType3.astype(str)[i] == 'nan'):
+                            hloc2 = 0.66
+                        else:
+                            hloc2 = 0.5
+                        xy = [hloc2,
+                              ((self.layers_top[i] - self.layers_bot[i]) / 2 + self.layers_bot[i])]  # coordinates to position this image
+                        ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
+                        ax.add_artist(ab)
                     else:
-                        hloc2 = 0.5
-                    xy = [hloc2,
-                          ((self.layers_top[i] - self.layers_bot[i]) / 2 + self.layers_bot[i])]  # coordinates to position this image
-                    ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
-                    ax.add_artist(ab)
+                        print 'WARNING: [' + flake + '] is not a compatible snowflake type. Check spelling!'
 
             for i, flake in enumerate(self.layers_grainType3.astype(str)):
                 if flake != 'nan':
-                    im = plt.imread(path2snowflake + snowflake_dict.get(flake))
-                    im[im == 0] = np.nan
-                    imagebox = OffsetImage(im, zoom=.01)
-                    xy = [0.75,
-                          ((self.layers_top[i] - self.layers_bot[i]) / 2 + self.layers_bot[i])]  # coordinates to position this image
-                    ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
-                    ax.add_artist(ab)
+                    if snowflake_dict.get(flake) is not None:
+                        im = plt.imread(path2snowflake + snowflake_dict.get(flake))
+                        im[im == 0] = np.nan
+                        imagebox = OffsetImage(im, zoom=.01)
+                        xy = [0.75,
+                              ((self.layers_top[i] - self.layers_bot[i]) / 2 + self.layers_bot[i])]  # coordinates to position this image
+                        ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
+                        ax.add_artist(ab)
+                    else:
+                        print 'WARNING: [' + flake + '] is not a compatible snowflake type. Check spelling!'
 
             ax.set_title("Stratigraphy")
             return im2
