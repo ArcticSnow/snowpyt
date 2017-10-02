@@ -1,5 +1,5 @@
 include README.md
-include snowpyt/Standard_pit.png
+include Standard_pit.png
 
 
 include snowpyt/snowflake/basal_ice.png
@@ -23,12 +23,12 @@ include snowpyt/snowflake/rounding_depth_hoar.png
 include snowpyt/snowflake/rounding_faceted.png
 include snowpyt/snowflake/rounding_surface_hoar.png
 include snowpyt/snowflake/slush.png
-include snowpyt/snowflake/snowflake.ai
-include snowpyt/snowflake/snowflake.svg
-include snowpyt/snowflake/snowflake_2.ai.svg
-include snowpyt/snowflake/SnowflakesymbolCheasheet.png
-include snowpyt/snowflake/SnowflakesymbolCheasheet_black.png
-include snowpyt/snowflake/SnowflakesymbolCheasheet_black.svg
+include snowpyt/snowflake/snowpyt/snowflake.ai
+include snowpyt/snowflake/snowpyt/snowflake.svg
+include snowpyt/snowflake/snowpyt/snowflake_2.ai.svg
+include snowpyt/snowflake/snowpyt/SnowflakesymbolCheasheet.png
+include snowpyt/snowflake/snowpyt/SnowflakesymbolCheasheet_black.png
+include snowpyt/snowflake/snowpyt/SnowflakesymbolCheasheet_black.svg
 include snowpyt/snowflake/sun_crust.png
 include snowpyt/snowflake/surface_hoar.png
 include snowpyt/snowflake/wind_broken_precip.png

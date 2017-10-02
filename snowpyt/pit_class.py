@@ -10,7 +10,7 @@ from __future__ import division
 import pickle
 import numpy as np
 import pandas as pd
-import xlrd
+import xlrd, inspect, os
 import CAAML_xml as cx
 import parse_xlsx as px
 
@@ -18,6 +18,8 @@ from matplotlib import pyplot as plt
 import matplotlib.cm as cm
 from matplotlib.offsetbox import AnnotationBbox, OffsetImage
 from matplotlib.ticker import MaxNLocator
+
+path2snowflake = os.path.dirname(inspect.getfile(px))+'/'
 
 snowflake_dict = {'faceted':'snowflake/faceted.png',
                   'wind packed':'snowflake/wind_packed.png',
@@ -385,7 +387,7 @@ class Snowpit(object):
             # include snowflake symbols
             for i, flake in enumerate(self.layers_grainType1.astype(str)):
                 if flake != 'nan':
-                    im = plt.imread(snowflake_dict.get(flake))
+                    im = plt.imread(path2snowflake + snowflake_dict.get(flake))
                     im[im == 0] = np.nan
                     imagebox = OffsetImage(im, zoom=.01)
                     if (self.layers_grainType2.astype(str)[i] == 'nan') and (self.layers_grainType3.astype(str)[i] == 'nan'):
@@ -402,7 +404,7 @@ class Snowpit(object):
 
             for i, flake in enumerate(self.layers_grainType2.astype(str)):
                 if flake != 'nan':
-                    im = plt.imread(snowflake_dict.get(flake))
+                    im = plt.imread(path2snowflake + snowflake_dict.get(flake))
                     im[im == 0] = np.nan
                     imagebox = OffsetImage(im, zoom=.01)
                     if (self.layers_grainType2.astype(str)[i] != 'nan') and (self.layers_grainType3.astype(str)[i] == 'nan'):
@@ -416,7 +418,7 @@ class Snowpit(object):
 
             for i, flake in enumerate(self.layers_grainType3.astype(str)):
                 if flake != 'nan':
-                    im = plt.imread(snowflake_dict.get(flake))
+                    im = plt.imread(path2snowflake + snowflake_dict.get(flake))
                     im[im == 0] = np.nan
                     imagebox = OffsetImage(im, zoom=.01)
                     xy = [0.75,

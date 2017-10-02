@@ -2,10 +2,10 @@ MANIFEST.in
 README.md
 setup.cfg
 setup.py
+data_example/20170209_Finse_snowpit.csv
 snowpyt/CAAML_xml.py
 snowpyt/Example.py
 snowpyt/JC_pit_class.py
-snowpyt/Standard_pit.png
 snowpyt/__init__.py
 snowpyt/parse_xlsx.py
 snowpyt/pit_class.py
@@ -18,9 +18,6 @@ snowpyt.egg-info/top_level.txt
 snowpyt/data_example/20170209_Finse_snowpit.csv
 snowpyt/data_example/20170209_Finse_snowpit.xlsx
 snowpyt/data_example/Standard_pit.xlsx
-snowpyt/snowflake/SnowflakesymbolCheasheet.png
-snowpyt/snowflake/SnowflakesymbolCheasheet_black.png
-snowpyt/snowflake/SnowflakesymbolCheasheet_black.svg
 snowpyt/snowflake/basal_ice.png
 snowpyt/snowflake/cavity_crevasse_hoar.png
 snowpyt/snowflake/chains_of_depth_hoar.png
@@ -42,9 +39,6 @@ snowpyt/snowflake/rounding_depth_hoar.png
 snowpyt/snowflake/rounding_faceted.png
 snowpyt/snowflake/rounding_surface_hoar.png
 snowpyt/snowflake/slush.png
-snowpyt/snowflake/snowflake.ai
-snowpyt/snowflake/snowflake.svg
-snowpyt/snowflake/snowflake_2.ai.svg
 snowpyt/snowflake/sun_crust.png
 snowpyt/snowflake/surface_hoar.png
 snowpyt/snowflake/wind_broken_precip.png
