@@ -2,4 +2,3 @@ matplotlib
 pandas
 numpy
 xlrd
-xml
