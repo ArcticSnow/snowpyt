@@ -99,7 +99,7 @@ def get_table(sh, path_xlsx):
 
     rowtoskip = range(0, int(values.get('Stra'))+1)
     rowtoskip.append(int(values.get('Stra'))+2)
-    table = pd.read_excel(path_xlsx, sheet=sh.name,header=-1, skiprows=rowtoskip, engine='xlrd')
+    table = pd.read_excel(path_xlsx, sheetname=sh.name,header=-1, skiprows=rowtoskip, engine='xlrd')
 
     newCol = []
     for i, name in enumerate(table.columns):

@@ -27,6 +27,7 @@ snowflake_dict = {'faceted':'snowflake/faceted.png',
                   'windslab':'snowflake/wind_packed.png',
                   'horizontal ice layer':'snowflake/ice.png',
                   'ice layer':'snowflake/ice.png',
+                  'ice lenses':'snowflake/ice.png',
                   'clustered rounded':'snowflake/cluster_rounded.png',
                   'cluster rounded':'snowflake/cluster_rounded.png',
                   'wind broken':'snowflake/wind_broken_precip.png',
@@ -465,9 +466,6 @@ class Snowpit(object):
                 tick.set_rotation(45)
 
             return im
-
-        def plot_sample_names(ax):
-            print 'Not implemented [plot_sample_names()]'
 
         def plot_sample_values(ax):
             if ax is ax1:
