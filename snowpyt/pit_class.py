@@ -19,43 +19,43 @@ import matplotlib.cm as cm
 from matplotlib.offsetbox import AnnotationBbox, OffsetImage
 from matplotlib.ticker import MaxNLocator
 
-snowflake_dict = {'faceted':'snowpyt/snowflake/faceted.png',
-                  'wind packed':'snowpyt/snowflake/wind_packed.png',
-                  'wind slab':'snowpyt/snowflake/wind_packed.png',
-                  'windslab':'snowpyt/snowflake/wind_packed.png',
-                  'horizontal ice layer':'snowpyt/snowflake/ice.png',
-                  'ice layer':'snowpyt/snowflake/ice.png',
-                  'clustered rounded':'snowpyt/snowflake/cluster_rounded.png',
-                  'cluster rounded':'snowpyt/snowflake/cluster_rounded.png',
-                  'wind broken':'snowpyt/snowflake/wind_broken_precip.png',
-                  'rounded':'snowpyt/snowflake/large_rounded.png',
-                  'faceted and rounded':'snowpyt/snowflake/faceted_rounded.png',
-                  'faceted rounded':'snowpyt/snowflake/faceted_rounded.png',
-                  'rounded and faceted':'snowpyt/snowflake/rounding_faceted.png',
-                  'rounded faceted':'snowpyt/snowflake/rounding_faceted.png',
-                  'depth hoar':'snowpyt/snowflake/hollow_cups.png',
-                  'hollow cups':'snowpyt/snowflake/hollow_cups.png',
-                  'hollow prism':'snowpyt/snowflake/hollow_prism.png',
-                  'melt refreeze':'snowpyt/snowflake/melt_freeze_crust.png',
-                  'melt refreeze crust':'snowpyt/snowflake/melt_freeze_crust.png',
-                  'partly decomposed': 'snowpyt/snowflake/partly_decomposed.png',
-                  'recent snow':'snowpyt/snowflake/recent_snow.png',
-                  'ice column':'snowpyt/snowflake/ice_column.png',
-                  'percolation column':'snowpyt/snowflake/ice_column.png',
-                  'percolation':'snowpyt/snowflake/ice_column.png',
-                  'rounding depth hoar':'snowpyt/snowflake/rounding_depth_hoar.png',
-                  'cavity crevasse hoar':'snowpyt/snowflake/cavity_crevasse_hoar.png',
-                  'rounding surface hoar':'snowpyt/snowflake/rounding_surface_hoar.png',
-                  'basal ice':'snowpyt/snowflake/basal_ice.png',
-                  'rain crust':'snowpyt/snowflake/rain_crust.png',
-                  'sun crust':'snowpyt/snowflake/sun_crust.png',
-                  'surface hoar':'snowpyt/snowflake/surface_hoar.png',
-                  'hoar frost':'snowpyt/snowflake/surface_hoar.png',
-                  'rounded polycrystals':'snowpyt/snowflake/rounded_polycrystals.png',
+snowflake_dict = {'faceted':'snowflake/faceted.png',
+                  'wind packed':'snowflake/wind_packed.png',
+                  'wind slab':'snowflake/wind_packed.png',
+                  'windslab':'snowflake/wind_packed.png',
+                  'horizontal ice layer':'snowflake/ice.png',
+                  'ice layer':'snowflake/ice.png',
+                  'clustered rounded':'snowflake/cluster_rounded.png',
+                  'cluster rounded':'snowflake/cluster_rounded.png',
+                  'wind broken':'snowflake/wind_broken_precip.png',
+                  'rounded':'snowflake/large_rounded.png',
+                  'faceted and rounded':'snowflake/faceted_rounded.png',
+                  'faceted rounded':'snowflake/faceted_rounded.png',
+                  'rounded and faceted':'snowflake/rounding_faceted.png',
+                  'rounded faceted':'snowflake/rounding_faceted.png',
+                  'depth hoar':'snowflake/hollow_cups.png',
+                  'hollow cups':'snowflake/hollow_cups.png',
+                  'hollow prism':'snowflake/hollow_prism.png',
+                  'melt refreeze':'snowflake/melt_freeze_crust.png',
+                  'melt refreeze crust':'snowflake/melt_freeze_crust.png',
+                  'partly decomposed': 'snowflake/partly_decomposed.png',
+                  'recent snow':'snowflake/recent_snow.png',
+                  'ice column':'snowflake/ice_column.png',
+                  'percolation column':'snowflake/ice_column.png',
+                  'percolation':'snowflake/ice_column.png',
+                  'rounding depth hoar':'snowflake/rounding_depth_hoar.png',
+                  'cavity crevasse hoar':'snowflake/cavity_crevasse_hoar.png',
+                  'rounding surface hoar':'snowflake/rounding_surface_hoar.png',
+                  'basal ice':'snowflake/basal_ice.png',
+                  'rain crust':'snowflake/rain_crust.png',
+                  'sun crust':'snowflake/sun_crust.png',
+                  'surface hoar':'snowflake/surface_hoar.png',
+                  'hoar frost':'snowflake/surface_hoar.png',
+                  'rounded polycrystals':'snowflake/rounded_polycrystals.png',
 
-                  'slush':'snowpyt/snowflake/slush.png',
-                  'chains of depth hoar':'snowpyt/snowflake/chains_of_depth_hoar.png',
-                  'near surface faceted':'snowpyt/snowflake/near_surface_faceted.png'}
+                  'slush':'snowflake/slush.png',
+                  'chains of depth hoar':'snowflake/chains_of_depth_hoar.png',
+                  'near surface faceted':'snowflake/near_surface_faceted.png'}
 
 class layer(object):
     def __init__(self):
@@ -212,6 +212,19 @@ class Snowpit(object):
         # load layers
         self.layers = cx.get_layers(self.filename)
         self._extract_layers()
+
+
+    def print_xlsx_sheets(self):
+        '''
+        Function to print in console the sheets within the xlsx file
+        :return:
+        '''
+        if self.filename[-4:]=='xlsx':
+            print('File ' + self.filename + ' contains the following sheets:')
+            px.sheet_names_xlsx(self.filename)
+        else:
+            print('The file is not of .xlsx format')
+
 
     def import_xlsx(self, sheet=None):
         if sheet == None:
