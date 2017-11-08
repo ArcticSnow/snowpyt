@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: snowpyt
-Version: 0.1.64
+Version: 0.1.66
 Summary: A Python project to visualize snowpit
 Home-page: https://github.com/ArcticSnow/snowpyt
 Author: Simon Filhol
@@ -146,7 +146,26 @@ Description: Snowpyt: an open-source library to visualize snowpits in Python
             mypit.plot(metadata=True)
             mypit.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size'], metadata=True)
         
-        ​
+        5. All the data table are loaded as a Pandas dataframe within the
+           snowpyt class object
+        
+        Type the following in your Python console to see the loaded datatable:
+        
+        .. code:: python
+        
+            mypit.table
+        
+        This allows for custom plotting using the library of your choice on top
+        of the existing plotting function
+        
+        6. Extra Sample Values
+        
+        Extra column of sample values can be added to the excel file. **Column
+        name must be unique**
+        
+        The current plotting functions will not plot these extra columns, only
+        the first one. However the values are loaded via pandas in the table as
+        a dataframe (see 5.)
         
         Want to contribute?
         -------------------

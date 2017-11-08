@@ -106,7 +106,23 @@ mypit.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size']
 
 ```
 
-   ​
+5. All the data table are loaded as a Pandas dataframe within the snowpyt class object
+
+Type the following in your Python console to see the loaded datatable:
+```python
+mypit.table
+
+```
+This allows for custom plotting using the library of your choice on top of the existing plotting function
+
+6. Extra Sample Values
+
+Extra column of sample values can be added to the excel file. **Column name must be unique**
+
+The current plotting functions will not plot these extra columns, only the first one. However the values are loaded via pandas in the table as a dataframe (see 5.)
+
+
+
 
 ## Want to contribute?
 Once you have cloned the project to your home directory, create a git branch and here you go. When your edits are stable, merge with the master branch. See this neat tutorial about git branching and merging, [here](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging)

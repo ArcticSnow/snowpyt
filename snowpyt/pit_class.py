@@ -169,7 +169,7 @@ class Snowpit(object):
         self.temperature_profile = temperature_profile()
         self.density_profile = density_profile()
         self.sample_profile = sample_profile()
-        self.table = None
+        self.table = pd.DataFrame()
         self.layers = None
         self.units = None
 

@@ -99,14 +99,20 @@ def get_table(sh, path_xlsx):
 
     rowtoskip = range(0, int(values.get('Stra'))+1)
     rowtoskip.append(int(values.get('Stra'))+2)
-    table = pd.read_excel(path_xlsx, sheetname=sh.name,header=-1, skiprows=rowtoskip, engine='xlrd')
+    print rowtoskip
 
+    # read excel file to get data
+    table = pd.read_excel(path_xlsx, sheetname=sh.name, skiprows=rowtoskip, engine='xlrd')
+
+    # # read excel file to get headers
+    # header = pd.read_excel(path_xlsx, sheetname=sh.name, skiprows=rowtoskip[:-1], engine='xlrd').columns
+    #
     newCol = []
     for i, name in enumerate(table.columns):
         newCol += [name.replace(' ', '_').lower()]
     table.columns = newCol
 
-    units = pd.read_excel(path_xlsx, sheet=sh.name,header=-1, skiprows=int(values.get('Stra'))+2, engine='xlrd')
+    units = pd.read_excel(path_xlsx, sheet=sh.name, header=None, skiprows=int(values.get('Stra'))+2, engine='xlrd')
     units = units.loc[0]
     # return an extra dataframe containing units only
     return table, units
