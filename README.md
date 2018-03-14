@@ -10,7 +10,6 @@ Feel free to contribute to the project!!!! Many new features can be added...
 ### High Priority
 
 - write function to save and load pit to and from pickle format (currently not working)
-- reorganize package example, standard excel and csv snowpit file
 - make ground appear to comfirm the user that the pit reached ground. add note about ground type.
 
 ### Low priority 
@@ -63,51 +62,53 @@ Python 2.7.9 with the following libraries:
 - [matplotlib](http://matplotlib.org/)
 - [pandas](http://pandas.pydata.org/)
 - xlrd
+- xlm
 
 ## Use
 
-1. Snowpit must be formated following the template file "Standard_pit.xlsx"
-   - requirements:
-      - To see the supported list of snowflakes input, see the python         dictionnary snowflake_dict in the pit_class.py file.
+1. There are three ways to import data into Snowpyt:
 
-      - Only ASCII characters in fields. Currently not supporting special characters
+   1. digitalize your pit with https://niviz.org/ and export your pit as a CAAMLv6 (This format follows an international standard for snowpit). Them use the import_caamlv6() function.
 
-2. Save the excel or libreoffice file in .xslx format (default Excel format).
+      More information about the [CAAML format](http://caaml.org/)
 
-3. Load the snowpit into snowpyt
+   2. digitalize you snowpit using the excel file template in the [excel file example here](https://github.com/ArcticSnow/snowpyt/blob/master/snowpyt/data_example/20170209_Finse_snowpit.xlsx). Save the excel or libreoffice file in .xslx format (default Excel format).
 
-```python
-from snowpyt import pit_class as pc
+   3. input directly data into the snowpit class object
 
-path_to_file = 'snowpyt/data_example/20170209_Finse_snowpit.xlsx'
+      ​
 
-mypit = pc.Snowpit()
-mypit.filename = path_to_file
-mypit.import_xlsx()
-
-mypit.plot(metadata=True)
-mypit.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size'], metadata=True)
-
-mypit.metadata.__dict__
-```
-
-4. It is also possible to load data from an .xml file formatted according to  [CAAML format](http://caaml.org/)
+3. Example:
 
 ```python
 from snowpyt import pit_class as pc
 
-path_to_file = 'path to xml file in CAAML format'
+############################################################
+# Example 1 - using a caamlv6 file:
 
-mypit = pc.Snowpit()
-mypit.filename = path_to_file
-mypit.import_xml()
+filename = '[PATH TO YOUR FILE].caaml'
 
-mypit.plot(metadata=True)
-mypit.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size'], metadata=True)
+p = pc.Snowpit()
+p.filename=filename
+p.import_caamlv6()
+p.plot(plots_order=['density', 'temperature', 'stratigraphy', 'hardness'])
+
+
+############################################################
+# Example 2 - using an excel file:
+
+filename = '[PATH TO YOUR FILE].xlsx'  
+
+pit1 = pc.Snowpit()
+pit1.filename = filename
+pit1.import_xlsx()
+pit1.plot(metadata=True)
+pit1.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size', 'sample value'])
+pit1.plot(plots_order=['density', 'sample names','sample values'])
 
 ```
 
-5. All the data table are loaded as a Pandas dataframe within the snowpyt class object
+4. All the data table are loaded as a Pandas dataframe or Numpy arrays within the snowpyt class object
 
 Type the following in your Python console to see the loaded datatable:
 ```python

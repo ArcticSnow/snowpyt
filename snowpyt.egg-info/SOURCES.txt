@@ -3,7 +3,8 @@ README.md
 setup.cfg
 setup.py
 data_example/20170209_Finse_snowpit.csv
-snowpyt/CAAML_xml.py
+snowpyt/CAAMLv5_xml.py
+snowpyt/CAAMLv6_xml.py
 snowpyt/Example.py
 snowpyt/JC_pit_class.py
 snowpyt/__init__.py
