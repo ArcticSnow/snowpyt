@@ -1,0 +1,62 @@
+Snowpit form for Snowpyt package																		
+																		
+Method:	1. Input values in green. If no value, leave cell empty																	
+	2. make sure spelling of snowflakes is correct, and hardness code is computed																	
+	3. save as csv file with tab delimiting fields																	
+	4. ready to import with Snowpyt package!																	
+																		
+Supported snowflake names		Hardness coding																
+chain of depth hoar		feast	1															
+depth hoar		4 finger	2															
+faceted		3 finger	3															
+faceted rounded		2 finger	4															
+ice		1 finger	5															
+melt refreeze		pencil	6															
+partly decomposed		knife	7															
+recent snow																		
+rounded																		
+rounded faceted																		
+wind broken																		
+wind packed																		
+clustered rounded																		
+dendrites																		
+ice layer	add it!!!!!																	
+slush	add it!!!!!																	
+																		
+																		
+																		
+																		
+																		
+Metadata																		
+Snowpit Name																		
+Date [YYYY-mm-dd]	2016-02-09																	
+Time [24hr]	10																	
+Observer	Simon F, Sven D																	
+General location	Finse, 1*1 km grid																	
+East [deg]	7.53822785223986																	
+North [deg]	60.578945																	
+Elevation [m]	1300	m																
+Weather conditions	Overcast with sun, wind from ESE triggering saltation																	
+Comments	Snow pit aside the Thomas weather station. 																	
+Air temperature [degC]	-18																	
+																		
+Stratigraphy											Density			Temperature			Sample	
+Layer ID	Top [cm]	Bottom [cm]	Type 1	Type 2	Type 3	Diameter min [mm]	Diameter max [mm]	Hardness	Hardness code		Depth Center [cm]	Snow Density [g/cm3]		Depth [cm]	Temp [deg C]		Depth Center [cm]	ID_sample
+1	0	12	windslab	faceted		0.1	0.5	3f	3		5	24		3	-15		5	1
+2	12	13	ice layer					k	7		17	28		15	-10.6		17	2
+3	13	22	faceted			0.2	0.5	3f	3		30	34		35	-6.7		30	3
+4	22	23	ice layer					k	7		40	35		65	-3.2		40	4
+5	23	37	windslab	faceted rounded	cluster rounded	0.2	1	1f	5		48	36		85	-2.1		48	5
+6	37	37	ice layer					k	7		52	30		113	-1		52	6
+7	37	43	windslab	cluster rounded		0.5	1	p	6		59	38		145	-0.6		59	7
+8	43	43	ice layer					k	7		67	40					67	8
+9	43	50	windslab	cluster rounded		0.5	1	1f	5		80	48					80	9
+10	50	54	faceted rounded	cluster rounded		1	2	2f	4		120	50					120	10
+11	54	62	faceted rounded	cluster rounded		1		p	6								95	11
+12	62	63	melt refreeze					p	6								110	12
+13	63	72	faceted rounded	cluster rounded		0.5	1.5	p	6								127	13
+14	72	74	ice layer					k	7									
+15	74	135	cluster rounded	rounded	percolation			p	6									
+16	135	140	melt refreeze					k	7									
+17	140	145	ice layer	melt refreeze				k	7									
+18	145		basal ice															

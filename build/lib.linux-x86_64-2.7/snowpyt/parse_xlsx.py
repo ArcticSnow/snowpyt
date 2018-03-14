@@ -131,8 +131,8 @@ def get_layers(table):
         layer.dtop = line.layer_bottom
         layer.hardness = line.hardness_code
         #layer.dtop_unit = line
-        layer.grain_size_mean = line.diameter_min
-        layer.grain_size_max = line.diameter_max
+        layer.grain_size_max = line.diameter_min
+        layer.grain_size_min = line.diameter_max
         layer.grain_type1 = line.type_1
         layer.grain_type2 = line.type_2
         layer.grain_type3 = line.type_3

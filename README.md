@@ -15,10 +15,11 @@ Feel free to contribute to the project!!!! Many new features can be added...
 
 ### Low priority 
 - specify the figure size and adjust font size in respect
-- render the medatadata text better
-- put option to adjust figure size to desired size and dpi
+- render the medatadata text better, convert date to a readable date
+- put option to adjust figure size to desired size and dpi. Return axis variable from plotting function for more advanced plotting if needed (i.e. multiple samples)
 - add option to save pits in Pickle format or CSV
 - add option to save figure in matplotlib format
+- add option to plot when multiple sample columns are given.
 
 
 

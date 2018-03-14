@@ -11,11 +11,8 @@ import pickle
 import numpy as np
 import pandas as pd
 import xlrd, inspect, os
-import CAAMLv5_xml as cxv5
-import CAAMLv6_xml as cxv6
+import CAAML_xml as cx
 import parse_xlsx as px
-from snowflake.sf_dict import snowflake_symbol_dict
-import snowflake.sf_dict as sfd
 
 from matplotlib import pyplot as plt
 import matplotlib.cm as cm
@@ -24,22 +21,60 @@ from matplotlib.ticker import MaxNLocator
 
 path2snowflake = os.path.dirname(inspect.getfile(px))+'/'
 
+snowflake_dict = {'basal ice':'snowflake/basal_ice.png',
+                    'cavity crevasse hoar':'snowflake/cavity_crevasse_hoar.png',
+                    'chains of depth hoar':'snowflake/chains_of_depth_hoar.png',
+                    'clustered rounded':'snowflake/cluster_rounded.png',
+                    'cluster rounded':'snowflake/cluster_rounded.png',
+                    'depth hoar':'snowflake/hollow_cups.png',
+                    'faceted':'snowflake/faceted.png',
+                    'faceted and rounded':'snowflake/faceted_rounded.png',
+                    'faceted rounded':'snowflake/faceted_rounded.png',
+                    'hollow cups':'snowflake/hollow_cups.png',
+                    'hollow prism':'snowflake/hollow_prism.png',
+                    'hoar frost':'snowflake/surface_hoar.png',
+                    'horizontal ice layer':'snowflake/ice.png',
+                    'ice':'snowflake/ice.png',
+                    'ice column':'snowflake/ice_column.png',
+                    'ice layer':'snowflake/ice.png',
+                    'ice lenses':'snowflake/ice.png',
+                    'melt refreeze':'snowflake/melt_freeze_crust.png',
+                    'melt refreeze crust':'snowflake/melt_freeze_crust.png',
+                    'melt freeze crust':'snowflake/melt_freeze_crust.png',
+                    'near surface faceted':'snowflake/near_surface_faceted.png',
+                    'partly decomposed': 'snowflake/partly_decomposed.png',
+                    'percolation column':'snowflake/ice_column.png',
+                    'percolation':'snowflake/ice_column.png',
+                    'rain crust':'snowflake/rain_crust.png',
+                    'recent snow':'snowflake/recent_snow.png',
+                    'rounding depth hoar':'snowflake/rounding_depth_hoar.png',
+                    'rounding surface hoar':'snowflake/rounding_surface_hoar.png',
+                    'rounded':'snowflake/large_rounded.png',
+                    'rounded and faceted':'snowflake/rounding_faceted.png',
+                    'rounded faceted':'snowflake/rounding_faceted.png',
+                    'rounded polycrystals':'snowflake/rounded_polycrystals.png',
+                    'slush':'snowflake/slush.png',
+                    'sun crust':'snowflake/sun_crust.png',
+                    'surface hoar':'snowflake/surface_hoar.png',
+                    'wind packed':'snowflake/wind_packed.png',
+                    'wind slab':'snowflake/wind_packed.png',
+                    'windslab':'snowflake/wind_packed.png',
+                    'wind broken':'snowflake/wind_broken_precip.png'}
 
 class layer(object):
     def __init__(self):
         self.dtop = None
         self.dtop_unit = None
         self.dbot = None
-        self.thickness = None
+        #self.thickness = None
         self.thickness_unit = None
         self.grain_type1 = None
         self.grain_type2 = None
         self.grain_type3 = None
-        self.grainSize_unit = None
-        self.grainSize_mean = None
-        self.grainSize_max = None
-        self.hardness_ram = None
-        self.hardness_index = None
+        self.grain_size_unit = None
+        self.grain_size_avg = None
+        self.gain_size_min = None
+        self.grain_size_max = None
         self.hardness = None
         self.lwc = None
         self.id = None
@@ -115,7 +150,6 @@ class metadata(object):
         self.air_temperature_unit = None
         self.windspeed = None
         self.windspeed_unit = None
-        self.winddir=None
         self.comments = None
 
     def __str__(self):
@@ -129,7 +163,7 @@ class Snowpit(object):
 
     # try to modify the snowpit class to use medata, layers and profile as class object
     def __init__(self):
-        self.snowflakeDICT = snowflake_symbol_dict
+        self.snowflakeDICT = snowflake_dict
         self.filename = None
         self.metadata = metadata()
         self.temperature_profile = temperature_profile()
@@ -147,9 +181,8 @@ class Snowpit(object):
 
         self.layers_bot = np.zeros(self.layers.__len__()) * np.nan
         self.layers_top = self.layers_bot * np.nan
-        self.layers_hardness_ram = self.layers_bot * np.nan
-        self.layers_hardness_index = self.layers_bot * np.nan
-        self.layers_grainSize_mean = self.layers_top * np.nan
+        self.layers_hardness = self.layers_bot * np.nan
+        self.layers_grainSize_min = self.layers_top * np.nan
         self.layers_grainSize_max = self.layers_top * np.nan
         self.layers_id = self.layers_top * np.nan
         self.layers_grainType1 = np.empty(self.layers.__len__(), dtype=object)
@@ -159,47 +192,31 @@ class Snowpit(object):
         for i, layer in enumerate(self.layers):
             print 'layer # ' + str(i)
             print layer.__dict__
+            print layer.dbot
             self.layers_bot[i] = layer.dbot
             self.layers_top[i] = layer.dtop
-            self.layers_hardness_index[i] = sfd.hardness_dict.get(layer.hardness)
-            try:
-                self.layers_hardness_ram[i] = 19.3 * self.layers_hardness_index[i] ** 2.4
-            except:
-                print 'WARNING: no hardness data'
-            self.layers_grainSize_mean[i] = layer.grainSize_mean
-            self.layers_grainSize_max[i] = layer.grainSize_max
+            self.layers_hardness[i] = layer.hardness
+            self.layers_grainSize_min[i] = layer.grain_size_min
+            self.layers_grainSize_max[i] = layer.grain_size_max
             self.layers_id[i] = layer.id
             self.layers_grainType1[i] = layer.grain_type1
             self.layers_grainType2[i] = layer.grain_type2
             self.layers_grainType3[i] = layer.grain_type3
 
-    def import_caamlv5(self):
+    def import_xml(self):
         # Load metadata
-        self.metadata = cxv5.get_metadata(self.filename)
+        self.metadata = cx.get_metadata(self.filename)
 
         # load temperature profile
-        self.temperature_profile = cxv5.get_temperature(self.filename)
+        self.temperature_profile = cx.get_temperature(self.filename)
 
         # load density profile
-        self.density_profile = cxv5.get_density()
+        self.density_profile = cx.get_density()
 
         # load layers
-        self.layers = cxv5.get_layers(self.filename)
+        self.layers = cx.get_layers(self.filename)
         self._extract_layers()
 
-    def import_caamlv6(self):
-        # Load metadata
-        self.metadata = cxv6.get_metadata(self.filename)
-
-        # load temperature profile
-        self.temperature_profile = cxv6.get_temperature(self.filename)
-
-        # load density profile
-        self.density_profile = cxv6.get_density(self.filename)
-
-        # load layers
-        self.layers = cxv6.get_layers(self.filename)
-        self._extract_layers()
 
     def print_xlsx_sheets(self):
         '''
@@ -362,9 +379,7 @@ class Snowpit(object):
             plt.setp(ax.get_xticklabels(), visible=False)
 
             im2 = ax.barh(self.layers_bot-(self.layers_bot-self.layers_top)/2, np.repeat(1, self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
-                          color=cm.Blues(self.layers_hardness_index / 6), edgecolor='k', linewidth=0.5)
-
-            #edgecolor='k', linewidth=0.5)
+                       color=cm.Blues(self.layers_hardness / 7), edgecolor='k', linewidth=0.5)
             ax.set_xlim(0, 1)
 
             # include sample name on pit face
@@ -373,17 +388,15 @@ class Snowpit(object):
 
             # include snowflake symbols
             for i, flake in enumerate(self.layers_grainType1.astype(str)):
-                if flake == 'nan':
-                    flake = None
-                if flake != None:
-                    if snowflake_symbol_dict.get(flake) != None:
+                if flake != 'nan':
+                    if snowflake_dict.get(flake) is not None:
 
-                        im = plt.imread(path2snowflake + snowflake_symbol_dict.get(flake))
+                        im = plt.imread(path2snowflake + snowflake_dict.get(flake))
                         im[im == 0] = np.nan
                         imagebox = OffsetImage(im, zoom=.01)
-                        if (self.layers_grainType2[i] is None) and (self.layers_grainType3[i] is None):
+                        if (self.layers_grainType2.astype(str)[i] == 'nan') and (self.layers_grainType3.astype(str)[i] == 'nan'):
                             hloc = 0.5
-                        elif (self.layers_grainType2[i] != None) and (self.layers_grainType3[i] is None):
+                        elif (self.layers_grainType2.astype(str)[i] != 'nan') and (self.layers_grainType3.astype(str)[i] == 'nan'):
                             hloc = 0.33
                         else:
                             hloc = 0.25
@@ -396,14 +409,12 @@ class Snowpit(object):
                         print 'WARNING: [' + flake + '] is not a compatible snowflake type. Check spelling!'
 
             for i, flake in enumerate(self.layers_grainType2.astype(str)):
-                if flake == 'nan':
-                    flake = None
-                if flake is not None:
-                    if snowflake_symbol_dict.get(flake) != None:
-                        im = plt.imread(path2snowflake + snowflake_symbol_dict.get(flake))
+                if flake != 'nan':
+                    if snowflake_dict.get(flake) is not None:
+                        im = plt.imread(path2snowflake + snowflake_dict.get(flake))
                         im[im == 0] = np.nan
                         imagebox = OffsetImage(im, zoom=.01)
-                        if (self.layers_grainType2[i] != None) and (self.layers_grainType3[i] is None):
+                        if (self.layers_grainType2.astype(str)[i] != 'nan') and (self.layers_grainType3.astype(str)[i] == 'nan'):
                             hloc2 = 0.66
                         else:
                             hloc2 = 0.5
@@ -415,11 +426,9 @@ class Snowpit(object):
                         print 'WARNING: [' + flake + '] is not a compatible snowflake type. Check spelling!'
 
             for i, flake in enumerate(self.layers_grainType3.astype(str)):
-                if flake == 'nan':
-                    flake = None
-                if flake != None:
-                    if snowflake_symbol_dict.get(flake) != None:
-                        im = plt.imread(path2snowflake + snowflake_symbol_dict.get(flake))
+                if flake != 'nan':
+                    if snowflake_dict.get(flake) is not None:
+                        im = plt.imread(path2snowflake + snowflake_dict.get(flake))
                         im[im == 0] = np.nan
                         imagebox = OffsetImage(im, zoom=.01)
                         xy = [0.75,
@@ -436,13 +445,13 @@ class Snowpit(object):
             plt.setp(ax.get_yticklabels(), visible=False)
 
             # Add grid following the layering
-            im = ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2, self.layers_hardness_index,
-                         self.layers_bot - self.layers_top, color=cm.Blues(self.layers_hardness_index / 6), edgecolor='k',
+            im = ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2, self.layers_hardness,
+                         self.layers_bot - self.layers_top, color=cm.Blues(self.layers_hardness / 7), edgecolor='k',
                          linewidth=0.5)
 
-            ax.set_xlim(0, 7)
+            ax.set_xlim(0, 8)
             ax.set_title("Hardness")
-            labels_ax = ['', 'Fist', '4F', '1F', 'P', 'K', 'I']
+            labels_ax = ['', 'Fist', '4F', '3F', '2F', '1F', 'P', 'K']
             ax.set_xticklabels(labels_ax, rotation=45)
             ax.xaxis.set_major_locator(MaxNLocator(integer=True, prune='upper'))
             return im
@@ -453,7 +462,7 @@ class Snowpit(object):
             else:
                 plt.setp(ax.get_yticklabels(), visible=False)
                 ax.yaxis.tick_right()
-            im = ax.barh(self.layers_bot-(self.layers_bot-self.layers_top)/2, self.layers_grainSize_max-self.layers_grainSize_mean, 1, self.layers_grainSize_mean)
+            im = ax.barh(self.layers_bot-(self.layers_bot-self.layers_top)/2, self.layers_grainSize_max-self.layers_grainSize_min, 1, self.layers_grainSize_min)
             xlim = ax.get_xlim()
             ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
                     np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
@@ -508,13 +517,15 @@ class Snowpit(object):
             plt.setp(ax.get_xticklabels(), visible=False)
 
         if metadata:
-            metadata_text = "Date: " + p.metadata.date + '; Time [24hr]: ' + '\n' + \
-                            "Observer: " + p.metadata.observer + '\n' + \
-                            "Location description: " + p.metadata.location_description + '\n' + \
-                            "East : " + str(p.metadata.east) + ' ' + \
-                            "North: " + str(p.metadata.north) + ' ' + \
-                            "Elevation: " + str(p.metadata.elevation) + ' ' + p.metadata.elevation_unit + '\n' + \
-                            "Air temperature: " + str(p.metadata.air_temperature) + '$^{\circ}C$' '\n'
+            metadata_text = "Date: " + self.metadata.date + '; Time [24hr]: ' + self.metadata.time + '\n' + \
+                            "Observer: " + self.metadata.observer + '\n' + \
+                            "Location description: " + self.metadata.location_description + '\n' + \
+                            "East : " + self.metadata.east + ' ' + self.metadata.east_unit + '\n' + \
+                            "North: " + self.metadata.north + ' ' + self.metadata.north_unit + '\n' + \
+                            "Elevation: " + self.metadata.elevation + ' ' + self.metadata.elevation_unit + '\n' + \
+                            "Weather Conditions: " + self.metadata.sky_conditions + '\n' + \
+                            "Air temperature: " + self.metadata.air_temperature + '$^{\circ}C$' '\n' + \
+                            "Comments: " + self.metadata.comments + '\n'
 
             plt.figtext(0.08, 0.12 , metadata_text,
                         horizontalalignment='left',
@@ -540,6 +551,3 @@ class Snowpit(object):
 
 
 
-#
-
-#
