@@ -19,7 +19,7 @@ import matplotlib.cm as cm
 from matplotlib.offsetbox import AnnotationBbox, OffsetImage
 from matplotlib.ticker import MaxNLocator
 
-path2snowflake = os.path.dirname('snowpyt/snowflake')+'/'
+path2snowflake = os.path.dirname('snowflaked')+'/'
 
 
 class layer(object):
