@@ -1,12 +1,13 @@
-Metadata-Version: 1.1
+Metadata-Version: 2.1
 Name: snowpyt
-Version: 0.1.70
+Version: 0.2.0
 Summary: A Python project to visualize snowpit
 Home-page: https://github.com/ArcticSnow/snowpyt
-Author: Simon Filhol
+Author: S. Filhol,G. Sutter
 Author-email: simon.filhol@geo.uio.no
 License: MIT
-Description: # Snowpyt: an open-source library to visualize snowpits in Python
+Description: 
+        # Snowpyt: an open-source library to visualize snowpits in Python
         Simon Filhol, November 2016, copyright under the MIT license terms, see the License.txt file
         
         LAST MODIFIED: March 2018 (or see date on github file history)
@@ -169,10 +170,12 @@ Description: # Snowpyt: an open-source library to visualize snowpits in Python
         
         
         
-Keywords: Plotting,snow,glaciology,science
 Platform: UNKNOWN
-Classifier: Development Status :: 4 - Beta
-Classifier: Intended Audience :: Science/Research
-Classifier: Topic :: Scientific/Engineering :: Visualization
 Classifier: License :: OSI Approved :: MIT License
-Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Python: >=3.6.0
+Description-Content-Type: text/markdown
