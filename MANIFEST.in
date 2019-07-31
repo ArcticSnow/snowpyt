@@ -1,4 +1,4 @@
-include README.md
+include README.md LICENSE
 include Standard_pit.png
 
 
@@ -34,6 +34,5 @@ include snowpyt/snowflake/surface_hoar.png
 include snowpyt/snowflake/wind_broken_precip.png
 include snowpyt/snowflake/wind_packed.png
 
-include snowpyt/data_example/20170209_Finse_snowpit.csv
-include snowpyt/data_example/20170209_Finse_snowpit.xlsx
-include snowpyt/data_example/Standard_pit.xlsx
+include snowpyt/data_example/201902261050_marsh_ørjan.caaml
+include snowpyt/data_example/20190228_finse_isotopes.csv

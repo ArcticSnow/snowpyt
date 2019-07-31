@@ -8,7 +8,6 @@ Created on Tue Jul 04 13:32:31 2017
 Collection of functions to import snowpit data stored in the CAAMLv6 xml standard
 
 """
-from __future__ import division
 
 import sys
 from xml.dom import minidom
@@ -42,7 +41,7 @@ def get_temperature(path_xml):
         TProfile.temp = np.array(temp).astype(float)
         return TProfile
     else:
-        print 'No temperature profile'
+        print('No temperature profile')
 
 def get_density(path_xml):
 
@@ -56,7 +55,7 @@ def get_density(path_xml):
                 it_top = itemlist[id].getElementsByTagName('caaml:depthTop')
                 it_thick = itemlist[id].getElementsByTagName('caaml:thickness')
             except:
-                print 'No density profile'
+                print('No density profile')
 
         itemlist = xmldoc.getElementsByTagName('caaml:snowPackCond')
         pit_depth = float(itemlist[0].getElementsByTagName('caaml:hS')[0].getElementsByTagName('caaml:height')[0].firstChild.nodeValue)
@@ -77,7 +76,7 @@ def get_density(path_xml):
         DProfile.density = np.array(density).astype(float)
         return DProfile
     else:
-        print 'No density profile'
+        print('No density profile')
 
 
 def childValueNoneTest(child):
@@ -89,7 +88,7 @@ def childValueNoneTest(child):
 def has_child(node, idx=0, dtype='str', unit_ret=False):
     if node.length > 0:
         if dtype == 'str':
-            print node
+            print(node)
             dest_var = str(childValueNoneTest(node[0].firstChild))
         elif dtype == 'float':
             dest_var = float(childValueNoneTest(node[idx].firstChild))
@@ -105,7 +104,7 @@ def has_child(node, idx=0, dtype='str', unit_ret=False):
         else:
             return dest_var
     else:
-        print 'no data in this field'
+        print('no data in this field')
         if unit_ret:
             dest_var = None
             unit_ret=None
@@ -124,8 +123,8 @@ def is_node(node):
 
 
 def get_metadata(path_xml):
-    print '\n====================='
-    print 'Loding metadata... \n'
+    print('\n=====================')
+    print('Loding metadata... \n')
     Metadata = pc.metadata()
 
     Tree = minidom.parse(path_xml)
@@ -165,7 +164,7 @@ def get_layers(path_xml):
     itemlist = xmldoc.getElementsByTagName('caaml:snowPackCond')
 
     pit_depth = has_child(itemlist[0].getElementsByTagName('caaml:hS')[0].getElementsByTagName('caaml:height'), dtype='float')
-    print 'Total snowpit depth = ' + str(pit_depth)
+    print('Total snowpit depth = ' + str(pit_depth))
 
     stratProfile = xmldoc.getElementsByTagName("caaml:stratProfile")
     Layers = []

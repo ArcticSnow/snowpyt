@@ -53,7 +53,20 @@ or by downloading the package
 
 The branch 'master' consists of the latest stable version. Other develepment versions are included in other git branches.
 
-The package contains all the functions to plot the snowpit if library requirements are met. It also contains data samples to test the library.
+The package contains all the functions to plot the Snowpyt if library requirements are met. It also contains data samples to test the library. Message us to be added as a contributor, then if you can also modify the code to your own convenience with the following steps:
+
+To work on a development version and keep using the latest change install it with the following
+```bash
+pip install -e [path2folder/snowpyt]
+```
+and to upload latest change to Pypi.org, simply:
+
+1. change the version number in the file `snowpyt/__version__.py`
+2. run from a terminal from the snowpyt folder, given your `$HOME/.pyc` is correctly set:
+
+```bash
+python setup.py upload
+```
 
 ### requirements
 
@@ -86,26 +99,30 @@ from snowpyt import pit_class as pc
 ############################################################
 # Example 1 - using a caamlv6 file:
 
-filename = '[PATH TO YOUR FILE].caaml'
+
 
 p = pc.Snowpit()
-p.filename=filename
+p.caaml_file= '[PATH TO YOUR FILE].caaml'
 p.import_caamlv6()
 p.plot(plots_order=['density', 'temperature', 'stratigraphy', 'hardness'])
 
+p.plot(metadata=True)
+p.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size'])
 
-############################################################
-# Example 2 - using an excel file:
+# import isotope values (dD, dO18, d-ex)
+p.isotopes_file = '[PATH TO YOUR FILE].csv'
+p.import_isotope_csv()
 
-filename = '[PATH TO YOUR FILE].xlsx'  
+p.plot(plots_order=['dD', 'd18O','d-ex', 'hardness'])
 
-pit1 = pc.Snowpit()
-pit1.filename = filename
-pit1.import_xlsx()
-pit1.plot(metadata=True)
-pit1.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size', 'sample value'])
-pit1.plot(plots_order=['density', 'sample names','sample values'])
+```
 
+The isotope `.csv` file should be following this format:
+```
+number,height_top,height_bot,dD,d18O,dxs,ice_type
+0,94,93.0,-57.55,-8.16,7.73,S
+1,93,89.8,-61.56,-8.76,8.54,S
+2,89.8,86.6,-75.45,-10.64,9.68,S
 ```
 
 4. All the data table are loaded as a Pandas dataframe or Numpy arrays within the snowpyt class object

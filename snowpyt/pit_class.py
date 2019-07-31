@@ -6,14 +6,11 @@ File defining a python class for snowpit data
 November 2016, Simon Filhol
 '''
 
-from __future__ import division
-import pickle
+
 import numpy as np
 import pandas as pd
-import xlrd, inspect, os
-import CAAMLv5_xml as cxv5
+import os
 import CAAMLv6_xml as cxv6
-import parse_xlsx as px
 from snowflake.sf_dict import snowflake_symbol_dict
 import snowflake.sf_dict as sfd
 
@@ -22,7 +19,7 @@ import matplotlib.cm as cm
 from matplotlib.offsetbox import AnnotationBbox, OffsetImage
 from matplotlib.ticker import MaxNLocator
 
-path2snowflake = os.path.dirname(inspect.getfile(px))+'/'
+path2snowflake = os.path.dirname('snowflaked')+'/'
 
 
 class layer(object):
@@ -93,6 +90,15 @@ class sample_profile(object):
         self.sample_value_unit = None
         self.comments = None
 
+class isotope_profile(object):
+    def __init__(self):
+        self.layer_top = []
+        self.layer_bot = []
+        self.depth_unit = None
+        self.names = []
+        self.values = []
+        self.values_units = None
+
 class metadata(object):
     def __init__(self):
         self.date = None
@@ -130,11 +136,13 @@ class Snowpit(object):
     # try to modify the snowpit class to use medata, layers and profile as class object
     def __init__(self):
         self.snowflakeDICT = snowflake_symbol_dict
-        self.filename = None
+        self.caaml_file = None
+        self.isotopes_file = None
         self.metadata = metadata()
         self.temperature_profile = temperature_profile()
         self.density_profile = density_profile()
         self.sample_profile = sample_profile()
+        self.isotope_profile = isotope_profile()
         self.table = pd.DataFrame()
         self.layers = None
         self.units = None
@@ -157,15 +165,15 @@ class Snowpit(object):
         self.layers_grainType3 = np.empty(self.layers.__len__(), dtype=object)
 
         for i, layer in enumerate(self.layers):
-            print 'layer # ' + str(i)
-            print layer.__dict__
+            print('layer # ' + str(i))
+            print(layer.__dict__)
             self.layers_bot[i] = layer.dbot
             self.layers_top[i] = layer.dtop
             self.layers_hardness_index[i] = sfd.hardness_dict.get(layer.hardness)
             try:
                 self.layers_hardness_ram[i] = 19.3 * self.layers_hardness_index[i] ** 2.4
             except:
-                print 'WARNING: no hardness data'
+                print('WARNING: no hardness data')
             self.layers_grainSize_mean[i] = layer.grainSize_mean
             self.layers_grainSize_max[i] = layer.grainSize_max
             self.layers_id[i] = layer.id
@@ -173,70 +181,31 @@ class Snowpit(object):
             self.layers_grainType2[i] = layer.grain_type2
             self.layers_grainType3[i] = layer.grain_type3
 
-    def import_caamlv5(self):
-        # Load metadata
-        self.metadata = cxv5.get_metadata(self.filename)
-
-        # load temperature profile
-        self.temperature_profile = cxv5.get_temperature(self.filename)
-
-        # load density profile
-        self.density_profile = cxv5.get_density()
-
-        # load layers
-        self.layers = cxv5.get_layers(self.filename)
-        self._extract_layers()
-
     def import_caamlv6(self):
         # Load metadata
-        self.metadata = cxv6.get_metadata(self.filename)
+        self.metadata = cxv6.get_metadata(self.caaml_file)
 
         # load temperature profile
-        self.temperature_profile = cxv6.get_temperature(self.filename)
+        self.temperature_profile = cxv6.get_temperature(self.caaml_file)
 
         # load density profile
-        self.density_profile = cxv6.get_density(self.filename)
+        self.density_profile = cxv6.get_density(self.caaml_file)
 
         # load layers
-        self.layers = cxv6.get_layers(self.filename)
+        self.layers = cxv6.get_layers(self.caaml_file)
         self._extract_layers()
 
-    def print_xlsx_sheets(self):
-        '''
-        Function to print in console the sheets within the xlsx file
-        :return:
-        '''
-        if self.filename[-4:]=='xlsx':
-            print('File ' + self.filename + ' contains the following sheets:')
-            px.sheet_names_xlsx(self.filename)
-        else:
-            print('The file is not of .xlsx format')
 
+    def import_isotope_csv(self):
+        self.isotope_profile.df = pd.read_csv(self.isotopes_file)
+        self.isotope_profile.layer_top = self.isotope_profile.df.height_top
+        self.isotope_profile.layer_bot = self.isotope_profile.df.height_bot
+        self.isotope_profile.names = self.isotope_profile.df.columns[2:]
 
-    def import_xlsx(self, sheet=None):
-        if sheet == None:
-            sheets = px.sheet_names_xlsx(self.filename)
-            sheet = sheets[0]
-
-        sh = px.open_xlsx(self.filename, sheetName=sheet)
-        self.table, self.units = px.get_table(sh, self.filename)
-        self.metadata = px.get_metadata(sh)
-        self.density_profile = px.get_density(self.table)
-        self.temperature_profile = px.get_temperature(self.table)
-        self.layers = px.get_layers(self.table)
-        self.sample_profile = px.get_sample(self.table)
-
-        self._extract_layers()
-
-        print 'Snowpit loaded from xlsx file'
-
-    def import_csv(self):
-        print 'Not implemented'
-
-    #==========================
-
-    def plot(self, save=False, metadata=False, plot_all=False, invert_depth=False,
-                     plots_order=['temperature', 'density', 'crystal size', 'stratigraphy', 'hardness', 'sample values','sample names']):
+    def plot(self, save=False, metadata=False, invert_depth=False,
+                     plots_order=['temperature', 'density', 'crystal size',
+                                  'stratigraphy', 'hardness', 'sample values',
+                                  'sample names', 'dD', 'd18O', 'd-ex']):
         fig = plt.figure(figsize=(8, 4), dpi=150)
 
         if metadata:
@@ -305,9 +274,89 @@ class Snowpit(object):
                           'hardness': plot_hardness,
                           'crystal size': plot_crystalSize,
                           'sample names': plot_sample_names,
-                          'sample values': plot_sample_values}
+                          'sample values': plot_sample_values,
+                          'dD': plot_dD,
+                          'd18O': plot_d18O,
+                          'd-ex': plot_d_ex}
             for i, axs in enumerate(axis_list):
                 plots_dict.get(plot_order[i])(axs)
+
+        def plot_dD(ax):
+            if ax is ax1:
+                ax.set_ylabel("Depth (cm)")
+            else:
+                plt.setp(ax.get_yticklabels(), visible=False)
+                ax.yaxis.tick_right()
+
+            im = ax.step(np.append(self.isotope_profile.df.dD.values[0], self.isotope_profile.df.dD.values),
+                         np.append(self.isotope_profile.df.height_top.values,0), where='post')
+            ax.set_title("dD ($^{o}/_{oo}$)")
+            xlim = ax.get_xlim()
+
+            # Add grid following the layering
+            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
+                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
+                    np.repeat(xlim[0], self.layers_top.__len__()),
+                    color='w', alpha=0.2, edgecolor='k', linewidth=0.5, linestyle=':')
+            ax.set_xlim(xlim)
+            #ax.grid(axis='x', linewidth=0.5, linestyle=':')
+            for tick in ax.get_xticklabels():
+                tick.set_rotation(45)
+
+            return im
+
+        def plot_d18O(ax):
+            if ax is ax1:
+                ax.set_ylabel("Depth (cm)")
+            else:
+                plt.setp(ax.get_yticklabels(), visible=False)
+                ax.yaxis.tick_right()
+
+            im = ax.step(np.append(self.isotope_profile.df.d18O.values[0], self.isotope_profile.df.d18O.values),
+                         np.append(self.isotope_profile.df.height_top.values, 0), where='post', color='#d62728')
+            ax.set_title("d18O ($^{o}/_{oo}$)")
+            xlim = ax.get_xlim()
+
+            # Add shading for the ice type of isotope sample
+            ax.barh(
+                self.isotope_profile.layer_bot - (self.isotope_profile.layer_bot - self.isotope_profile.layer_top) / 2,
+                np.repeat(xlim[1] - xlim[0], self.isotope_profile.layer_top.__len__()), - (self.isotope_profile.layer_bot - self.isotope_profile.layer_top),
+                np.repeat(xlim[0], self.isotope_profile.layer_top.__len__()),
+                color=cm.bone(pd.Categorical(self.isotope_profile.df.ice_type).codes), alpha=0.2)
+
+            # Add grid following the layering
+            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
+                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
+                    np.repeat(xlim[0], self.layers_top.__len__()),
+                    color='w', alpha=0.2, edgecolor='k', linewidth=0.5, linestyle=':')
+            ax.set_xlim(xlim)
+            ax.grid(axis='x', linewidth=0.5, linestyle=':')
+            for tick in ax.get_xticklabels():
+                tick.set_rotation(45)
+            return im
+
+        def plot_d_ex(ax):
+            if ax is ax1:
+                ax.set_ylabel("Depth (cm)")
+            else:
+                plt.setp(ax.get_yticklabels(), visible=False)
+                ax.yaxis.tick_right()
+
+            im = ax.step(np.append(self.isotope_profile.df.dxs.values[0], self.isotope_profile.df.dxs.values),
+                         np.append(self.isotope_profile.df.height_top.values, 0), where='post', color='#2ca02c')
+            ax.set_title("d-excess ($^{o}/_{oo}$)")
+            xlim = ax.get_xlim()
+
+            # Add grid following the layering
+            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
+                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
+                    np.repeat(xlim[0], self.layers_top.__len__()),
+                    color='w', alpha=0.2, edgecolor='k', linewidth=0.5, linestyle=':')
+            ax.set_xlim(xlim)
+            ax.grid(axis='x', linewidth=0.5, linestyle=':')
+            for tick in ax.get_xticklabels():
+                tick.set_rotation(45)
+            return im
 
         def plot_density(ax):
             if ax is ax1:
@@ -361,7 +410,8 @@ class Snowpit(object):
                 ax.yaxis.tick_right()
             plt.setp(ax.get_xticklabels(), visible=False)
 
-            im2 = ax.barh(self.layers_bot-(self.layers_bot-self.layers_top)/2, np.repeat(1, self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
+            im2 = ax.barh(self.layers_bot-(self.layers_bot-self.layers_top)/2,
+                          np.repeat(1, self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
                           color=cm.Blues(self.layers_hardness_index / 6), edgecolor='k', linewidth=0.5)
 
             #edgecolor='k', linewidth=0.5)
@@ -393,7 +443,7 @@ class Snowpit(object):
                         ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
                         ax.add_artist(ab)
                     else:
-                        print 'WARNING: [' + flake + '] is not a compatible snowflake type. Check spelling!'
+                        print('WARNING: [' + flake + '] is not a compatible snowflake type. Check spelling!')
 
             for i, flake in enumerate(self.layers_grainType2.astype(str)):
                 if flake == 'nan':
@@ -412,7 +462,7 @@ class Snowpit(object):
                         ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
                         ax.add_artist(ab)
                     else:
-                        print 'WARNING: [' + flake + '] is not a compatible snowflake type. Check spelling!'
+                        print('WARNING: [' + flake + '] is not a compatible snowflake type. Check spelling!')
 
             for i, flake in enumerate(self.layers_grainType3.astype(str)):
                 if flake == 'nan':
@@ -427,7 +477,7 @@ class Snowpit(object):
                         ab = AnnotationBbox(imagebox, xy, xycoords='data', boxcoords='data', frameon=False)
                         ax.add_artist(ab)
                     else:
-                        print 'WARNING: [' + flake + '] is not a compatible snowflake type. Check spelling!'
+                        print('WARNING: [' + flake + '] is not a compatible snowflake type. Check spelling!')
 
             ax.set_title("Stratigraphy")
             return im2
@@ -528,15 +578,15 @@ class Snowpit(object):
 
         if save == True:
             fig.savefig(self.filename.split('/')[-1][0:-4])
-            print 'Figure saved as ' + self.filename.split('/')[-1][0:-4] + '.png'
+            print('Figure saved as ' + self.filename.split('/')[-1][0:-4] + '.png')
 
 
 
     def print_metadata(self):
-        print 'Not implemented [print_metadata()]'
+        print('Not implemented [print_metadata()]')
 
     def print_layers(self):
-        print 'Not implemented [print_layers()]'
+        print('Not implemented [print_layers()]')
 
 
 
