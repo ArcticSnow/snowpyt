@@ -1,7 +1,7 @@
 # Snowpyt: an open-source library to visualize snowpits in Python
 Simon Filhol, November 2016, copyright under the MIT license terms, see the License.txt file
 
-LAST MODIFIED: March 2018 (or see date on github file history)
+LAST MODIFIED: August 2019 (or see date on github file history)
 
 Feel free to contribute to the project!!!! Many new features can be added...
 
@@ -11,6 +11,7 @@ Feel free to contribute to the project!!!! Many new features can be added...
 
 - write function to save and load pit to and from pickle format (currently not working)
 - make ground appear to comfirm the user that the pit reached ground. add note about ground type.
+- Create a plotting function to plot any newly named column from the isotope class object. Maybe rename the isotope class object to simply `samples`
 
 ### Low priority 
 - specify the figure size and adjust font size in respect
@@ -70,7 +71,7 @@ python setup.py upload
 
 ### requirements
 
-Python 2.7.9 with the following libraries:
+Python >= 3.6 with the following libraries:
 - [numpy](http://www.numpy.org/)
 - [matplotlib](http://matplotlib.org/)
 - [pandas](http://pandas.pydata.org/)
@@ -79,19 +80,17 @@ Python 2.7.9 with the following libraries:
 
 ## Use
 
-1. There are three ways to import data into Snowpyt:
+There are three ways to import data into Snowpyt:
 
    1. digitalize your pit with https://niviz.org/ and export your pit as a CAAMLv6 (This format follows an international standard for snowpit). Them use the import_caamlv6() function.
 
       More information about the [CAAML format](http://caaml.org/)
 
-   2. digitalize you snowpit using the excel file template in the [excel file example here](https://github.com/ArcticSnow/snowpyt/blob/master/snowpyt/data_example/20170209_Finse_snowpit.xlsx). Save the excel or libreoffice file in .xslx format (default Excel format).
-
-   3. input directly data into the snowpit class object
+   2. input directly data into the snowpit class object
 
       ​
 
-3. Example:
+**Usage:**
 
 ```python
 from snowpyt import pit_class as pc
@@ -124,6 +123,7 @@ number,height_top,height_bot,dD,d18O,dxs,ice_type
 1,93,89.8,-61.56,-8.76,8.54,S
 2,89.8,86.6,-75.45,-10.64,9.68,S
 ```
+Many more columns can be added. Create a plotting function to plot any newly named column
 
 4. All the data table are loaded as a Pandas dataframe or Numpy arrays within the snowpyt class object
 
