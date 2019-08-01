@@ -83,15 +83,6 @@ class density_profile(object):
 
 class sample_profile(object):
     def __init__(self):
-        self.depth = []
-        self.depth_unit = None
-        self.sample_name = []
-        self.sample_value = []
-        self.sample_value_unit = None
-        self.comments = None
-
-class isotope_profile(object):
-    def __init__(self):
         self.layer_top = []
         self.layer_bot = []
         self.depth_unit = None
@@ -137,12 +128,11 @@ class Snowpit(object):
     def __init__(self):
         self.snowflakeDICT = snowflake_symbol_dict
         self.caaml_file = None
-        self.isotopes_file = None
+        self.sample_file = None
         self.metadata = metadata()
         self.temperature_profile = temperature_profile()
         self.density_profile = density_profile()
         self.sample_profile = sample_profile()
-        self.isotope_profile = isotope_profile()
         self.table = pd.DataFrame()
         self.layers = None
         self.units = None
@@ -196,17 +186,17 @@ class Snowpit(object):
         self._extract_layers()
 
 
-    def import_isotope_csv(self):
-        self.isotope_profile.df = pd.read_csv(self.isotopes_file)
-        self.isotope_profile.layer_top = self.isotope_profile.df.height_top
-        self.isotope_profile.layer_bot = self.isotope_profile.df.height_bot
-        self.isotope_profile.names = self.isotope_profile.df.columns[2:]
+    def import_sample_csv(self):
+        self.sample_profile.df = pd.read_csv(self.samples_file)
+        self.sample_profile.layer_top = self.sample_profile.df.height_top
+        self.sample_profile.layer_bot = self.sample_profile.df.height_bot
+        self.sample_profile.names = self.sample_profile.df.columns[2:]
 
-    def plot(self, save=False, metadata=False, invert_depth=False,
-                     plots_order=['temperature', 'density', 'crystal size',
-                                  'stratigraphy', 'hardness', 'sample values',
+    def plot(self, save=False, fig_fname=self.caaml_file.split('/')[-1][0:-4] + '.png',metadata=False, invert_depth=False,figsize=(8,4), dpi=150,
+                     plot_order=['temperature', 'density', 'crystal size',
+                                  'stratigraphy', 'hardness',
                                   'sample names', 'dD', 'd18O', 'd-ex']):
-        fig = plt.figure(figsize=(8, 4), dpi=150)
+        fig = plt.figure(figsize=figsize, dpi=dpi)
 
         if metadata:
             my_rowspan = 3
@@ -215,70 +205,33 @@ class Snowpit(object):
 
         # ===========================================================
         # Automatically adjust summary plot based on data available
-        ncol = plots_order.__len__()
+        ncol = plot_order.__len__()
 
         if ncol == 1:
             ax1 = plt.subplot2grid((4, ncol), (0, ncol - 1), rowspan=my_rowspan)
-            axs_list = [ax1]
+            self.axs_list = [ax1]
 
-        if ncol == 2:
-            ax1 = plt.subplot2grid((4, ncol), (0, ncol - 2), rowspan=my_rowspan)
-            ax2 = plt.subplot2grid((4, ncol), (0, ncol - 1), rowspan=my_rowspan, sharey=ax1)
-            axs_list = [ax1, ax2]
+        if ncol >= 2:
+            ax1 = plt.subplot2grid((4, ncol), (0, 0), rowspan=my_rowspan)
+            self.axs_list = []
+            self.axs_list.append(ax1)
+            for n in range(1, ncol):
+                ax = plt.subplot2grid((4, ncol), (0, n), rowspan=my_rowspan, sharey=ax1)
+                self.axs_list.append(ax)
+            print(self.axs_list)
 
-        if ncol == 3:
-            ax1 = plt.subplot2grid((4, ncol), (0, ncol - 3), rowspan=my_rowspan)
-            ax2 = plt.subplot2grid((4, ncol), (0, ncol - 2), rowspan=my_rowspan, sharey=ax1)
-            ax3 = plt.subplot2grid((4, ncol), (0, ncol - 1), rowspan=my_rowspan, sharey=ax1)
-            axs_list = [ax1, ax2, ax3]
-
-        if ncol == 4:
-            ax1 = plt.subplot2grid((4, ncol), (0, ncol - 4), rowspan=my_rowspan)
-            ax2 = plt.subplot2grid((4, ncol), (0, ncol - 3), rowspan=my_rowspan, sharey=ax1)
-            ax3 = plt.subplot2grid((4, ncol), (0, ncol - 2), rowspan=my_rowspan, sharey=ax1)
-            ax4 = plt.subplot2grid((4, ncol), (0, ncol - 1), rowspan=my_rowspan, sharey=ax1)
-            axs_list = [ax1, ax2, ax3, ax4]
-
-        if ncol == 5:
-            ax1 = plt.subplot2grid((4, ncol), (0, ncol - 5), rowspan=my_rowspan)
-            ax2 = plt.subplot2grid((4, ncol), (0, ncol - 4), rowspan=my_rowspan, sharey=ax1)
-            ax3 = plt.subplot2grid((4, ncol), (0, ncol - 3), rowspan=my_rowspan, sharey=ax1)
-            ax4 = plt.subplot2grid((4, ncol), (0, ncol - 2), rowspan=my_rowspan, sharey=ax1)
-            ax5 = plt.subplot2grid((4, ncol), (0, ncol - 1), rowspan=my_rowspan, sharey=ax1)
-            axs_list = [ax1, ax2, ax3, ax4, ax5]
-
-        if ncol == 6:
-            ax1 = plt.subplot2grid((4, ncol), (0, ncol - 6), rowspan=my_rowspan)
-            ax2 = plt.subplot2grid((4, ncol), (0, ncol - 5), rowspan=my_rowspan, sharey=ax1)
-            ax3 = plt.subplot2grid((4, ncol), (0, ncol - 4), rowspan=my_rowspan, sharey=ax1)
-            ax4 = plt.subplot2grid((4, ncol), (0, ncol - 3), rowspan=my_rowspan, sharey=ax1)
-            ax5 = plt.subplot2grid((4, ncol), (0, ncol - 2), rowspan=my_rowspan, sharey=ax1)
-            ax6 = plt.subplot2grid((4, ncol), (0, ncol - 1), rowspan=my_rowspan, sharey=ax1)
-            axs_list = [ax1, ax2, ax3, ax4, ax5, ax6]
-
-        if ncol == 7:
-            ax1 = plt.subplot2grid((4, ncol), (0, ncol - 7), rowspan=my_rowspan)
-            ax2 = plt.subplot2grid((4, ncol), (0, ncol - 6), rowspan=my_rowspan, sharey=ax1)
-            ax3 = plt.subplot2grid((4, ncol), (0, ncol - 5), rowspan=my_rowspan, sharey=ax1)
-            ax4 = plt.subplot2grid((4, ncol), (0, ncol - 4), rowspan=my_rowspan, sharey=ax1)
-            ax5 = plt.subplot2grid((4, ncol), (0, ncol - 3), rowspan=my_rowspan, sharey=ax1)
-            ax6 = plt.subplot2grid((4, ncol), (0, ncol - 2), rowspan=my_rowspan, sharey=ax1)
-            ax7 = plt.subplot2grid((4, ncol), (0, ncol - 1), rowspan=my_rowspan, sharey=ax1)
-            axs_list = [ax1, ax2, ax3, ax4, ax5, ax6, ax7]
-
-        def to_plot(plot_order=plots_order, axis_list=axs_list):
+        def to_plot(plot_order=plot_order):
             # function to plot plots based on the order indicated in plots_order
             plots_dict = {'temperature': plot_temperature,
                           'density': plot_density,
                           'stratigraphy': plot_stratigraphy,
                           'hardness': plot_hardness,
                           'crystal size': plot_crystalSize,
-                          'sample names': plot_sample_names,
-                          'sample values': plot_sample_values,
+                          'sample_name': plot_sample_names,
                           'dD': plot_dD,
                           'd18O': plot_d18O,
                           'd-ex': plot_d_ex}
-            for i, axs in enumerate(axis_list):
+            for i, axs in enumerate(self.axis_list):
                 plots_dict.get(plot_order[i])(axs)
 
         def plot_dD(ax):
@@ -288,8 +241,8 @@ class Snowpit(object):
                 plt.setp(ax.get_yticklabels(), visible=False)
                 ax.yaxis.tick_right()
 
-            im = ax.step(np.append(self.isotope_profile.df.dD.values[0], self.isotope_profile.df.dD.values),
-                         np.append(self.isotope_profile.df.height_top.values,0), where='post')
+            im = ax.step(np.append(self.sample_profile.df.dD.values[0], self.sample_profile.df.dD.values),
+                         np.append(self.sample_profile.df.height_top.values,0), where='post')
             ax.set_title("dD ($^{o}/_{oo}$)")
             xlim = ax.get_xlim()
 
@@ -312,17 +265,17 @@ class Snowpit(object):
                 plt.setp(ax.get_yticklabels(), visible=False)
                 ax.yaxis.tick_right()
 
-            im = ax.step(np.append(self.isotope_profile.df.d18O.values[0], self.isotope_profile.df.d18O.values),
-                         np.append(self.isotope_profile.df.height_top.values, 0), where='post', color='#d62728')
+            im = ax.step(np.append(self.sample_profile.df.d18O.values[0], self.sample_profile.df.d18O.values),
+                         np.append(self.sample_profile.df.height_top.values, 0), where='post', color='#d62728')
             ax.set_title("d18O ($^{o}/_{oo}$)")
             xlim = ax.get_xlim()
 
-            # Add shading for the ice type of isotope sample
+            # Add shading for the ice type of sample sample
             ax.barh(
-                self.isotope_profile.layer_bot - (self.isotope_profile.layer_bot - self.isotope_profile.layer_top) / 2,
-                np.repeat(xlim[1] - xlim[0], self.isotope_profile.layer_top.__len__()), - (self.isotope_profile.layer_bot - self.isotope_profile.layer_top),
-                np.repeat(xlim[0], self.isotope_profile.layer_top.__len__()),
-                color=cm.bone(pd.Categorical(self.isotope_profile.df.ice_type).codes), alpha=0.2)
+                self.sample_profile.layer_bot - (self.sample_profile.layer_bot - self.sample_profile.layer_top) / 2,
+                np.repeat(xlim[1] - xlim[0], self.sample_profile.layer_top.__len__()), - (self.sample_profile.layer_bot - self.sample_profile.layer_top),
+                np.repeat(xlim[0], self.sample_profile.layer_top.__len__()),
+                color=cm.bone(pd.Categorical(self.sample_profile.df.ice_type).codes), alpha=0.2)
 
             # Add grid following the layering
             ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
@@ -519,27 +472,6 @@ class Snowpit(object):
 
             return im
 
-        def plot_sample_values(ax):
-            if ax is ax1:
-                ax.set_ylabel("Depth (cm)")
-            else:
-                plt.setp(ax.get_yticklabels(), visible=False)
-                ax.yaxis.tick_right()
-            im = ax.plot(self.sample_profile.sample_value, self.sample_profile.depth)
-            xlim = ax.get_xlim()
-
-            # Add grid following the layering
-            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
-                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
-                    np.repeat(xlim[0], self.layers_top.__len__()),
-                    color='w', alpha=0.2, edgecolor='k', linewidth=0.5, linestyle=':')
-            ax.set_xlim(xlim)
-            ax.grid(axis='x', linewidth=0.5, linestyle=':')
-            ax.set_title("Sample Value")
-            for tick in ax.get_xticklabels():
-                tick.set_rotation(45)
-            return im
-
         def plot_sample_names(ax):
             # add here code for plotting column of sample names
             ax.set_xlim([0,1])
@@ -570,17 +502,15 @@ class Snowpit(object):
                         horizontalalignment='left',
                         verticalalignment='center', wrap=True, fontsize=4)
 
-        to_plot(plots_order, axs_list)
+        to_plot(plots_order)
         if invert_depth:
             fig.gca().invert_yaxis()
         plt.tight_layout()
         plt.subplots_adjust(wspace=0)
 
         if save == True:
-            fig.savefig(self.filename.split('/')[-1][0:-4])
-            print('Figure saved as ' + self.filename.split('/')[-1][0:-4] + '.png')
-
-
+            fig.savefig(fig_fname)
+            print('Figure saved as ' + fig_fname)
 
     def print_metadata(self):
         print('Not implemented [print_metadata()]')

@@ -104,16 +104,16 @@ from snowpyt import pit_class as pc
 p = pc.Snowpit()
 p.caaml_file= '[PATH TO YOUR FILE].caaml'
 p.import_caamlv6()
-p.plot(plots_order=['density', 'temperature', 'stratigraphy', 'hardness'])
+p.plot(plot_order=['density', 'temperature', 'stratigraphy', 'hardness'])
 
 p.plot(metadata=True)
-p.plot(plots_order=['density', 'temperature', 'stratigraphy','crystal size'])
+p.plot(plot_order=['density', 'temperature', 'stratigraphy','crystal size'])
 
 # import isotope values (dD, dO18, d-ex)
-p.isotopes_file = '[PATH TO YOUR FILE].csv'
-p.import_isotope_csv()
+p.sample_file = '[PATH TO YOUR FILE].csv'
+p.import_sample_csv()
 
-p.plot(plots_order=['dD', 'd18O','d-ex', 'hardness'])
+p.plot(plot_order=['dD', 'd18O','d-ex', 'hardness'])
 
 ```
 
