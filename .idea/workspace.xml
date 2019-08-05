@@ -3,14 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="290ef6ec-b4b7-4c98-964b-6c2005758c8f" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/snowpyt/__version__.py" beforeDir="false" afterPath="$PROJECT_DIR$/build/lib/snowpyt/__version__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/snowpyt/pit_class.py" beforeDir="false" afterPath="$PROJECT_DIR$/build/lib/snowpyt/pit_class.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/snowpyt-0.2.0-py2.py3-none-any.whl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/snowpyt-0.2.0.tar.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/snowpyt.egg-info/PKG-INFO" beforeDir="false" afterPath="$PROJECT_DIR$/snowpyt.egg-info/PKG-INFO" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/snowpyt/__version__.py" beforeDir="false" afterPath="$PROJECT_DIR$/snowpyt/__version__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/snowpyt/pit_class.py" beforeDir="false" afterPath="$PROJECT_DIR$/snowpyt/pit_class.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
