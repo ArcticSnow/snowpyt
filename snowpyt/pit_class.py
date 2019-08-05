@@ -188,12 +188,15 @@ class Snowpit(object):
 
 
     def import_sample_csv(self):
-        self.sample_profile.df = pd.read_csv(self.samples_file)
+        self.sample_profile.df = pd.read_csv(self.sample_file)
         self.sample_profile.layer_top = self.sample_profile.df.height_top
         self.sample_profile.layer_bot = self.sample_profile.df.height_bot
         self.sample_profile.names = self.sample_profile.df.columns[2:]
 
-    def plot(self, save=False, fig_fname=self.caaml_file.split('/')[-1][0:-4] + '.png',metadata=False, invert_depth=False,figsize=(8,4), dpi=150,
+    
+
+
+    def plot(self, save=False,metadata=False, invert_depth=False,figsize=(8,4), dpi=150,
                      plot_order=['temperature', 'density', 'crystal size',
                                   'stratigraphy', 'hardness',
                                   'sample names', 'dD', 'd18O', 'd-ex']):
@@ -232,8 +235,9 @@ class Snowpit(object):
                           'dD': plot_dD,
                           'd18O': plot_d18O,
                           'd-ex': plot_d_ex}
-            for i, axs in enumerate(self.axis_list):
+            for i, axs in enumerate(self.axs_list):
                 plots_dict.get(plot_order[i])(axs)
+
 
         def plot_dD(ax):
             if ax is ax1:
@@ -243,21 +247,50 @@ class Snowpit(object):
                 ax.yaxis.tick_right()
 
             im = ax.step(np.append(self.sample_profile.df.dD.values[0], self.sample_profile.df.dD.values),
-                         np.append(self.sample_profile.df.height_top.values,0), where='post')
+                         np.append(self.sample_profile.df.height_top.values,0), where='post',color='#1f77b4')
             ax.set_title("dD ($^{o}/_{oo}$)")
             xlim = ax.get_xlim()
+
+            # Mika: add error-bar in isotope
+            ax.barh(
+                self.sample_profile.df.height_top,2*self.sample_profile.df.dD_SD.values,
+                (self.sample_profile.df.height_bot-self.sample_profile.df.height_top),
+                (self.sample_profile.df.dD.values-self.sample_profile.df.dD_SD.values),
+                align='edge',edgecolor='k',linewidth=0,color='#1f77b4',alpha=0.6,zorder=5)
+
+            #Mika's way to make a col_vec with colors based on category
+            col_vec=[]
+            hatch_vec=[]
+            cat=self.sample_profile.df.ice_type
+            for let in cat:
+                if let=='S':
+                    col_vec=np.append(col_vec,'None')
+                    hatch_vec=np.append(hatch_vec,'')
+                if let=='I':
+                    col_vec=np.append(col_vec,'0.7')
+                    hatch_vec=np.append(hatch_vec,'.')
+                if let=='M':
+                    col_vec=np.append(col_vec,'0.9')
+                    hatch_vec=np.append(hatch_vec,'\\')
+
+            # Mika: add isotope-sample-layer type - this needs the col_vec. Define it three times, as I don't know how to make it "global"
+            ax.barh(
+                self.sample_profile.df.height_top,np.diff(xlim),
+                (self.sample_profile.df.height_bot-self.sample_profile.df.height_top),xlim[0],
+                align='edge',edgecolor='k',color=col_vec,linewidth=0,zorder=2)
 
             # Add grid following the layering
             ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
                     np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
-                    np.repeat(xlim[0], self.layers_top.__len__()),
-                    color='w', alpha=0.2, edgecolor='k', linewidth=0.5, linestyle=':')
+                    np.repeat(xlim[0], self.layers_top.__len__()), 
+                    alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':',zorder=20,fill=False)
             ax.set_xlim(xlim)
-            #ax.grid(axis='x', linewidth=0.5, linestyle=':')
+            ax.grid(axis='x', linewidth=0.5, linestyle=':')
             for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
 
             return im
+        
 
         def plot_d18O(ax):
             if ax is ax1:
@@ -267,22 +300,50 @@ class Snowpit(object):
                 ax.yaxis.tick_right()
 
             im = ax.step(np.append(self.sample_profile.df.d18O.values[0], self.sample_profile.df.d18O.values),
-                         np.append(self.sample_profile.df.height_top.values, 0), where='post', color='#d62728')
+                         np.append(self.sample_profile.df.height_top.values, 0), where='post', color='#d62728',zorder=10)
             ax.set_title("d18O ($^{o}/_{oo}$)")
             xlim = ax.get_xlim()
 
-            # Add shading for the ice type of sample sample
+            # Mika: add error-bar in isotope
             ax.barh(
-                self.sample_profile.layer_bot - (self.sample_profile.layer_bot - self.sample_profile.layer_top) / 2,
-                np.repeat(xlim[1] - xlim[0], self.sample_profile.layer_top.__len__()), - (self.sample_profile.layer_bot - self.sample_profile.layer_top),
-                np.repeat(xlim[0], self.sample_profile.layer_top.__len__()),
-                color=cm.bone(pd.Categorical(self.sample_profile.df.ice_type).codes), alpha=0.2)
+                self.sample_profile.df.height_top,2*self.sample_profile.df.d18O_SD.values,
+                (self.sample_profile.df.height_bot-self.sample_profile.df.height_top),
+                (self.sample_profile.df.d18O.values-self.sample_profile.df.d18O_SD.values),
+                align='edge',edgecolor='k',linewidth=0,color='#d62728',alpha=0.6,zorder=5)
+            
+            #Mika's way to make a col_vec with colors based on category
+            col_vec=[]
+            hatch_vec=[]
+            cat=self.sample_profile.df.ice_type
+            for let in cat:
+                if let=='S':
+                    col_vec=np.append(col_vec,'None')
+                    hatch_vec=np.append(hatch_vec,'')
+                if let=='I':
+                    col_vec=np.append(col_vec,'0.7')
+                    hatch_vec=np.append(hatch_vec,'.')
+                if let=='M':
+                    col_vec=np.append(col_vec,'0.9')
+                    hatch_vec=np.append(hatch_vec,'\\')
 
+            # Mika: add isotope-sample-layer type - this needs the col_vec. Define it three times, as I don't know how to make it "global"
+            ax.barh(
+                self.sample_profile.df.height_top,np.diff(xlim),
+                (self.sample_profile.df.height_bot-self.sample_profile.df.height_top),xlim[0],
+                align='edge',edgecolor='k',color=col_vec,linewidth=0,zorder=2)     
+
+            # Add shading for the ice type of sample sample
+#            ax.barh(
+#                self.sample_profile.layer_bot - (self.sample_profile.layer_bot - self.sample_profile.layer_top) / 2,
+#                np.repeat(xlim[1] - xlim[0], self.sample_profile.layer_top.__len__()), - (self.sample_profile.layer_bot - self.sample_profile.layer_top),
+#                np.repeat(xlim[0], self.sample_profile.layer_top.__len__()),
+#                color=cm.bone(pd.Categorical(self.sample_profile.df.ice_type).codes), alpha=0.2,zorder=1)
+#    
             # Add grid following the layering
             ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
                     np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
-                    np.repeat(xlim[0], self.layers_top.__len__()),
-                    color='w', alpha=0.2, edgecolor='k', linewidth=0.5, linestyle=':')
+                    np.repeat(xlim[0], self.layers_top.__len__()), 
+                    alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':',zorder=20,fill=False)
             ax.set_xlim(xlim)
             ax.grid(axis='x', linewidth=0.5, linestyle=':')
             for tick in ax.get_xticklabels():
@@ -296,16 +357,46 @@ class Snowpit(object):
                 plt.setp(ax.get_yticklabels(), visible=False)
                 ax.yaxis.tick_right()
 
-            im = ax.step(np.append(self.isotope_profile.df.dxs.values[0], self.isotope_profile.df.dxs.values),
-                         np.append(self.isotope_profile.df.height_top.values, 0), where='post', color='#2ca02c')
+            im = ax.step(np.append(self.sample_profile.df.dxs.values[0], self.sample_profile.df.dxs.values),
+                         np.append(self.sample_profile.df.height_top.values, 0), where='post', color='#2ca02c')
             ax.set_title("d-excess ($^{o}/_{oo}$)")
             xlim = ax.get_xlim()
+            
+              # Mika: add error-bar in isotope
+            ax.barh(
+                self.sample_profile.df.height_top,2*self.sample_profile.df.dxs_SD.values,
+                (self.sample_profile.df.height_bot-self.sample_profile.df.height_top),
+                (self.sample_profile.df.dxs.values-self.sample_profile.df.dxs_SD.values),
+                align='edge',edgecolor='k',linewidth=0,color='#2ca02c',alpha=0.6,zorder=5)
+
+             #Mika's way to make a col_vec with colors based on category
+            col_vec=[]
+            hatch_vec=[]
+            cat=self.sample_profile.df.ice_type
+            for let in cat:
+                if let=='S':
+                    col_vec=np.append(col_vec,'None')
+                    hatch_vec=np.append(hatch_vec,'')
+                if let=='I':
+                    col_vec=np.append(col_vec,'0.7')
+                    hatch_vec=np.append(hatch_vec,'.')
+                if let=='M':
+                    col_vec=np.append(col_vec,'0.9')
+                    hatch_vec=np.append(hatch_vec,'\\')
+
+            # Mika: add isotope-sample-layer type - this needs the col_vec. Define it three times, as I don't know how to make it "global"
+            ax.barh(
+                self.sample_profile.df.height_top,np.diff(xlim),
+                (self.sample_profile.df.height_bot-self.sample_profile.df.height_top),xlim[0],
+                align='edge',edgecolor='k',color=col_vec,linewidth=0,zorder=2)     
+
+
 
             # Add grid following the layering
             ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
                     np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
-                    np.repeat(xlim[0], self.layers_top.__len__()),
-                    color='w', alpha=0.2, edgecolor='k', linewidth=0.5, linestyle=':')
+                    np.repeat(xlim[0], self.layers_top.__len__()), 
+                    alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':',zorder=20,fill=False)
             ax.set_xlim(xlim)
             ax.grid(axis='x', linewidth=0.5, linestyle=':')
             for tick in ax.get_xticklabels():
@@ -325,7 +416,7 @@ class Snowpit(object):
             ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
                     np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
                     np.repeat(xlim[0], self.layers_top.__len__()),
-                    color='w', alpha=0.2, edgecolor='k', linewidth=0.5, linestyle=':')
+                    color='w', alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':')
             ax.set_xlim(xlim)
             ax.grid(axis='x', linewidth=0.5, linestyle=':')
             ax.set_title("Density")
@@ -347,7 +438,7 @@ class Snowpit(object):
             ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
                      np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
                      np.repeat(xlim[0], self.layers_top.__len__()),
-                     color='w', alpha=0.2, edgecolor='k', linewidth=0.5, linestyle=':')
+                     color='w', alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':')
             ax.set_xlim(xlim)
             ax.set_title("Temperature ($^\circ$C)")
             ax.grid(axis='x', linestyle=':', linewidth=0.5)
@@ -503,7 +594,7 @@ class Snowpit(object):
                         horizontalalignment='left',
                         verticalalignment='center', wrap=True, fontsize=4)
 
-        to_plot(plots_order)
+        to_plot(plot_order)
         if invert_depth:
             fig.gca().invert_yaxis()
         plt.tight_layout()
