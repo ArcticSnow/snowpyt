@@ -609,6 +609,69 @@ class Snowpit(object):
 
     def print_layers(self):
         print('Not implemented [print_layers()]')
+        
+    
+        def calc_SWE(method):
+            if method == 'avg':
+                SWE=(self.density_profile.density.mean()*self.layers_top[0])/1000
+                
+            if method == 'samples':
+                #make layer boundaries, horizons, at half-points between density samples
+                #make into pandas to use rolling mean, make back into numpy array
+                self.density_profile.layer_horz = pd.DataFrame(self.density_profile.depth).rolling(2,min_periods=2).mean().to_numpy()
+                #override first value of rolling mean, nan, with top max height of snowpit
+                self.density_profile.layer_horz[0]=self.layers_top[0]
+                #app bottom of snowpit, yes 0
+                self.density_profile.layer_horz=np.append(self.density_profile.layer_horz,self.layers_bot[-1])
+                #calculate thicknsesses:
+                self.density_profile.layer_thickness=abs(np.diff(self.density_profile.layer_horz))
+               
+                SWE=(self.density_profile.layer_thickness*self.density_profile.density / 1000).sum()
+           
+            if method == 'layers':
+                def nearest(direction,lookin,lookfor):
+                    if direction == 'up':
+                        idx = np.where(lookin > lookfor)[0][-1]
+                    if direction == 'down':
+                        idx = np.where(lookin < lookfor)[0][0]
+                    return idx
+                
+                
+                #get thickness or our strat-layers:        
+                self.layers_thickness=self.layers_top-self.layers_bot
+    
+                #initialize numpy array for our strat-densities, length of the strat-layers
+                self.layers_density = np.zeros(len(self.layers_top))
+    
+                #get the density of strat-layers, with different conditions
+                for i in range(len(self.layers_top)):
+                    #if ice layer, set density:
+                    if self.layers_hardness_index[i] == 6:
+                        self.layers_density[i]=680 #change ice value?
+                        #if not ice, check if there are NO density samples within the strat-layer:    
+                    elif np.sum((self.density_profile.depth>self.layers_bot[i]) & (self.density_profile.depth <self.layers_top[i])) == 0:
+                        #if yes:
+                        #take care of first layer, bottom layer, since they both have only one of idxlower/idxupper
+                        if i == 0:
+                            self.layers_density[i]=self.density_profile.density[nearest('down',self.density_profile.depth,self.layers_bot[i])]
+                
+                        if i == len(self.layers_top)-1:
+                            self.layers_density[i]=self.density_profile.density[nearest('up',self.density_profile.depth,self.layers_top[i])]
+            
+                        #for all other layers, look both up and down:    
+                        else:
+                            idxupper = nearest('up',self.density_profile.depth,self.layers_top[i])
+                            idxlower = nearest('down',self.density_profile.depth,self.layers_top[i])
+                            self.layers_density[i] = self.density_profile.density[idxupper:idxlower+1].mean()
+                
+                    #if there ARE samples within the layer, take mean of those samples:    
+                    else:
+                        self.layers_density[i]=self.density_profile.density[(self.density_profile.depth >= self.layers_bot[i]) & (self.density_profile.depth <= self.layers_top[i])].mean()
+            
+            
+                SWE = (self.layers_thickness * self.layers_density / 1000).sum()
+                
+                return SWE
 
 
 
