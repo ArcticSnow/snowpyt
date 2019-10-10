@@ -187,14 +187,16 @@ class Snowpit(object):
         self._extract_layers()
 
 
-    def import_sample_csv(self):
+    def import_sample_csv(self, bar_plot=False):
+        '''
+        Function to import sample profiles. 
+        :param bar_plot: plot sample profile as bar instead of line-scatter. Default is False
+        '''
         self.sample_profile.df = pd.read_csv(self.sample_file)
-        self.sample_profile.layer_top = self.sample_profile.df.height_top
-        self.sample_profile.layer_bot = self.sample_profile.df.height_bot
+#        self.sample_profile.layer_top = self.sample_profile.df.height_top
+#        self.sample_profile.layer_bot = self.sample_profile.df.height_bot
         self.sample_profile.names = self.sample_profile.df.columns[2:]
-
-    
-
+        self.sample_profile.bar_plot = bar_plot   
 
     def plot(self, save=False,metadata=False, invert_depth=False,figsize=(8,4), dpi=150,
                      plot_order=['temperature', 'density', 'crystal size',
@@ -225,7 +227,7 @@ class Snowpit(object):
             print(self.axs_list)
 
         def to_plot(plot_order=plot_order):
-            # function to plot plots based on the order indicated in plots_order
+            # function to plot plots based on the order indicated in plot_order
             plots_dict = {'temperature': plot_temperature,
                           'density': plot_density,
                           'stratigraphy': plot_stratigraphy,
@@ -234,175 +236,106 @@ class Snowpit(object):
                           'sample_name': plot_sample_names,
                           'dD': plot_dD,
                           'd18O': plot_d18O,
-                          'd-ex': plot_d_ex}
+                          'dXS': plot_dXS}
             for i, axs in enumerate(self.axs_list):
                 plots_dict.get(plot_order[i])(axs)
 
 
-        def plot_dD(ax):
+        def add_grid(ax):
+            xlim = ax.get_xlim() 
+            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
+                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
+                    np.repeat(xlim[0], self.layers_top.__len__()), 
+                    alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':',zorder=20,fill=False)
+
+        def plot_isotope(ax,iso='dD', std=None):
+            if std is None:
+                std = iso + '_SD'  #std column name default for data from FARLAB
+            # include a little logic to check that iso is properly define
+            if iso is not ('dD' or 'd18O' or 'dXS'):
+                print('iso must be dD, d18O or dXS')
+                return
+                
             if ax is ax1:
                 ax.set_ylabel("Depth (cm)")
             else:
                 plt.setp(ax.get_yticklabels(), visible=False)
                 ax.yaxis.tick_right()
-
-            im = ax.step(np.append(self.sample_profile.df.dD.values[0], self.sample_profile.df.dD.values),
-                         np.append(self.sample_profile.df.height_top.values,0), where='post',color='#1f77b4')
-            ax.set_title("dD ($^{o}/_{oo}$)")
-            xlim = ax.get_xlim()
-
-            # Mika: add error-bar in isotope
-            ax.barh(
-                self.sample_profile.df.height_top,2*self.sample_profile.df.dD_SD.values,
-                (self.sample_profile.df.height_bot-self.sample_profile.df.height_top),
-                (self.sample_profile.df.dD.values-self.sample_profile.df.dD_SD.values),
-                align='edge',edgecolor='k',linewidth=0,color='#1f77b4',alpha=0.6,zorder=5)
-
-            #Mika's way to make a col_vec with colors based on category
+                
+            color_dict = {'dD': '#1f77b4',
+                          'd18O': '#1f77b4','dxs':'#d62728'}
+            title_dict = {'dD': "dD ($^{o}/_{oo}$)", 
+                          'd18O': "d18O ($^{o}/_{oo}$)",
+                          'dXS': "d-excess ($^{o}/_{oo}$)"}
+            
+            color=color_dict[iso]
+            
+            #sample-type layer color in gray scale
             col_vec=[]
             hatch_vec=[]
+            symb_vec=[]
             cat=self.sample_profile.df.ice_type
             for let in cat:
                 if let=='S':
                     col_vec=np.append(col_vec,'None')
                     hatch_vec=np.append(hatch_vec,'')
+                    symb_vec=np.append(symb_vec,'o')
                 if let=='I':
                     col_vec=np.append(col_vec,'0.7')
                     hatch_vec=np.append(hatch_vec,'.')
+                    symb_vec=np.append(symb_vec,'sq')
                 if let=='M':
                     col_vec=np.append(col_vec,'0.9')
                     hatch_vec=np.append(hatch_vec,'\\')
-
-            # Mika: add isotope-sample-layer type - this needs the col_vec. Define it three times, as I don't know how to make it "global"
+                    symb_vec=np.append(symb_vec,'d')
+            
+            
+            
+            #staircase step plot:
+            im = ax.step(np.append(self.sample_profile.df[iso].values[0], self.sample_profile.df[iso].values),
+                         np.append(self.sample_profile.df.height_top.values,0), where='post', color=color)
+            #ax.set_title("dD ($^{o}/_{oo}$)")
+            xlim = ax.get_xlim()    
+            
+            # Mika: add error-bar in isotope
+            ax.barh(
+                self.sample_profile.df.height_top,2*self.sample_profile.df[std].values,
+                (self.sample_profile.df.height_bot-self.sample_profile.df.height_top),
+                (self.sample_profile.df[iso].values-self.sample_profile.df[std].values),
+                align='edge',edgecolor='k',linewidth=0,color=color,alpha=0.6,zorder=5)
+            
+            # Mika: add isotope-sample-layer type - this needs the col_vec.
             ax.barh(
                 self.sample_profile.df.height_top,np.diff(xlim),
                 (self.sample_profile.df.height_bot-self.sample_profile.df.height_top),xlim[0],
                 align='edge',edgecolor='k',color=col_vec,linewidth=0,zorder=2)
 
             # Add grid following the layering
-            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
-                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
-                    np.repeat(xlim[0], self.layers_top.__len__()), 
-                    alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':',zorder=20,fill=False)
+            add_grid(ax)
+#            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
+#                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
+#                    np.repeat(xlim[0], self.layers_top.__len__()), 
+#                    alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':',zorder=20,fill=False)
+            
+            ax.set_title(title_dict[iso])
             ax.set_xlim(xlim)
             ax.grid(axis='x', linewidth=0.5, linestyle=':')
             for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
 
             return im
+            
         
+        def plot_dD(ax):
+            plot_isotope(ax,iso='dD')
 
         def plot_d18O(ax):
-            if ax is ax1:
-                ax.set_ylabel("Depth (cm)")
-            else:
-                plt.setp(ax.get_yticklabels(), visible=False)
-                ax.yaxis.tick_right()
+            plot_isotope(ax,iso='d18O')
 
-            im = ax.step(np.append(self.sample_profile.df.d18O.values[0], self.sample_profile.df.d18O.values),
-                         np.append(self.sample_profile.df.height_top.values, 0), where='post', color='#d62728',zorder=10)
-            ax.set_title("d18O ($^{o}/_{oo}$)")
-            xlim = ax.get_xlim()
-
-            # Mika: add error-bar in isotope
-            ax.barh(
-                self.sample_profile.df.height_top,2*self.sample_profile.df.d18O_SD.values,
-                (self.sample_profile.df.height_bot-self.sample_profile.df.height_top),
-                (self.sample_profile.df.d18O.values-self.sample_profile.df.d18O_SD.values),
-                align='edge',edgecolor='k',linewidth=0,color='#d62728',alpha=0.6,zorder=5)
+        def plot_dXS(ax):
+             plot_isotope(ax,iso='dxs')
+           
             
-            #Mika's way to make a col_vec with colors based on category
-            col_vec=[]
-            hatch_vec=[]
-            cat=self.sample_profile.df.ice_type
-            for let in cat:
-                if let=='S':
-                    col_vec=np.append(col_vec,'None')
-                    hatch_vec=np.append(hatch_vec,'')
-                if let=='I':
-                    col_vec=np.append(col_vec,'0.7')
-                    hatch_vec=np.append(hatch_vec,'.')
-                if let=='M':
-                    col_vec=np.append(col_vec,'0.9')
-                    hatch_vec=np.append(hatch_vec,'\\')
-
-            # Mika: add isotope-sample-layer type - this needs the col_vec. Define it three times, as I don't know how to make it "global"
-            ax.barh(
-                self.sample_profile.df.height_top,np.diff(xlim),
-                (self.sample_profile.df.height_bot-self.sample_profile.df.height_top),xlim[0],
-                align='edge',edgecolor='k',color=col_vec,linewidth=0,zorder=2)     
-
-            # Add shading for the ice type of sample sample
-#            ax.barh(
-#                self.sample_profile.layer_bot - (self.sample_profile.layer_bot - self.sample_profile.layer_top) / 2,
-#                np.repeat(xlim[1] - xlim[0], self.sample_profile.layer_top.__len__()), - (self.sample_profile.layer_bot - self.sample_profile.layer_top),
-#                np.repeat(xlim[0], self.sample_profile.layer_top.__len__()),
-#                color=cm.bone(pd.Categorical(self.sample_profile.df.ice_type).codes), alpha=0.2,zorder=1)
-#    
-            # Add grid following the layering
-            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
-                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
-                    np.repeat(xlim[0], self.layers_top.__len__()), 
-                    alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':',zorder=20,fill=False)
-            ax.set_xlim(xlim)
-            ax.grid(axis='x', linewidth=0.5, linestyle=':')
-            for tick in ax.get_xticklabels():
-                tick.set_rotation(45)
-            return im
-
-        def plot_d_ex(ax):
-            if ax is ax1:
-                ax.set_ylabel("Depth (cm)")
-            else:
-                plt.setp(ax.get_yticklabels(), visible=False)
-                ax.yaxis.tick_right()
-
-            im = ax.step(np.append(self.sample_profile.df.dxs.values[0], self.sample_profile.df.dxs.values),
-                         np.append(self.sample_profile.df.height_top.values, 0), where='post', color='#2ca02c')
-            ax.set_title("d-excess ($^{o}/_{oo}$)")
-            xlim = ax.get_xlim()
-            
-              # Mika: add error-bar in isotope
-            ax.barh(
-                self.sample_profile.df.height_top,2*self.sample_profile.df.dxs_SD.values,
-                (self.sample_profile.df.height_bot-self.sample_profile.df.height_top),
-                (self.sample_profile.df.dxs.values-self.sample_profile.df.dxs_SD.values),
-                align='edge',edgecolor='k',linewidth=0,color='#2ca02c',alpha=0.6,zorder=5)
-
-             #Mika's way to make a col_vec with colors based on category
-            col_vec=[]
-            hatch_vec=[]
-            cat=self.sample_profile.df.ice_type
-            for let in cat:
-                if let=='S':
-                    col_vec=np.append(col_vec,'None')
-                    hatch_vec=np.append(hatch_vec,'')
-                if let=='I':
-                    col_vec=np.append(col_vec,'0.7')
-                    hatch_vec=np.append(hatch_vec,'.')
-                if let=='M':
-                    col_vec=np.append(col_vec,'0.9')
-                    hatch_vec=np.append(hatch_vec,'\\')
-
-            # Mika: add isotope-sample-layer type - this needs the col_vec. Define it three times, as I don't know how to make it "global"
-            ax.barh(
-                self.sample_profile.df.height_top,np.diff(xlim),
-                (self.sample_profile.df.height_bot-self.sample_profile.df.height_top),xlim[0],
-                align='edge',edgecolor='k',color=col_vec,linewidth=0,zorder=2)     
-
-
-
-            # Add grid following the layering
-            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
-                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
-                    np.repeat(xlim[0], self.layers_top.__len__()), 
-                    alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':',zorder=20,fill=False)
-            ax.set_xlim(xlim)
-            ax.grid(axis='x', linewidth=0.5, linestyle=':')
-            for tick in ax.get_xticklabels():
-                tick.set_rotation(45)
-            return im
-
         def plot_density(ax):
             if ax is ax1:
                 ax.set_ylabel("Depth (cm)")
@@ -413,16 +346,18 @@ class Snowpit(object):
             xlim = ax.get_xlim()
 
             # Add grid following the layering
-            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
-                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
-                    np.repeat(xlim[0], self.layers_top.__len__()),
-                    color='w', alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':')
+            add_grid(ax)
+#            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
+#                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
+#                    np.repeat(xlim[0], self.layers_top.__len__()),
+#                    color='w', alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':')
             ax.set_xlim(xlim)
             ax.grid(axis='x', linewidth=0.5, linestyle=':')
             ax.set_title("Density")
             for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
             return im
+
 
         def plot_temperature(ax):
             if ax is ax1:
@@ -435,10 +370,11 @@ class Snowpit(object):
             xlim = ax.get_xlim()
 
             # # Add grid following the layering
-            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
-                     np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
-                     np.repeat(xlim[0], self.layers_top.__len__()),
-                     color='w', alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':')
+            add_grid(ax)
+#            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
+#                     np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
+#                     np.repeat(xlim[0], self.layers_top.__len__()),
+#                     color='w', alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':')
             ax.set_xlim(xlim)
             ax.set_title("Temperature ($^\circ$C)")
             ax.grid(axis='x', linestyle=':', linewidth=0.5)
@@ -446,6 +382,7 @@ class Snowpit(object):
             for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
             return im
+
 
         def plot_stratigraphy(ax):
             if ax is ax1:
@@ -527,6 +464,7 @@ class Snowpit(object):
             ax.set_title("Stratigraphy")
             return im2
 
+
         def plot_hardness(ax):
             plt.setp(ax.get_yticklabels(), visible=False)
 
@@ -542,6 +480,7 @@ class Snowpit(object):
             ax.xaxis.set_major_locator(MaxNLocator(integer=True, prune='upper'))
             return im
 
+
         def plot_crystalSize(ax):
             if ax is ax1:
                 ax.set_ylabel("Depth (cm)")
@@ -550,10 +489,11 @@ class Snowpit(object):
                 ax.yaxis.tick_right()
             im = ax.barh(self.layers_bot-(self.layers_bot-self.layers_top)/2, self.layers_grainSize_max-self.layers_grainSize_mean, 1, self.layers_grainSize_mean)
             xlim = ax.get_xlim()
-            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
-                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
-                    np.repeat(xlim[0], self.layers_top.__len__()),
-                    color='w', alpha=0.2, edgecolor='k', linewidth=0.5, linestyle=':')
+            add_grid(ax)
+#            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
+#                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
+#                    np.repeat(xlim[0], self.layers_top.__len__()),
+#                    color='w', alpha=0.2, edgecolor='k', linewidth=0.5, linestyle=':')
             ax.xaxis.set_ticks([0, 0.1, 0.2, 0.5, 1, 1.5, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40])
             ax.set_xlim(xlim)
             ax.set_title("Crystal size (mm)")
@@ -564,6 +504,7 @@ class Snowpit(object):
 
             return im
 
+
         def plot_sample_names(ax):
             # add here code for plotting column of sample names
             ax.set_xlim([0,1])
@@ -573,10 +514,11 @@ class Snowpit(object):
                             bbox={'facecolor':'red', 'edgecolor':'none', 'alpha':0.5, 'pad':1},fontsize=5)
 
             xlim = ax.get_xlim()
-            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
-                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
-                    np.repeat(xlim[0], self.layers_top.__len__()),
-                    color='w', alpha=0.2, edgecolor='k', linewidth=0.5, linestyle=':')
+            add_grid(ax)
+#            ax.barh(self.layers_bot - (self.layers_bot - self.layers_top) / 2,
+#                    np.repeat(xlim[1] - xlim[0], self.layers_top.__len__()), - (self.layers_bot - self.layers_top),
+#                    np.repeat(xlim[0], self.layers_top.__len__()),
+#                    color='w', alpha=0.2, edgecolor='k', linewidth=0.5, linestyle=':')
             ax.set_xlim(xlim)
             ax.set_title("Sample Name")
             plt.setp(ax.get_xticklabels(), visible=False)
@@ -604,6 +546,7 @@ class Snowpit(object):
             fig.savefig(fig_fname)
             print('Figure saved as ' + fig_fname)
 
+
     def print_metadata(self):
         print('Not implemented [print_metadata()]')
 
@@ -611,67 +554,72 @@ class Snowpit(object):
         print('Not implemented [print_layers()]')
         
     
-        def calc_SWE(method):
-            if method == 'avg':
-                SWE=(self.density_profile.density.mean()*self.layers_top[0])/1000
-                
-            if method == 'samples':
-                #make layer boundaries, horizons, at half-points between density samples
-                #make into pandas to use rolling mean, make back into numpy array
-                self.density_profile.layer_horz = pd.DataFrame(self.density_profile.depth).rolling(2,min_periods=2).mean().to_numpy()
-                #override first value of rolling mean, nan, with top max height of snowpit
-                self.density_profile.layer_horz[0]=self.layers_top[0]
-                #app bottom of snowpit, yes 0
-                self.density_profile.layer_horz=np.append(self.density_profile.layer_horz,self.layers_bot[-1])
-                #calculate thicknsesses:
-                self.density_profile.layer_thickness=abs(np.diff(self.density_profile.layer_horz))
-               
-                SWE=(self.density_profile.layer_thickness*self.density_profile.density / 1000).sum()
+    def calc_SWE(self, method):
+        '''
+        calculate SWE using three methods: avg SWE for all pit 'avg', SWE based on density samples 'samples', and SWE based  
+        :param method: 'avg', 'samples' or 'layers'. no default
+        '''
+        if method == 'avg':
+            SWE=(self.density_profile.density.mean()*self.layers_top[0])/1000
+            
+        if method == 'samples':
+            #make layer boundaries, horizons, at half-points between density samples
+            #make into pandas to use rolling mean, make back into numpy array
+            self.density_profile.layer_horz = pd.DataFrame(self.density_profile.depth).rolling(2,min_periods=2).mean().to_numpy()
+            #override first value of rolling mean, nan, with top max height of snowpit
+            self.density_profile.layer_horz[0]=self.layers_top[0]
+            #app bottom of snowpit, yes 0
+            self.density_profile.layer_horz=np.append(self.density_profile.layer_horz,self.layers_bot[-1])
+            #calculate thicknsesses:
+            self.density_profile.layer_thickness=abs(np.diff(self.density_profile.layer_horz))
            
-            if method == 'layers':
-                def nearest(direction,lookin,lookfor):
-                    if direction == 'up':
-                        idx = np.where(lookin > lookfor)[0][-1]
-                    if direction == 'down':
-                        idx = np.where(lookin < lookfor)[0][0]
-                    return idx
-                
-                
-                #get thickness or our strat-layers:        
-                self.layers_thickness=self.layers_top-self.layers_bot
-    
-                #initialize numpy array for our strat-densities, length of the strat-layers
-                self.layers_density = np.zeros(len(self.layers_top))
-    
-                #get the density of strat-layers, with different conditions
-                for i in range(len(self.layers_top)):
-                    #if ice layer, set density:
-                    if self.layers_hardness_index[i] == 6:
-                        self.layers_density[i]=680 #change ice value?
-                        #if not ice, check if there are NO density samples within the strat-layer:    
-                    elif np.sum((self.density_profile.depth>self.layers_bot[i]) & (self.density_profile.depth <self.layers_top[i])) == 0:
-                        #if yes:
-                        #take care of first layer, bottom layer, since they both have only one of idxlower/idxupper
-                        if i == 0:
-                            self.layers_density[i]=self.density_profile.density[nearest('down',self.density_profile.depth,self.layers_bot[i])]
-                
-                        if i == len(self.layers_top)-1:
-                            self.layers_density[i]=self.density_profile.density[nearest('up',self.density_profile.depth,self.layers_top[i])]
+            SWE=(self.density_profile.layer_thickness*self.density_profile.density / 1000).sum()
+       
+        if method == 'layers':
+            def nearest(direction,lookin,lookfor):
+                if direction == 'up':
+                    idx = np.where(lookin > lookfor)[0][-1]
+                if direction == 'down':
+                    idx = np.where(lookin < lookfor)[0][0]
+                return idx
             
-                        #for all other layers, look both up and down:    
-                        else:
-                            idxupper = nearest('up',self.density_profile.depth,self.layers_top[i])
-                            idxlower = nearest('down',self.density_profile.depth,self.layers_top[i])
-                            self.layers_density[i] = self.density_profile.density[idxupper:idxlower+1].mean()
-                
-                    #if there ARE samples within the layer, take mean of those samples:    
+            
+            #get thickness or our strat-layers:        
+            self.layers_thickness=self.layers_top-self.layers_bot
+
+            #initialize numpy array for our strat-densities, length of the strat-layers
+            self.layers_density = np.zeros(len(self.layers_top))
+
+            #get the density of strat-layers, with different conditions
+            for i in range(len(self.layers_top)):
+                #if ice layer, set density:
+                if self.layers_hardness_index[i] == 6:
+                    self.layers_density[i]=680 #change ice value?
+                    #if not ice, check if there are NO density samples within the strat-layer:    
+                elif np.sum((self.density_profile.depth>self.layers_bot[i]) & (self.density_profile.depth <self.layers_top[i])) == 0:
+                    #if yes:
+                    #take care of first layer, bottom layer, since they both have only one of idxlower/idxupper
+                    if i == 0:
+                        self.layers_density[i]=self.density_profile.density[nearest('down',self.density_profile.depth,self.layers_bot[i])]
+            
+                    if i == len(self.layers_top)-1:
+                        self.layers_density[i]=self.density_profile.density[nearest('up',self.density_profile.depth,self.layers_top[i])]
+        
+                    #for all other layers, look both up and down:    
                     else:
-                        self.layers_density[i]=self.density_profile.density[(self.density_profile.depth >= self.layers_bot[i]) & (self.density_profile.depth <= self.layers_top[i])].mean()
+                        idxupper = nearest('up',self.density_profile.depth,self.layers_top[i])
+                        idxlower = nearest('down',self.density_profile.depth,self.layers_top[i])
+                        self.layers_density[i] = self.density_profile.density[idxupper:idxlower+1].mean()
             
+                #if there ARE samples within the layer, take mean of those samples:    
+                else:
+                    self.layers_density[i]=self.density_profile.density[(self.density_profile.depth >= self.layers_bot[i]) & (self.density_profile.depth <= self.layers_top[i])].mean()
+        
+        
+            SWE = (self.layers_thickness * self.layers_density / 1000).sum()
             
-                SWE = (self.layers_thickness * self.layers_density / 1000).sum()
-                
-                return SWE
+            return SWE
+        print(SWE)
 
 
 
