@@ -1,7 +1,7 @@
 '''
 Created on 6 avr. 2017
 
-@author: hagenmullerp
+@author: hagenmullerp, S. Filhol
 '''
 
 import numpy as np
@@ -59,26 +59,27 @@ grain_colormap = LinearSegmentedColormap.from_list("custom", [[i / 14., color_gr
 
 
 hardness_dict = {
-                    'F-':0.5,
-                    'F':1,
-                    'F+':1.25,
-                    'F-4F':1.5,
-                    '4F-':1.75,
-                    '4F':2,
-                    '4F+':2.25,
-                    '4F-1F':2.5,
-                    '1F-':2.75,
-                    '1F':3,
-                    '1F+':3.25,
-                    '1F-P':3.5,
-                    'P+':3.75,
-                    'P':4,
-                    'P+':4.3,
-                    'P-K':4.6,
-                    'K':5,
-                    'K+':5.3,
-                    'K-I':5.6,
-                    'I':6}
+                  'F-':  0.33,
+                  'F':  1,
+                  'F+':  1.33,
+                  'F-4F':  1.5,
+                  '4F-': 1.66,
+                  '4F': 2,
+                  '4F+': 2.33,
+                  '4F-1F': 2.5,
+                  '1F-': 2.66,
+                  '1F': 3,
+                  '1F+': 3.33,
+                  '1F-P': 3.5,
+                  'P-':  3.66,
+                  'P':  4,
+                  'P+':  4.33,
+                  'P-K':  4.5,
+                  'K-':  4.66,
+                  'K':  5,
+                  'K+':  5.33,
+                  'K-I':  5.5,
+                  'I':  6}
 
 snowflake_symbol_dict = {'PP':'snowflake/recent_snow.png',
                     'DF':'snowflake/partly_decomposed.png',

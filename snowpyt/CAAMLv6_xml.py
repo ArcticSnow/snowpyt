@@ -85,7 +85,7 @@ def childValueNoneTest(child):
     except:
         return None
 
-def has_child(node, idx=0, dtype='str', unit_ret=False):
+def has_child(node, idx=0, dtype='str', unit_ret=False, print2term=True):
     if node.length > 0:
         if dtype == 'str':
             print(node)
@@ -104,7 +104,8 @@ def has_child(node, idx=0, dtype='str', unit_ret=False):
         else:
             return dest_var
     else:
-        print('no data in this field')
+        if print2term:
+            print('no data in this field')
         if unit_ret:
             dest_var = None
             unit_ret=None
@@ -122,32 +123,33 @@ def is_node(node):
         return False
 
 
-def get_metadata(path_xml):
-    print('\n=====================')
-    print('Loding metadata... \n')
+def get_metadata(path_xml, print2term=True):
+    if print2term:
+        print('\n=====================')
+        print('Loading metadata... \n')
     Metadata = pc.metadata()
 
     Tree = minidom.parse(path_xml)
 
-    Metadata.date = has_child(Tree.getElementsByTagName("caaml:timePosition"))
-    Metadata.observer = has_child(Tree.getElementsByTagName("caaml:name"))
-    Metadata.profile_depth, Metadata.profile_depth_unit = has_child(Tree.getElementsByTagName("caaml:profileDepth"), dtype='float', unit_ret=True)
-    Metadata.air_temperature, Metadata.air_temperature_unit = has_child(Tree.getElementsByTagName("caaml:airTempPres"), dtype='float', unit_ret=True)
-    Metadata.windspeed, Metadata.windspeed_unit = has_child(Tree.getElementsByTagName("caaml:windSpd"), dtype='float', unit_ret=True)
-    Metadata.winddir = has_child(Tree.getElementsByTagName("caaml:windDir"))
+    Metadata.date = has_child(Tree.getElementsByTagName("caaml:timePosition"), print2term=print2term)
+    Metadata.observer = has_child(Tree.getElementsByTagName("caaml:name"), print2term=print2term)
+    Metadata.profile_depth, Metadata.profile_depth_unit = has_child(Tree.getElementsByTagName("caaml:profileDepth"), dtype='float', unit_ret=True, print2term=print2term)
+    Metadata.air_temperature, Metadata.air_temperature_unit = has_child(Tree.getElementsByTagName("caaml:airTempPres"), dtype='float', unit_ret=True, print2term=print2term)
+    Metadata.windspeed, Metadata.windspeed_unit = has_child(Tree.getElementsByTagName("caaml:windSpd"), dtype='float', unit_ret=True, print2term=print2term)
+    Metadata.winddir = has_child(Tree.getElementsByTagName("caaml:windDir"), print2term=print2term)
 
     if is_node(Tree.getElementsByTagName("caaml:ElevationPosition")):
-        Metadata.elevation, Metadata.elevation_unit = has_child(Tree.getElementsByTagName("caaml:ElevationPosition")[0].getElementsByTagName('caaml:position'), dtype='float', unit_ret=True)
+        Metadata.elevation, Metadata.elevation_unit = has_child(Tree.getElementsByTagName("caaml:ElevationPosition")[0].getElementsByTagName('caaml:position'), dtype='float', unit_ret=True, print2term=print2term)
     if is_node(Tree.getElementsByTagName('caaml:SlopeAnglePosition')):
-        Metadata.slope, Metadata.slope_unit = has_child(Tree.getElementsByTagName('caaml:SlopeAnglePosition')[0].getElementsByTagName('caaml:position'), dtype='float', unit_ret=True)
+        Metadata.slope, Metadata.slope_unit = has_child(Tree.getElementsByTagName('caaml:SlopeAnglePosition')[0].getElementsByTagName('caaml:position'), dtype='float', unit_ret=True, print2term=print2term)
     if is_node(Tree.getElementsByTagName('caaml:AspectPosition')):
-        Metadata.aspect = has_child(Tree.getElementsByTagName('caaml:AspectPosition')[0].getElementsByTagName('caaml:position'))
+        Metadata.aspect = has_child(Tree.getElementsByTagName('caaml:AspectPosition')[0].getElementsByTagName('caaml:position'), print2term=print2term)
     if is_node(Tree.getElementsByTagName('caaml:metaData')):
-        Metadata.location_description = has_child(Tree.getElementsByTagName('caaml:metaData')[0].getElementsByTagName('caaml:comment'))
+        Metadata.location_description = has_child(Tree.getElementsByTagName('caaml:metaData')[0].getElementsByTagName('caaml:comment'), print2term=print2term)
     if is_node(Tree.getElementsByTagName('caaml:snowPackCond')):
-        Metadata.snowpack_condition = has_child(Tree.getElementsByTagName('caaml:snowPackCond')[0].getElementsByTagName('caaml:comment'))
+        Metadata.snowpack_condition = has_child(Tree.getElementsByTagName('caaml:snowPackCond')[0].getElementsByTagName('caaml:comment'), print2term=print2term)
     if is_node(Tree.getElementsByTagName('caaml:surfCond')):
-        Metadata.surface_condition = has_child(Tree.getElementsByTagName('caaml:surfCond')[0].getElementsByTagName('caaml:comment'))
+        Metadata.surface_condition = has_child(Tree.getElementsByTagName('caaml:surfCond')[0].getElementsByTagName('caaml:comment'), print2term=print2term)
 
     if is_node(Tree.getElementsByTagName("gml:Point")):
         Metadata.srsName = Tree.getElementsByTagName("gml:Point")[0].attributes.item(0).value
@@ -158,50 +160,59 @@ def get_metadata(path_xml):
                 Tree.getElementsByTagName("gml:Point")[0].childNodes[1].firstChild.nodeValue.split(" ")[1])
     return Metadata
 
-def get_layers(path_xml):
+def get_layers(path_xml, print2term=True):
     xmldoc = minidom.parse(path_xml)
 
     itemlist = xmldoc.getElementsByTagName('caaml:snowPackCond')
 
-    pit_depth = has_child(itemlist[0].getElementsByTagName('caaml:hS')[0].getElementsByTagName('caaml:height'), dtype='float')
-    print('Total snowpit depth = ' + str(pit_depth))
+    
+
+    pit_depth = has_child(itemlist[0].getElementsByTagName('caaml:hS')[0].getElementsByTagName('caaml:height'), dtype='float', print2term=print2term)
+    if print2term:
+        print('Total snowpit depth = ' + str(pit_depth))
 
     stratProfile = xmldoc.getElementsByTagName("caaml:stratProfile")
-    Layers = []
-    for Layer in stratProfile[0].childNodes[3:]:
-        if Layer.nodeType not in {3, 8}:
-            lay = pc.layer()
-            for child in Layer.childNodes:
-                if child.nodeType not in {3, 8}:
-                    if child.localName == "depthTop" and child.firstChild is not None:
-                        lay.dtop = pit_depth - float(child.firstChild.nodeValue)
-                        lay.dtop_unit = str(child.attributes.item(0).value)
-                    elif child.localName == "thickness" and child.firstChild is not None:
-                        lay.thickness = float(child.firstChild.nodeValue)
-                        lay.thickness_unit = child.attributes.item(0).value
-                    elif child.localName == "grainFormPrimary" and child.firstChild is not None:
-                        lay.grain_type1 = str(child.firstChild.nodeValue)
-                    elif child.localName == "grainFormSecondary" and child.firstChild is not None:
-                        lay.grain_type2 = str(child.firstChild.nodeValue)
-                    elif child.localName == "grainSize":
-                        lay.grain_size_unit = str(child.attributes.item(0).value)
-                        for component in child.childNodes[1].childNodes:
-                            if component.nodeType not in {3, 8}:
-                                if component.localName == "avg" and component.firstChild is not None:
-                                    lay.grainSize_mean = float(component.firstChild.nodeValue)
-                                elif component.localName == "avgMax" and component.firstChild is not None:
-                                    lay.grainSize_max = float(component.firstChild.nodeValue)
-                    elif child.localName == "hardness" and child.firstChild is not None:
-                        lay.hardness = str(child.firstChild.nodeValue)
-                        lay.hardness_index = sfd.hardness_dict.get(lay.hardness)
-                        lay.hardness_ram = 19.3 * lay.hardness_index ** 2.4
-                    elif child.localName == "wetness" and child.firstChild is not None:
-                        lay.lwc = str(child.firstChild.nodeValue)
+    if stratProfile.length > 0:
+        Layers = []
+        for Layer in stratProfile[0].childNodes[3:]:
+            if Layer.nodeType not in {3, 8}:
+                lay = pc.layer()
+                for child in Layer.childNodes:
+                    if child.nodeType not in {3, 8}:
+                        if child.localName == "depthTop" and child.firstChild is not None:
+                            lay.dtop = pit_depth - float(child.firstChild.nodeValue)
+                            lay.dtop_unit = str(child.attributes.item(0).value)
+                        elif child.localName == "thickness" and child.firstChild is not None:
+                            lay.thickness = float(child.firstChild.nodeValue)
+                            lay.thickness_unit = child.attributes.item(0).value
+                        elif child.localName == "grainFormPrimary" and child.firstChild is not None:
+                            lay.grain_type1 = str(child.firstChild.nodeValue)
+                        elif child.localName == "grainFormSecondary" and child.firstChild is not None:
+                            lay.grain_type2 = str(child.firstChild.nodeValue)
+                        elif child.localName == "grainSize":
+                            lay.grain_size_unit = str(child.attributes.item(0).value)
+                            for component in child.childNodes[1].childNodes:
+                                if component.nodeType not in {3, 8}:
+                                    if component.localName == "avg" and component.firstChild is not None:
+                                        lay.grainSize_mean = float(component.firstChild.nodeValue)
+                                    elif component.localName == "avgMax" and component.firstChild is not None:
+                                        lay.grainSize_max = float(component.firstChild.nodeValue)
+                        elif child.localName == "hardness" and child.firstChild is not None:
+                            lay.hardness = str(child.firstChild.nodeValue)
+                            lay.hardness_index = sfd.hardness_dict.get(lay.hardness)
+                            lay.hardness_ram = 19.3 * lay.hardness_index ** 2.4
+                        elif child.localName == "wetness" and child.firstChild is not None:
+                            lay.lwc = str(child.firstChild.nodeValue)
 
-                if lay.dtop is not None and lay.thickness is not None:
-                    lay.dbot = lay.dtop - lay.thickness
-            Layers += [lay]
-    return Layers
+                    if lay.dtop is not None and lay.thickness is not None:
+                        lay.dbot = lay.dtop - lay.thickness
+                Layers += [lay]
+        return Layers
+    else:
+        if print2term:
+            print('No layers')
+        return None
+
 
 
 
