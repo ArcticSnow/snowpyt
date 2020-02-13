@@ -178,10 +178,10 @@ class Snowpit(object):
         self.metadata = cxv6.get_metadata(self.caaml_file, print2term=print2term)
 
         # load temperature profile
-        self.temperature_profile = cxv6.get_temperature(self.caaml_file)
+        self.temperature_profile = cxv6.get_temperature(self.caaml_file, print2term=print2term)
 
         # load density profile
-        self.density_profile = cxv6.get_density(self.caaml_file)
+        self.density_profile = cxv6.get_density(self.caaml_file, print2term=print2term)
 
         # load layers
         self.layers = cxv6.get_layers(self.caaml_file, print2term=print2term)

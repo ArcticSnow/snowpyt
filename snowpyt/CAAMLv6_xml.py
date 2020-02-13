@@ -15,7 +15,7 @@ import snowpyt.pit_class as pc
 import numpy as np
 import snowpyt.snowflake.sf_dict as sfd
 
-def get_temperature(path_xml):
+def get_temperature(path_xml, print2term=True):
     xmldoc = minidom.parse(path_xml)
     itemlist = xmldoc.getElementsByTagName('caaml:tempProfile')
     if itemlist.length > 0:
@@ -41,9 +41,10 @@ def get_temperature(path_xml):
         TProfile.temp = np.array(temp).astype(float)
         return TProfile
     else:
-        print('No temperature profile')
+        if print2term:
+            print('No temperature profile')
 
-def get_density(path_xml):
+def get_density(path_xml, print2term=True):
 
     xmldoc = minidom.parse(path_xml)
     itemlist = xmldoc.getElementsByTagName('caaml:densityProfile')
@@ -76,7 +77,8 @@ def get_density(path_xml):
         DProfile.density = np.array(density).astype(float)
         return DProfile
     else:
-        print('No density profile')
+        if print2term:
+            print('No density profile')
 
 
 def childValueNoneTest(child):
@@ -88,7 +90,8 @@ def childValueNoneTest(child):
 def has_child(node, idx=0, dtype='str', unit_ret=False, print2term=True):
     if node.length > 0:
         if dtype == 'str':
-            print(node)
+            if print2term:
+                print(node)
             dest_var = str(childValueNoneTest(node[0].firstChild))
         elif dtype == 'float':
             dest_var = float(childValueNoneTest(node[idx].firstChild))
