@@ -554,10 +554,18 @@ class Snowpit(object):
         print('Not implemented [print_layers()]')
         
     
-    def calc_SWE(self, method):
+    def calc_SWE(self, method='avg', ice_layer_density=680):
         '''
         calculate SWE using three methods: avg SWE for all pit 'avg', SWE based on density samples 'samples', and SWE based  
         :param method: 'avg', 'samples' or 'layers'. no default
+                        - 'avg' is simply the
+                        - 'samples' is density by density samples. Top and bottom layer from all top to all bottom 
+                        to half between density sample 1;2 and N-1;N. All others, make layer horizons between samples, 
+                        use density sample in middle of these layers as density
+                        - 'layers' is density by strat-layer, find matching density sample.Ice layer density a given 
+                        density.if more than one match, use average. if no matches, search for neareast. (or search for nearest two, upper and lower, and make average)
+        : param ice_layer_density: assign a constant density to ice layers (An ice layer is detected when hand hardness index = knife = 6)
+        :return: SWE in [cm]
         '''
         if method == 'avg':
             SWE=(self.density_profile.density.mean()*self.layers_top[0])/1000
@@ -567,46 +575,62 @@ class Snowpit(object):
             #make into pandas to use rolling mean, make back into numpy array
             self.density_profile.layer_horz = pd.DataFrame(self.density_profile.depth).rolling(2,min_periods=2).mean().to_numpy()
             #override first value of rolling mean, nan, with top max height of snowpit
-            self.density_profile.layer_horz[0]=self.layers_top[0]
+            self.density_profile.layer_horz[0] = self.layers_top[0]
             #app bottom of snowpit, yes 0
-            self.density_profile.layer_horz=np.append(self.density_profile.layer_horz,self.layers_bot[-1])
+            self.density_profile.layer_horz = np.append(self.density_profile.layer_horz,self.layers_bot[-1])
             #calculate thicknsesses:
-            self.density_profile.layer_thickness=abs(np.diff(self.density_profile.layer_horz))
+            self.density_profile.layer_thickness = abs(np.diff(self.density_profile.layer_horz))
            
             SWE=(self.density_profile.layer_thickness*self.density_profile.density / 1000).sum()
        
         if method == 'layers':
-            def nearest(direction,lookin,lookfor):
+            """
+            Add logic here that check layers exist, If not ignore method and return message why
+
+            Correction to do: If the first density sample is below the bottom of the second layer then it fails
+            one logic could be: take height of upper density. Assign this density to any layer above unless flagged as ice. Do the opposite for bootom layers
+10:30
+then assign density o layers which have a density sample within their height range
+10:30
+and finally do interpolation for the one having no value after this
+            """
+
+            def nearest(direction, lookin, lookfor):
                 if direction == 'up':
                     idx = np.where(lookin > lookfor)[0][-1]
-                if direction == 'down':
+                elif direction == 'down':
                     idx = np.where(lookin < lookfor)[0][0]
+                else:
+                    print('ERROR: You must provide a direction, up or down')
                 return idx
             
             
             #get thickness or our strat-layers:        
-            self.layers_thickness=self.layers_top-self.layers_bot
+            self.layers_thickness = self.layers_top-self.layers_bot
 
             #initialize numpy array for our strat-densities, length of the strat-layers
             self.layers_density = np.zeros(len(self.layers_top))
 
             #get the density of strat-layers, with different conditions
             for i in range(len(self.layers_top)):
-                #if ice layer, set density:
+                
+                #if ice layer, set arbitrary density:
                 if self.layers_hardness_index[i] == 6:
-                    self.layers_density[i]=680 #change ice value?
-                    #if not ice, check if there are NO density samples within the strat-layer:    
-                elif np.sum((self.density_profile.depth>self.layers_bot[i]) & (self.density_profile.depth <self.layers_top[i])) == 0:
+                    self.layers_density[i] = ice_layer_density
+
+                #if not ice, check if there are NO density samples within the strat-layer:    
+                elif np.sum((self.density_profile.depth > self.layers_bot[i]) & (self.density_profile.depth < self.layers_top[i])) == 0:
                     #if yes:
                     #take care of first layer, bottom layer, since they both have only one of idxlower/idxupper
                     if i == 0:
-                        self.layers_density[i]=self.density_profile.density[nearest('down',self.density_profile.depth,self.layers_bot[i])]
+                        self.layers_density[i] = self.density_profile.density[nearest('down',self.density_profile.depth,self.layers_bot[i])]
             
-                    if i == len(self.layers_top)-1:
+                    elif i == len(self.layers_top)-1:
                         self.layers_density[i]=self.density_profile.density[nearest('up',self.density_profile.depth,self.layers_top[i])]
         
                     #for all other layers, look both up and down:    
                     else:
+                        print(i)
                         idxupper = nearest('up',self.density_profile.depth,self.layers_top[i])
                         idxlower = nearest('down',self.density_profile.depth,self.layers_top[i])
                         self.layers_density[i] = self.density_profile.density[idxupper:idxlower+1].mean()

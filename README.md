@@ -141,6 +141,13 @@ Extra column of sample values can be added to the excel file. **Column name must
 The current plotting functions will not plot these extra columns, only the first one. However the values are loaded via pandas in the table as a dataframe (see 5.)
 
 
+7. Compute SWE
+
+```python
+p = pc.Snowpit()
+p.caaml_file= '[PATH TO YOUR FILE].caaml'
+p.calc_SWE(method='avg')
+```
 
 
 ## Want to contribute?
@@ -149,7 +156,7 @@ Once you have cloned the project to your home directory, create a git branch and
 ### List of Contributor
 - Simon Filhol
 - Guillaume Sutter
-- [add your name]
+- Mika Lanzky
 
 ## Example
 ![Example snowpit](snowpyt/Standard_pit.png)
