@@ -8,10 +8,10 @@ Feel free to contribute to the project!!!! Many new features can be added...
 ## To do:
 
 ### High Priority
-
+- **write class to import and plot CROCUS results**
+- **add same colormap for snowgrain type as the snowtool_git for CROCUS**
 - write function to save and load pit to and from pickle format (currently not working)
 - make ground appear to comfirm the user that the pit reached ground. add note about ground type.
-- Create a plotting function to plot any newly named column from the isotope class object. Maybe rename the isotope class object to simply `samples`
 
 ### Low priority 
 - specify the figure size and adjust font size in respect

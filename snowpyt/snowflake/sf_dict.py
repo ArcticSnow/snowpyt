@@ -57,7 +57,7 @@ color_grain = {MEPRA_dict['PP']: coloring['PP'],
 grain_colormap = LinearSegmentedColormap.from_list("custom", [[i / 14., color_grain[i]] for i in range(15)])
 
 
-
+# These values were extracted from Niviz source code (as well as the relationship to Newton equivalent)
 hardness_dict = {
                   'F-':  0.33,
                   'F':  1,
