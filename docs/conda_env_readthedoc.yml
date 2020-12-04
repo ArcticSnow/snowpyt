@@ -1,0 +1,51 @@
+name: docu_sphinx
+channels:
+  - defaults
+dependencies:
+  - _libgcc_mutex
+  - ca-certificates
+  - certifi
+  - ld_impl_linux-64
+  - libedit
+  - libffi
+  - libgcc-ng
+  - libstdcxx-ng
+  - ncurses
+  - openssl
+  - pip
+  - python
+  - readline
+  - setuptools
+  - sqlite
+  - tk
+  - tzdata
+  - wheel
+  - xz
+  - zlib
+  - pip:
+    - alabaster
+    - babel
+    - chardet
+    - commonmark
+    - docutils
+    - idna
+    - imagesize
+    - jinja2
+    - markupsafe
+    - packaging
+    - pygments
+    - pyparsing
+    - pytz
+    - recommonmark
+    - requests
+    - snowballstemmer
+    - sphinx
+    - sphinx-rtd-theme
+    - sphinxcontrib-applehelp
+    - sphinxcontrib-devhelp
+    - sphinxcontrib-htmlhelp
+    - sphinxcontrib-jsmath
+    - sphinxcontrib-qthelp
+    - sphinxcontrib-serializinghtml
+    - urllib3
+prefix: /home/arcticsnow/miniconda3/envs/docu_sphinx
