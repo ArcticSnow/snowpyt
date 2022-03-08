@@ -19,35 +19,82 @@ Raw images are in 12 bit. Find a way to convert to BW from original while mainta
 wrap micmac function to extract profile 'mm3d vodka'. At least provide the method on how to do it.
 
 '''
+import pdb
 
-from skimage import io, color
+from skimage import io, measure, color
 import matplotlib.pyplot as plt
 from mpl_point_clicker import clicker
 import numpy as np
+import cv2
+import pandas as pd
 
-class micmac_nir():
+
+def kernel_square(nPix):
+    """
+    Function to defin a square kernel of equal value for performing averaging
+    :param nPix: size of the kernel in pixel
+    :return: kernel matrix
+    """
+    print("... Averaging kernel of " + str(nPix) + " by " + str(nPix))
+    kernel = np.empty([nPix, nPix])
+    kernel.fill(1)
+    kernel /= kernel.sum()   # kernel should sum to 1!  :)
+    return kernel
+
+
+def smooth(mat, kernel):
+    """
+    Function that produce a smoothed version of the 2D array
+    :param mat: Array to smooth
+    :param nPix: kernel array (output) from the function kernel_square()
+    :return: smoothed array
+    """
+    r = cv2.filter2D(mat, -1, kernel)
+    print("... Smoothing done ...")
+    return r
+
+
+def micmac_radiometric():
     '''
-    Class to correct images via micmac. with mm3d vodka
+    List of commands to run for deriving a radiometric calibratino profile for the camera
     '''
 
+    cmd1 = "mm3d Tapioca All .*JPG 2500"
+    cmd2 = "mm3d Vodka .*JPG"
 
 
 class nir(object):
-    def __init__(self, fname_nir, fname_calib):
+    def __init__(self, fname_nir, fname_calib, highpass=True, kernel_size=2000):
+        """
+        Class initialization
+        Args:
+            fname_nir (str): path to NIR image
+            fname_calib (str): path to radiometric calibration image
+            highpass (bool): perform high pass filtering to remove luminosity gradient across the pit
+            kernel_size (int): size of the kernel for the highpass filter
+        """
+
         self.fname_nir = fname_nir
         self.fname_calib = fname_calib
         self.img_rgb = None
-        self.img_v = None
+        self.img_bw = None
         self.img_calib = None
         self.calib_profile = None
+        self.highpass = highpass
+        self.kernel_size = kernel_size
         self.targets = []
+        self.spatial_param = None
         self.img_reflectance = None
+        self.img_ssa = None
+        self.img_doptic = None
+        self.profile = None
 
         self.load_nir()
         if fname_calib is not None:
             self.load_calib()
             self.apply_calib()
         else:
+            self.apply_calib()
             print("---> WARNING: No calbration profile provided.")
 
 
@@ -64,8 +111,9 @@ class nir(object):
                 dict: data for one type of targets
             """
             fig, ax = plt.subplots(constrained_layout=True)
+            ax.set_title('Pick targets')
             ax.imshow(image_calib, cmap=plt.cm.gray)
-            klicker = clicker(ax, ["event"], markers=["x"])
+            klicker = clicker(ax, ["event"], markers=["x"], colors='r')
             plt.show()
 
             coords = klicker.get_positions().get('event').astype(int)
@@ -85,6 +133,7 @@ class nir(object):
         print('DONE: Reflectance targets picked.')
 
     def convert_to_reflectance(self):
+        print('---> convert to reflectance')
         values = []
         reflectances = []
 
@@ -100,104 +149,197 @@ class nir(object):
         self.img_reflectance = self.img_calib * m + c
 
     def convert_to_SSA(self):
+        if self.img_ssa is None:
+            print('ERROR convert to Reflectance first')
+        else:
+            print('---> convert to SSA')
         self.img_ssa = 0.017 * np.exp(self.img_reflectance/12.222)
 
     def convert_to_doptic(self):
-        self.img_doptic = 6/self.img_ssa
+        if self.img_ssa is None:
+            print('ERROR convert to SSA first')
+        else:
+            print('---> convert to optical diameter')
+            self.img_doptic = 6/self.img_ssa
 
+    def convert_all(self):
+        """
+        Function to convert pixel values to physical values using the targets
+        """
+        self.convert_to_reflectance()
+        self.convert_to_SSA()
+        self.convert_to_doptic()
+        
     def load_calib(self):
         self.calib_profile = io.imread(self.fname_calib).T
 
     def apply_calib(self,  crop_calib=False):
-        if (self.calib_profile.shape != self.img_v) or (crop_calib):
-        # Crop calib profile, using center of matrix as cropping reference
-            def crop_center(img,crop_shape):
-                y,x = img.shape
-                startx = x//2 - crop_shape[1]//2
-                starty = y//2 - crop_shape[0]//2
-                return img[starty:starty+crop_shape[0], startx:startx+crop_shape[1]]
-            self.calib_profile = crop_center(self.calib_profile, self.img_v.shape)
 
-        means = np.mean(self.img_v * self.calib_profile, axis=1)
-        trend = np.polyfit(np.arange(0,means.shape[0]),means,1)
-        trendpoly = np.poly1d(trend)
-        self.img_calib = self.img_v * self.calib_profile - np.repeat(trendpoly(np.arange(0,means.shape[0])),
-                                                                     self.img_v.shape[1], axis=0).reshape(self.img_v.shape)
+
+        # remove noise with median filter
+        print('---> Apply median filter for noise reduction')
+        self.img_bw = cv2.medianBlur(self.img_bw, 5)
+
+        # apply radiometric calibration
+        if self.fname_calib is not None:
+            if (self.calib_profile.shape != self.img_bw) or (crop_calib):
+                # Crop calib profile, using center of matrix as cropping reference
+                def crop_center(img, crop_shape):
+                    y,x = img.shape
+                    startx = x//2 - crop_shape[1]//2
+                    starty = y//2 - crop_shape[0]//2
+                    return img[starty:starty+crop_shape[0], startx:startx+crop_shape[1]]
+                self.calib_profile = crop_center(self.calib_profile, self.img_bw.shape)
+            print('---> Apply radiometric calibration')
+            self.img_calib = self.img_bw * self.calib_profile
+        else:
+            print("---> WARNING: No radiometric calibration applied")
+            self.img_calib = self.img_bw
+
+        # Apply a high pass filter
+        if self.highpass:
+            print('---> Apply high pass filter')
+            lowpass = smooth(self.img_calib/255, kernel_square(self.kernel_size))
+            self.img_calib = self.img_calib/255 - lowpass
 
 
     def load_nir(self):
-        '''
-        function to load jpeg NIR images, and convert them to BW
-        '''
-        self.img_rgb = io.imread(self.fname_nir)
-        self.img_v = color.rgb2hsv(self.img_rgb)[:,:,2]
-
-
-    def load_array(self):
-        '''
-        Function to data if saved in a 2D array format.
-        '''
-        return
-
-    def read_exif(self):
-        '''
-        function to read image exif
-        :return:
-        '''
-        return
-
-    def apply_vignetting(self):
-        '''
-        Apply via Python the
-        :return:
-        '''
-
-    def detrend_limunosity_gradient(self):
-        '''
-        Function to detrend the luminosity gradient (vertical and/or horizontal)
-        :return:
-        '''
-
-    def extract_profile(self):
-        '''function to extract profile
-        1. one single pixel profile
-        2. multiple profile, and return aggregate profile (mean, median, min, max, std)
-        '''
-        return
-
-    def calibrate_targets(self):
-        '''
-        Function to derive reflectance calibration value from targets (50% and 90%)
-        :return:
-        '''
-        return
-
-    def apply_calibration(self):
-        '''
-        apply reflectance calibration from targets
-        :return:
-        '''
-        return
-
-    def ref2ssa(self):
-        '''
-        function to compute SSA from reflectance value
-        :return:
-        '''
-        return
-
-    def ssa2d(self):
-        '''
-        function to derive optical diameter of grain from SSA values
-        :return:
-        '''
-        return
-
-        def plot_compare(self, im1, im2, cm=plt.cm.gray):
         """
-        Function to compare two images
-        :param im1:
-        :param im2:
-        :param cm:
-        :return:
+        Function to load jpeg NIR images, and convert them to BW
         """
+        self.img_rgb = cv2.imread(self.fname_nir)
+        self.img_bw = cv2.cvtColor(self.img_rgb, cv2.COLOR_BGR2HSV)[:,:,2]
+        
+    def scale_spatially(self):
+        """
+        Function to bring real spatial coordinate
+
+        # 1. click two points
+        # 2. provide corresponding length
+        # 3. option to provide geometrical correction
+        """
+        # Pick two points with a known distance
+        print('---> Pick two points with known distance')
+        fig, ax = plt.subplots(constrained_layout=True)
+        ax.set_title('Pick 2 points with known distance [2 pts]')
+        ax.imshow(self.img_calib, cmap=plt.cm.gray)
+        klicker = clicker(ax, ["event"], markers=["x"], **{"linestyle": "--"}, colors='r')
+        plt.show()
+        coords = klicker.get_positions().get('event').astype(int)
+
+        # provide corresponding distance
+        dist = float(input('Enter distance in [cm]: '))
+        scale = dist / np.linalg.norm(coords[0] - coords[1])
+
+        # pick origin point for coordinate system
+        print('---> Pick coordinate system origin)')
+        fig, ax = plt.subplots(constrained_layout=True)
+        ax.set_title('Pick coordinate system origin [1 pt]')
+        ax.imshow(self.img_calib, cmap=plt.cm.gray)
+        klicker = clicker(ax, ["event"], markers=["o"],  colors='r')
+        plt.show()
+
+        coord = klicker.get_positions().get('event').astype(int)
+        extent = np.array([-coord[0][0], self.img_bw.shape[1] - coord[0][0],  coord[0][1] - self.img_bw.shape[0], coord[0][1]])
+        self.spatial_param = {'scale': scale, 'extent': extent*scale}
+
+
+    def extract_profile(self,
+                        imgs=['SSA', 'reflectance', 'd_optical'],
+                        linewidth=5,
+                        reduce_func=np.median,
+                        spline_order=1):
+        """
+        Function to extract profile of values for a list of images
+
+        Args:
+            imgs (list): images from which to sample profile
+            linewidth (int): width of the profile
+            reduce_func (func): function to agglomerate the pixels perpendicular to the line
+            spline_order (int, 0-5): order of the spline applied to the sampled profile
+        """
+        img_dict = {'reflectance': self.img_reflectance,
+                    'SSA': self.img_ssa,
+                    'd_optical': self.img_doptic,
+                    'value_ori': self.img_bw,
+                    'value_calib': self.img_calib}
+
+        print('---> Pick segement along which extracting profile')
+        fig, ax = plt.subplots(constrained_layout=True)
+        ax.set_title('Pick segement along which extracting profile [2 pts]')
+        ax.imshow(self.img_reflectance, cmap=plt.cm.gray)
+        klicker = clicker(ax, ["event"], markers=["x"], **{"linestyle": "--"}, colors='r')
+        plt.show()
+
+        coord = klicker.get_positions().get('event').astype(int)
+        #pdb.set_trace()
+        method='skimage'
+        self.profile = pd.DataFrame()
+        
+        if method=='scipy':
+            print('WARNING: implementation not finished')
+            for img in imgs:
+                
+                x, y = np.linspace(coord[0][0], coord[1][0], 1000), np.linspace(coord[0][1], coord[1][1], 1000)
+                self.profile[img] = scipy.ndimage.map_coordinates(img_dict.get(img), np.vstack((y,x)))
+
+            
+            
+        elif method=='numpy':
+            print('WARNING: implementation not finished')
+            x, y = np.linspace(coord[0][0], coord[1][0], 1000), np.linspace(coord[0][1], coord[1][1], 1000)
+            zi = self.img_ssa[y.astype(np.int), x.astype(np.int)]
+            
+        
+        elif method=='skimage':
+            for img in imgs:
+                co = np.flip(coord, axis=1)
+                self.profile[img] = measure.profile_line(img_dict.get(img), co[0], co[1],
+                                                    linewidth=linewidth,
+                                                    reduce_func=reduce_func,
+                                                    order=spline_order)
+            self.profile['dist_pix'] = np.arange(0, np.ceil(np.linalg.norm(co[1]-co[0]))+1)
+            self.profile['dist'] = self.profile.dist_pix * self.spatial_param.get('scale')
+            xs, ys = np.mgrid[0:self.img_bw.shape[1]:1, 0:self.img_bw.shape[0]:1]
+            self.profile['x_pix'] = measure.profile_line(xs, co[0], co[1], order=0)
+            self.profile['y_pix'] = measure.profile_line(ys, co[0], co[1], order=0)
+            self.profile['x'] = self.profile.x_pix * self.spatial_param.get('scale') + self.spatial_param.get('extent')[0]
+            self.profile['y'] = self.profile.y_pix * self.spatial_param.get('scale') + self.spatial_param.get('extent')[2]
+            
+            else:
+                print('ERROR: sampling method not existing. Available: scipy, numpy, skimage')
+
+
+if __name__ == '__main__':
+    fnir = '/home/simonfi/Desktop/202202_finse_livox/NIR_cam/20220224_NIR/DSC01493.JPG'
+    fcalib = '/home/simonfi/Downloads/Foc0200Diaph028-FlatField.tif'
+    mo = nir(fname_nir=fnir, fname_calib=None, kernel_size=500)
+
+    mo.pick_targets()
+    mo.convert_all()
+    mo.scale_spatially()
+    mo.extract_profile(['SSA', 'd_optical', 'reflectance'], spline_order=0)
+
+    fig, ax = plt.subplots(1, 3, sharey=True)
+    ax[0].plot(mo.profile.reflectance, mo.profile.dist)
+    ax[0].grid(':')
+    ax[0].set_xlabel('Reflectance [%]')
+
+    ax[1].plot(mo.profile.SSA, mo.profile.dist)
+    ax[1].grid(':')
+    ax[1].set_xlabel('SSA [mm$^{-1}$]')
+
+    ax[2].plot(mo.profile.d_optical, mo.profile.dist)
+    ax[2].grid(':')
+    ax[2].set_xlabel('d$_{optical}$ [mm]')
+    plt.show()
+
+
+
+
+    
+
+
+
+    
+    
