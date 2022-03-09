@@ -17,13 +17,13 @@ NAME = 'snowpyt'
 DESCRIPTION = 'A Python project to visualize snowpit'
 URL = 'https://github.com/ArcticSnow/snowpyt'
 EMAIL = 'simon.filhol@geo.uio.no'
-AUTHOR = 'S. Filhol,G. Sutter'
+AUTHOR = 'S. Filhol, G. Sutter, M. Lanzky'
 REQUIRES_PYTHON = '>=3.6.0'
 VERSION = None
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'matplotlib', 'pandas', 'numpy', 'xarray'
+    'matplotlib', 'pandas', 'numpy', 'xarray', 'skimage', 'opencv', 'scipy'
 ]
 
 # The rest you shouldn't have to touch too much :)

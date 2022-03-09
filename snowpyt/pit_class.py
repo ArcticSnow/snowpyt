@@ -190,20 +190,37 @@ class Snowpit(object):
 
 
     def import_sample_csv(self, bar_plot=False):
-        '''
-        Function to import sample profiles. 
-        :param bar_plot: plot sample profile as bar instead of line-scatter. Default is False
-        '''
+        """
+        Function to import sample profiles.
+
+        Args:
+            bar_plot (bool): plot sample profile as bar instead of line-scatter. Default is False
+        """
         self.sample_profile.df = pd.read_csv(self.sample_file)
 #        self.sample_profile.layer_top = self.sample_profile.df.height_top
 #        self.sample_profile.layer_bot = self.sample_profile.df.height_bot
         self.sample_profile.names = self.sample_profile.df.columns[2:]
         self.sample_profile.bar_plot = bar_plot   
 
-    def plot(self, save=False,metadata=False, invert_depth=False,figsize=(8,4), dpi=150,
-                     plot_order=['temperature', 'density', 'crystal size',
-                                  'stratigraphy', 'hardness',
-                                  'sample names', 'dD', 'd18O', 'd-ex']):
+    def plot(self,
+             save=False,
+             metadata=False,
+             invert_depth=False,
+             figsize=(8,4),
+             dpi=150,
+             plot_order=['temperature', 'density', 'crystal size',
+                         'stratigraphy', 'hardness', 'sample names',
+                         'dD', 'd18O', 'd-ex']):
+        """
+        Function to plot pit data
+        Args:
+            save (bool): save plot
+            metadata (bool): add metadata to plot
+            invert_depth (bool): invert depth/height axis. Default is height
+            figsize (tuple): size of plot in inch. default matplotlib setting
+            dpi (int): plot resolution, pixel per inches
+            plot_order (list): list of plots to add to the figure, the order defines the order of the plots
+        """
         fig = plt.figure(figsize=figsize, dpi=dpi)
 
         if metadata:
@@ -290,9 +307,7 @@ class Snowpit(object):
                     col_vec=np.append(col_vec,'0.9')
                     hatch_vec=np.append(hatch_vec,'\\')
                     symb_vec=np.append(symb_vec,'d')
-            
-            
-            
+
             #staircase step plot:
             im = ax.step(np.append(self.sample_profile.df[iso].values[0], self.sample_profile.df[iso].values),
                          np.append(self.sample_profile.df.height_top.values,0), where='post', color=color)
@@ -326,8 +341,7 @@ class Snowpit(object):
                 tick.set_rotation(45)
 
             return im
-            
-        
+
         def plot_dD(ax):
             plot_isotope(ax,iso='dD')
 
@@ -336,7 +350,6 @@ class Snowpit(object):
 
         def plot_dXS(ax):
              plot_isotope(ax,iso='dxs')
-           
             
         def plot_density(ax):
             if ax is ax1:
@@ -401,17 +414,12 @@ class Snowpit(object):
             #edgecolor='k', linewidth=0.5)
             ax.set_xlim(0, 1)
 
-            # include sample name on pit face
-            # for i, sample in enumerate(self.sample_name):
-
-
             # include snowflake symbols
             for i, flake in enumerate(self.layers_grainType1.astype(str)):
                 if flake == 'nan':
                     flake = None
                 if flake != None:
                     if snowflake_symbol_dict.get(flake) != None:
-
                         im = plt.imread(path2snowflake + snowflake_symbol_dict.get(flake))
                         im[im == 0] = np.nan
                         imagebox = OffsetImage(im, zoom=.01)
@@ -557,18 +565,21 @@ class Snowpit(object):
         
     
     def calc_SWE(self, method='avg', ice_layer_density=680):
-        '''
-        calculate SWE using three methods: avg SWE for all pit 'avg', SWE based on density samples 'samples', and SWE based  
-        :param method: 'avg', 'samples' or 'layers'. no default
+        """
+        Functino to compute SWE using three methods: avg SWE for all pit 'avg', SWE based on density samples 'samples', and SWE based
+        Args:
+            method (str): 'avg', 'samples' or 'layers'. no default
                         - 'avg' is simply the
-                        - 'samples' is density by density samples. Top and bottom layer from all top to all bottom 
-                        to half between density sample 1;2 and N-1;N. All others, make layer horizons between samples, 
+                        - 'samples' is density by density samples. Top and bottom layer from all top to all bottom
+                        to half between density sample 1;2 and N-1;N. All others, make layer horizons between samples,
                         use density sample in middle of these layers as density
-                        - 'layers' is density by strat-layer, find matching density sample.Ice layer density a given 
+                        - 'layers' is density by strat-layer, find matching density sample.Ice layer density a given
                         density.if more than one match, use average. if no matches, search for neareast. (or search for nearest two, upper and lower, and make average)
-        : param ice_layer_density: assign a constant density to ice layers (An ice layer is detected when hand hardness index = knife = 6)
-        :return: SWE in [cm]
-        '''
+            ice_layer_density (int): assign a constant density to ice layers (An ice layer is detected when hand hardness index = knife = 6)
+
+        Returns:
+            float: SWE in [cm]
+        """
         if method == 'avg':
             SWE=(self.density_profile.density.mean()*self.layers_top[0])/1000
             
@@ -654,8 +665,3 @@ and finally do interpolation for the one having no value after this
         return SWE
         print(SWE)
 
-
-
-#
-
-#

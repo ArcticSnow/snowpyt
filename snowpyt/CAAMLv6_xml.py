@@ -3,10 +3,9 @@
 """
 Created on Tue Jul 04 13:32:31 2017
 
-@author: Simon Filhol
+@author: Simon Filhol, Guillaume Sutter
 
 Collection of functions to import snowpit data stored in the CAAMLv6 xml standard
-
 """
 
 import sys
@@ -16,6 +15,15 @@ import numpy as np
 import snowpyt.snowflake.sf_dict as sfd
 
 def get_temperature(path_xml, print2term=True):
+    """
+    Function to extract temperature profile from CAAML xml file
+    Args:
+        path_xml (str): path to xml file
+        print2term (bool): print profile to termninal
+
+    Returns:
+        array: temperature profile
+    """
     xmldoc = minidom.parse(path_xml)
     itemlist = xmldoc.getElementsByTagName('caaml:tempProfile')
     if itemlist.length > 0:
@@ -45,6 +53,15 @@ def get_temperature(path_xml, print2term=True):
             print('No temperature profile')
 
 def get_density(path_xml, print2term=True):
+    """
+    Function to extract density profile from CAAML xml file
+    Args:
+        path_xml (str): path to xml file
+        print2term (bool): print profile to termninal
+
+    Returns:
+        array: density profile
+    """
 
     xmldoc = minidom.parse(path_xml)
     itemlist = xmldoc.getElementsByTagName('caaml:densityProfile')
@@ -127,6 +144,15 @@ def is_node(node):
 
 
 def get_metadata(path_xml, print2term=True):
+    """
+    Function to extract snowpit metadata profile from CAAML xml file
+    Args:
+        path_xml (str): path to xml file
+        print2term (bool): print profile to termninal
+
+    Returns:
+        metadata object
+    """
     if print2term:
         print('\n=====================')
         print('Loading metadata... \n')
@@ -164,6 +190,15 @@ def get_metadata(path_xml, print2term=True):
     return Metadata
 
 def get_layers(path_xml, print2term=True):
+    """
+    Function to extract layers from CAAML xml file
+    Args:
+        path_xml (str): path to xml file
+        print2term (bool): print profile to termninal
+
+    Returns:
+        list: layers content
+    """
     xmldoc = minidom.parse(path_xml)
 
     itemlist = xmldoc.getElementsByTagName('caaml:snowPackCond')

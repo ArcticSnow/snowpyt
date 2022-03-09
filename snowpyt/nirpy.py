@@ -1,5 +1,9 @@
-'''
-See the paper by Matzl and Schneebeli 2016 for more info
+"""
+Collection of NIR processing tools
+S. Filhol, March 2022
+
+
+Inpired by the paper by Matzl and Schneebeli 2016 for more info
 
 A calibration profile was derived from the camera with Micmac. This calibration profile is for correcting vigneting.
 correct image for vignetting (calib profile is of the size of Raw images. Crop from center to use with jpegs
@@ -8,32 +12,31 @@ sample targets for absolute reflectance calibration (white= 99%, and grey=50%). 
 Convert reflectance image to SSA with the conversion equation  𝑆𝑆𝐴=𝐴𝑒𝑟/𝑡
 
 Finally, use the ruler (or other object of know size) in image to scale image dimension to metric system.
+
 TODO:
+- write function to extract SSA profile to import in niviz.org
+- Raw images are in 12 bit. Find a way to convert to BW from original while maintaining the 12bit resolution. Rawpy might be useful. Then make sure the processing pipeline can accept 12bit data (i.e. all skimage functions)
+- wrap micmac function to extract profile 'mm3d vodka'. At least provide the method on how to do it.
 
-write functions for all steps
-wrap all in a python package/class
-write function to extract profiles, and maybe later identify layers using reflectance/SSA, and contrast enhanced image
-write function to extract SSA profile to import in niviz.org
-include class to compute
-Raw images are in 12 bit. Find a way to convert to BW from original while maintaining the 12bit resolution. Rawpy might be useful. Then make sure the processing pipeline can accept 12bit data (i.e. all skimage functions)
-wrap micmac function to extract profile 'mm3d vodka'. At least provide the method on how to do it.
-
-'''
-import pdb
+"""
 
 from skimage import io, measure, color
 import matplotlib.pyplot as plt
 from mpl_point_clicker import clicker
 import numpy as np
-import cv2
+import cv2, scipy
 import pandas as pd
 
 
 def kernel_square(nPix):
     """
     Function to defin a square kernel of equal value for performing averaging
-    :param nPix: size of the kernel in pixel
-    :return: kernel matrix
+    Args:
+        nPix (int): size of the kernel in pixel
+
+    Returns:
+        array: kernel matrix
+
     """
     print("... Averaging kernel of " + str(nPix) + " by " + str(nPix))
     kernel = np.empty([nPix, nPix])
@@ -45,9 +48,12 @@ def kernel_square(nPix):
 def smooth(mat, kernel):
     """
     Function that produce a smoothed version of the 2D array
-    :param mat: Array to smooth
-    :param nPix: kernel array (output) from the function kernel_square()
-    :return: smoothed array
+    Args:
+        mat: 2D Array to smooth
+        kernel: kernel array (output) from the function kernel_square()
+
+    Returns:
+        2D array: smoothed array
     """
     r = cv2.filter2D(mat, -1, kernel)
     print("... Smoothing done ...")
@@ -55,16 +61,19 @@ def smooth(mat, kernel):
 
 
 def micmac_radiometric():
-    '''
+    """
     List of commands to run for deriving a radiometric calibratino profile for the camera
-    '''
+    """
 
     cmd1 = "mm3d Tapioca All .*JPG 2500"
     cmd2 = "mm3d Vodka .*JPG"
 
 
 class nir(object):
-    def __init__(self, fname_nir, fname_calib, highpass=True, kernel_size=2000):
+    """
+    Class to process NIR snowpit photograph.
+    """
+    def __init__(self, fname_nir, fname_calib, highpass=True, kernel_size=2000, rotate_calib=False):
         """
         Class initialization
         Args:
@@ -76,6 +85,7 @@ class nir(object):
 
         self.fname_nir = fname_nir
         self.fname_calib = fname_calib
+        self.rotate_calib = rotate_calib
         self.img_rgb = None
         self.img_bw = None
         self.img_calib = None
@@ -99,6 +109,11 @@ class nir(object):
 
 
     def pick_targets(self, reflectances=[99, 50]):
+        """
+        Function to pick reflectance targets
+        Args:
+            reflectances (list of int): List of reflectance targets to pick
+        """
 
         def pick_target(image_calib, target_reflectance=99):
             """
@@ -133,6 +148,9 @@ class nir(object):
         print('DONE: Reflectance targets picked.')
 
     def convert_to_reflectance(self):
+        """
+        Function to convert image to reflectance using at minimum 2 sets of reflectance targets previously picked
+        """
         print('---> convert to reflectance')
         values = []
         reflectances = []
@@ -149,13 +167,19 @@ class nir(object):
         self.img_reflectance = self.img_calib * m + c
 
     def convert_to_SSA(self):
-        if self.img_ssa is None:
+        """
+        Function to convert reflectance to SSA
+        """
+        if self.img_reflectance is None:
             print('ERROR convert to Reflectance first')
         else:
             print('---> convert to SSA')
         self.img_ssa = 0.017 * np.exp(self.img_reflectance/12.222)
 
     def convert_to_doptic(self):
+        """
+        Function to convert SSA to optical diameter
+        """
         if self.img_ssa is None:
             print('ERROR convert to SSA first')
         else:
@@ -171,11 +195,19 @@ class nir(object):
         self.convert_to_doptic()
         
     def load_calib(self):
-        self.calib_profile = io.imread(self.fname_calib).T
+        """
+        Function to load radiometrci calibration file
+        """
+        self.calib_profile = io.imread(self.fname_calib)
+        if self.rotate_calib:
+            self.calib_profile = self.calib_profile.T
 
     def apply_calib(self,  crop_calib=False):
-
-
+        """
+        Function to apply calibration profile to the NIR image.
+        Args:
+            crop_calib (bool): if calibration and image are of slightly different size, crop calib and align the two with center.
+        """
         # remove noise with median filter
         print('---> Apply median filter for noise reduction')
         self.img_bw = cv2.medianBlur(self.img_bw, 5)
@@ -214,9 +246,10 @@ class nir(object):
         """
         Function to bring real spatial coordinate
 
-        # 1. click two points
-        # 2. provide corresponding length
-        # 3. option to provide geometrical correction
+        Method:
+            1. click two points
+            2. provide corresponding length
+            3. option to provide geometrical correction
         """
         # Pick two points with a known distance
         print('---> Pick two points with known distance')
@@ -244,19 +277,24 @@ class nir(object):
         self.spatial_param = {'scale': scale, 'extent': extent*scale}
 
 
-    def extract_profile(self,
-                        imgs=['SSA', 'reflectance', 'd_optical'],
-                        linewidth=5,
-                        reduce_func=np.median,
-                        spline_order=1):
+    def extract_profile(self, imgs=['SSA', 'reflectance', 'd_optical'], param={'method': scipy, 'n_samples':1000}):
         """
         Function to extract profile of values for a list of images
 
         Args:
             imgs (list): images from which to sample profile
-            linewidth (int): width of the profile
-            reduce_func (func): function to agglomerate the pixels perpendicular to the line
-            spline_order (int, 0-5): order of the spline applied to the sampled profile
+            param (dict):
+                method (str): method to sample the profile. Avail: numpy, scipy, and skimage.
+                n_sample (int, numpy and scipy method): number of samples along profile
+                linewidth (int, skimage method): width of the profile
+                reduce_func (func, skimage method): function to agglomerate the pixels perpendicular to the line
+                spline_order (int, 0-5, skimage method): order of the spline applied to the sampled profile
+
+                examples:
+                    {'method': scipy, 'n_samples':1000},
+                    {'method': numpy, 'n_samples':1000},
+                    {'method': skimage, 'linewidth':5, 'reduce_func':np.median, 'spline_order':1}
+
         """
         img_dict = {'reflectance': self.img_reflectance,
                     'SSA': self.img_ssa,
@@ -272,42 +310,50 @@ class nir(object):
         plt.show()
 
         coord = klicker.get_positions().get('event').astype(int)
-        #pdb.set_trace()
-        method='skimage'
-        self.profile = pd.DataFrame()
-        
-        if method=='scipy':
-            print('WARNING: implementation not finished')
-            for img in imgs:
-                
-                x, y = np.linspace(coord[0][0], coord[1][0], 1000), np.linspace(coord[0][1], coord[1][1], 1000)
-                self.profile[img] = scipy.ndimage.map_coordinates(img_dict.get(img), np.vstack((y,x)))
 
-            
-            
-        elif method=='numpy':
-            print('WARNING: implementation not finished')
-            x, y = np.linspace(coord[0][0], coord[1][0], 1000), np.linspace(coord[0][1], coord[1][1], 1000)
-            zi = self.img_ssa[y.astype(np.int), x.astype(np.int)]
-            
-        
-        elif method=='skimage':
+        self.profile = pd.DataFrame()
+        if param.get('method') == 'scipy':
+            x, y = np.linspace(coord[0][0], coord[1][0], n_samples), np.linspace(coord[0][1], coord[1][1], n_samples)
             for img in imgs:
-                co = np.flip(coord, axis=1)
-                self.profile[img] = measure.profile_line(img_dict.get(img), co[0], co[1],
-                                                    linewidth=linewidth,
-                                                    reduce_func=reduce_func,
-                                                    order=spline_order)
-            self.profile['dist_pix'] = np.arange(0, np.ceil(np.linalg.norm(co[1]-co[0]))+1)
+                print('... sampling from {}'.format(img))
+                self.profile[img] = scipy.ndimage.map_coordinates(img_dict.get(img), np.vstack((y,x)))
+            self.profile['x_pix'] = x
+            self.profile['y_pix'] = y
+            self.profile['dist_pix'] = np.sqrt((x[0] - x)**2 + (y[0] - y)**2)
             self.profile['dist'] = self.profile.dist_pix * self.spatial_param.get('scale')
-            xs, ys = np.mgrid[0:self.img_bw.shape[1]:1, 0:self.img_bw.shape[0]:1]
-            self.profile['x_pix'] = measure.profile_line(xs, co[0], co[1], order=0)
-            self.profile['y_pix'] = measure.profile_line(ys, co[0], co[1], order=0)
             self.profile['x'] = self.profile.x_pix * self.spatial_param.get('scale') + self.spatial_param.get('extent')[0]
             self.profile['y'] = self.profile.y_pix * self.spatial_param.get('scale') + self.spatial_param.get('extent')[2]
-            
-            else:
-                print('ERROR: sampling method not existing. Available: scipy, numpy, skimage')
+
+        elif param.get('method') == 'numpy':
+            x, y = np.linspace(coord[0][0], coord[1][0], n_samples), np.linspace(coord[0][1], coord[1][1], n_samples)
+            for img in imgs:
+                print('... sampling from {}'.format(img))
+                self.profile[img] = img_dict.get(img)[y.astype(np.int), x.astype(np.int)]
+            self.profile['x_pix'] = x
+            self.profile['y_pix'] = y
+            self.profile['dist_pix'] = np.sqrt((x[0] - x)**2 + (y[0] - y)**2)
+            self.profile['dist'] = self.profile.dist_pix * self.spatial_param.get('scale')
+            self.profile['x'] = self.profile.x_pix * self.spatial_param.get('scale') + self.spatial_param.get('extent')[0]
+            self.profile['y'] = self.profile.y_pix * self.spatial_param.get('scale') + self.spatial_param.get('extent')[2]
+
+        elif param.get('method') == 'skimage':
+            co = np.flip(coord, axis=1)
+            xs, ys = np.mgrid[0:self.img_bw.shape[1]:1, 0:self.img_bw.shape[0]:1]
+            for img in imgs:
+                print('... sampling from {}'.format(img))
+                self.profile[img] = measure.profile_line(img_dict.get(img), co[0], co[1],
+                                                    linewidth=param.get('linewidth'),
+                                                    reduce_func=param.get('reduce_func'),
+                                                    order=param.get('spline_order'))
+                self.profile['x_pix'] = measure.profile_line(xs, co[0], co[1], order=0)
+                self.profile['y_pix'] = measure.profile_line(ys, co[0], co[1], order=0)
+            self.profile['dist_pix'] = np.arange(0, np.ceil(np.linalg.norm(co[1]-co[0]))+1)
+            self.profile['dist'] = self.profile.dist_pix * self.spatial_param.get('scale')
+            self.profile['x'] = self.profile.x_pix * self.spatial_param.get('scale') + self.spatial_param.get('extent')[0]
+            self.profile['y'] = self.profile.y_pix * self.spatial_param.get('scale') + self.spatial_param.get('extent')[2]
+
+        else:
+            print('ERROR: sampling method not existing. Available: scipy, numpy, skimage')
 
 
 if __name__ == '__main__':
@@ -318,7 +364,10 @@ if __name__ == '__main__':
     mo.pick_targets()
     mo.convert_all()
     mo.scale_spatially()
-    mo.extract_profile(['SSA', 'd_optical', 'reflectance'], spline_order=0)
+    mo.extract_profile(['SSA', 'd_optical', 'reflectance'], param={'method': skimage,
+                                                                   'linewidth': 5,
+                                                                   'reduce_func': np.median,
+                                                                   'spline_order': 1})
 
     fig, ax = plt.subplots(1, 3, sharey=True)
     ax[0].plot(mo.profile.reflectance, mo.profile.dist)
