@@ -23,7 +23,7 @@ VERSION = None
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'matplotlib', 'pandas', 'numpy', 'xarray', 'skimage', 'opencv', 'scipy'
+    'matplotlib', 'pandas', 'numpy', 'xarray', 'scikit-image', 'scipy'
 ]
 
 # The rest you shouldn't have to touch too much :)

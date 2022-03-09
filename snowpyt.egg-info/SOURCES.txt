@@ -3,9 +3,9 @@ README.md
 setup.cfg
 setup.py
 snowpyt/CAAMLv6_xml.py
-snowpyt/JC_pit_class.py
 snowpyt/__init__.py
 snowpyt/__version__.py
+snowpyt/nirpy.py
 snowpyt/pit_class.py
 snowpyt.egg-info/PKG-INFO
 snowpyt.egg-info/SOURCES.txt

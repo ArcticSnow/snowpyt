@@ -3,14 +3,14 @@ Name: snowpyt
 Version: 0.2.2
 Summary: A Python project to visualize snowpit
 Home-page: https://github.com/ArcticSnow/snowpyt
-Author: S. Filhol,G. Sutter
+Author: S. Filhol, G. Sutter, M. Lanzky
 Author-email: simon.filhol@geo.uio.no
 License: MIT
 Description: 
         # Snowpyt: an open-source library to visualize snowpits in Python
         Simon Filhol, November 2016, copyright under the MIT license terms, see the License.txt file
         
-        LAST MODIFIED: August 2019 (or see date on github file history)
+        LAST MODIFIED: March 2022 (or see date on github file history)
         
         Feel free to contribute to the project!!!! Many new features can be added...
         
@@ -29,8 +29,6 @@ Description:
         - add option to save pits in Pickle format or CSV
         - add option to save figure in matplotlib format
         - add option to plot when multiple sample columns are given.
-        
-        
         
         ## Objective
         The objective of this library is to provide visualization tool for snowpit data. 
@@ -86,29 +84,22 @@ Description:
         - [pandas](http://pandas.pydata.org/)
         - xlrd
         - xlm
+        - skimage
+        - opencv
         
-        ## Use
+        ## Usage
+        Currently Snowpyt can be used for two purposes: 1) read and work with CAAML files, and 2) processing NIR images of snowpit to extract refelctance, SSA and optical diameter.
         
+        ### Work with snowpit data: CAAML file
         There are three ways to import data into Snowpyt:
-        
-           1. digitalize your pit with https://niviz.org/ and export your pit as a CAAMLv6 (This format follows an international standard for snowpit). Them use the import_caamlv6() function.
-        
-              More information about the [CAAML format](http://caaml.org/)
-        
-           2. input directly data into the snowpit class object
-        
-              ​
-        
-        **Usage:**
+        1. digitalize your pit with https://niviz.org/ and export your pit as a CAAMLv6 (This format follows an international standard for snowpit). Them use the import_caamlv6() function.  More information about the [CAAML format](http://caaml.org/)
+        2. input directly data into the snowpit class object
         
         ```python
         from snowpyt import pit_class as pc
         
         ############################################################
         # Example 1 - using a caamlv6 file:
-        
-        
-        
         p = pc.Snowpit()
         p.caaml_file= '[PATH TO YOUR FILE].caaml'
         p.import_caamlv6()
@@ -122,7 +113,6 @@ Description:
         p.import_sample_csv()
         
         p.plot(plot_order=['dD', 'd18O','d-ex', 'hardness'])
-        
         ```
         
         The isotope `.csv` file should be following this format:
@@ -134,30 +124,54 @@ Description:
         ```
         Many more columns can be added. Create a plotting function to plot any newly named column
         
-        4. All the data table are loaded as a Pandas dataframe or Numpy arrays within the snowpyt class object
-        
+        3. All the data table are loaded as a Pandas dataframe or Numpy arrays within the snowpyt class object
         Type the following in your Python console to see the loaded datatable:
         ```python
         mypit.table
-        
         ```
         This allows for custom plotting using the library of your choice on top of the existing plotting function
         
-        6. Extra Sample Values
-        
+        4. Extra Sample Values.
         Extra column of sample values can be added to the excel file. **Column name must be unique**
-        
         The current plotting functions will not plot these extra columns, only the first one. However the values are loaded via pandas in the table as a dataframe (see 5.)
         
-        
-        7. Compute SWE
-        
+        5. Compute SWE
         ```python
         p = pc.Snowpit()
         p.caaml_file= '[PATH TO YOUR FILE].caaml'
         p.calc_SWE(method='avg')
         ```
         
+        ### NIR photography
+        The `nirpy.py` file contains method to process 
+        
+        ```python
+        fnir = '/home/simonfi/Desktop/202202_finse_livox/NIR_cam/20220224_NIR/DSC01493.JPG'
+        fcalib = '/home/simonfi/Downloads/Foc0200Diaph028-FlatField.tif'
+        mo = nir(fname_nir=fnir, fname_calib=None, kernel_size=500)
+        
+        mo.pick_targets()
+        mo.convert_all()
+        mo.scale_spatially()
+        mo.extract_profile(['SSA', 'd_optical', 'reflectance'], param={'method': skimage,
+                                                                       'linewidth': 5,
+                                                                       'reduce_func': np.median,
+                                                                       'spline_order': 1})
+        
+        fig, ax = plt.subplots(1, 3, sharey=True)
+        ax[0].plot(mo.profile.reflectance, mo.profile.dist)
+        ax[0].grid(':')
+        ax[0].set_xlabel('Reflectance [%]')
+        
+        ax[1].plot(mo.profile.SSA, mo.profile.dist)
+        ax[1].grid(':')
+        ax[1].set_xlabel('SSA [mm$^{-1}$]')
+        
+        ax[2].plot(mo.profile.d_optical, mo.profile.dist)
+        ax[2].grid(':')
+        ax[2].set_xlabel('d$_{optical}$ [mm]')
+        plt.show()
+        ```
         
         ## Want to contribute?
         Once you have cloned the project to your home directory, create a git branch and here you go. When your edits are stable, merge with the master branch. See this neat tutorial about git branching and merging, [here](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging)
