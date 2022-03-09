@@ -312,6 +312,7 @@ class nir(object):
         coord = klicker.get_positions().get('event').astype(int)
 
         self.profile = pd.DataFrame()
+        print('WARNING: method to compute absolute x,y not correct')
         if param.get('method') == 'scipy':
             x, y = np.linspace(coord[0][0], coord[1][0], n_samples), np.linspace(coord[0][1], coord[1][1], n_samples)
             for img in imgs:

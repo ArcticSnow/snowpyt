@@ -138,6 +138,8 @@ The `nirpy.py` file contains method to process
 
 ```python
 from snowpyt import nirpy
+import numpy as np
+import matplotlib.pyplot as plt
 
 fnir = '/home/simonfi/Desktop/202202_finse_livox/NIR_cam/20220224_NIR/DSC01493.JPG'
 fcalib = '/home/simonfi/Downloads/Foc0200Diaph028-FlatField.tif'
@@ -146,10 +148,10 @@ mo = nirpy.nir(fname_nir=fnir, fname_calib=None, kernel_size=500)
 mo.pick_targets()
 mo.convert_all()
 mo.scale_spatially()
-mo.extract_profile(['SSA', 'd_optical', 'reflectance'], param={'method': skimage,
+mo.extract_profile(['SSA', 'd_optical', 'reflectance'], param={'method': 'skimage',
                                                                'linewidth': 5,
                                                                'reduce_func': np.median,
-                                                               'spline_order': 1})
+                                                               'spline_order': 2})
 
 fig, ax = plt.subplots(1, 3, sharey=True)
 ax[0].plot(mo.profile.reflectance, mo.profile.dist)
