@@ -210,7 +210,7 @@ class Snowpit(object):
              dpi=150,
              plot_order=['temperature', 'density', 'crystal size',
                          'stratigraphy', 'hardness', 'sample names',
-                         'dD', 'd18O', 'd-ex']):
+                         'dD', 'd18O', 'dxs']):
         """
         Function to plot pit data
         Args:
@@ -255,7 +255,20 @@ class Snowpit(object):
                           'sample_name': plot_sample_names,
                           'dD': plot_dD,
                           'd18O': plot_d18O,
-                          'dXS': plot_dXS}
+                          'dxs': plot_dxs}
+            # include a little logic to check that iso is properly define
+            for var in plot_order:
+                if var not in ['temperature', 
+                               'density', 
+                               'stratigraphy', 
+                               'hardness', 
+                               'crystal_size', 
+                               'sample_name',
+                               'dD', 
+                               'd18O', 
+                               'dxs']:
+                    print('\nERROR: plot_order only accepts: temperature, density, stratigraphy, hardness, crystal_size, sample_name, dD, d18O, dxs')
+                    return
             for i, axs in enumerate(self.axs_list):
                 plots_dict.get(plot_order[i])(axs)
 
@@ -267,13 +280,10 @@ class Snowpit(object):
                     np.repeat(xlim[0], self.layers_top.__len__()), 
                     alpha=0.5, edgecolor='m', linewidth=0.75, linestyle=':',zorder=20,fill=False)
 
-        def plot_isotope(ax,iso='dD', std=None):
+        def plot_isotope(ax, iso='dD', std=None):
             if std is None:
                 std = iso + '_SD'  #std column name default for data from FARLAB
-            # include a little logic to check that iso is properly define
-            if iso is not ('dD' or 'd18O' or 'dXS'):
-                print('iso must be dD, d18O or dXS')
-                return
+            
                 
             if ax is ax1:
                 ax.set_ylabel("Depth (cm)")
@@ -285,7 +295,7 @@ class Snowpit(object):
                           'd18O': '#1f77b4','dxs':'#d62728'}
             title_dict = {'dD': "dD ($^{o}/_{oo}$)", 
                           'd18O': "d18O ($^{o}/_{oo}$)",
-                          'dXS': "d-excess ($^{o}/_{oo}$)"}
+                          'dxs': "d-excess ($^{o}/_{oo}$)"}
             
             color=color_dict[iso]
             
@@ -348,7 +358,7 @@ class Snowpit(object):
         def plot_d18O(ax):
             plot_isotope(ax,iso='d18O')
 
-        def plot_dXS(ax):
+        def plot_dxs(ax):
              plot_isotope(ax,iso='dxs')
             
         def plot_density(ax):
