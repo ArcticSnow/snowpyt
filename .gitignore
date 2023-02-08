@@ -3,3 +3,6 @@ docs/_static
 docs/_templates
 .idea/
 __pycache__/
+
+snowpyt/__pycache__/
+snowpyt.egg-info/

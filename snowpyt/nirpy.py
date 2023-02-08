@@ -14,6 +14,7 @@ Convert reflectance image to SSA with the conversion equation  𝑆𝑆𝐴=𝐴
 Finally, use the ruler (or other object of know size) in image to scale image dimension to metric system.
 
 TODO:
+- save final image in netcdf (x,y) (original, calibrated, reflectance, SSA, d_optics)
 - write function to extract SSA profile to import in niviz.org
 - Raw images are in 12 bit. Find a way to convert to BW from original while maintaining the 12bit resolution. Rawpy might be useful. Then make sure the processing pipeline can accept 12bit data (i.e. all skimage functions)
 - wrap micmac function to extract profile 'mm3d vodka'. At least provide the method on how to do it.
@@ -26,6 +27,7 @@ from mpl_point_clicker import clicker
 import numpy as np
 import cv2, scipy
 import pandas as pd
+from scipy.optimize import curve_fit
 
 
 def kernel_square(nPix):
@@ -233,6 +235,69 @@ class nir(object):
             print('---> Apply high pass filter')
             lowpass = smooth(self.img_calib/255, kernel_square(self.kernel_size))
             self.img_calib = self.img_calib/255 - lowpass
+    def remove_vignetting(self, replace_img_calib=True):
+        '''
+        Function to estimate vignetting by fitting a gaussian to the image.
+        '''
+
+        # scale image t0 range [0,1]
+        img = self.img_calib.copy()
+        img = (img-img.min())/img.max()
+
+        def func(cr, fx, fy, sigma_x, sigma_y):
+
+            cols, rows = cr
+
+            #print(f'rows:{rows}, cols:{cols}, fx:{fx}, fy:{fy}')
+
+            a = cv2.getGaussianKernel(2*int(cols) ,sigma_x)[int(cols-fx):int(2*cols-fx)]
+            b = cv2.getGaussianKernel(2*int(rows) ,sigma_y)[int(rows-fy):int(2*rows-fy)]
+            c = b*a.T
+            d = c/c.max()
+
+            return d.ravel()
+
+        def fit(image, with_bounds=False):
+
+            # Prepare fitting
+            cols = image.shape[1]
+            rows = image.shape[0]
+
+            # Guess intial parameters
+            fx0 = int(image.shape[1])/2 # Middle of the image
+            fy0 = int(image.shape[0])/2 # Middle of the image
+            sigma_x = max(*image.shape) * 0.6 # 60% of the image
+            sigma_y = max(*image.shape) * 0.6 # 60% of the image
+            initial_guess = [fx0, fy0, sigma_x, sigma_y]
+
+            # Constraints of the parameters
+            if with_bounds:
+                lower = [0, 0, 0, 0]
+                upper = [image.shape[1], image.shape[0], max(*image.shape), max(*image.shape)]
+                bounds = [lower, upper]
+            else:
+                bounds = [-np.inf, np.inf]
+
+            pred_params, uncert_cov = curve_fit(func, (cols, rows), img.ravel(),
+                                                p0=initial_guess, bounds=bounds, method='trf')
+
+            # Get residual
+            predictions = func((cols, rows), *pred_params)
+            rms = np.sqrt(np.mean((img.ravel() - predictions.ravel())**2))
+
+            print("Predicted params : ", pred_params)
+            print("Residual : ", rms)
+
+            return pred_params
+
+        print('Estimating Vigneting...')
+        params = fit(img, with_bounds=True)
+        predictions = func((img.shape[1], img.shape[0]), *params)
+        self.img_vignette = predictions.reshape(img.shape)
+
+        self.img_no_vignette = img/self.img_vignette
+        if replace_img_calib:
+            self.img_calib = self.img_no_vignette.copy()
 
 
     def load_nir(self):
@@ -314,7 +379,7 @@ class nir(object):
         self.profile = pd.DataFrame()
         print('WARNING: method to compute absolute x,y not correct')
         if param.get('method') == 'scipy':
-            x, y = np.linspace(coord[0][0], coord[1][0], n_samples), np.linspace(coord[0][1], coord[1][1], n_samples)
+            x, y = np.linspace(coord[0][0], coord[1][0], n_samples), np.linspace(coord[0][1], coord[1][1], param.get('n_samples'))
             for img in imgs:
                 print('... sampling from {}'.format(img))
                 self.profile[img] = scipy.ndimage.map_coordinates(img_dict.get(img), np.vstack((y,x)))
@@ -326,7 +391,7 @@ class nir(object):
             self.profile['y'] = self.profile.y_pix * self.spatial_param.get('scale') + self.spatial_param.get('extent')[2]
 
         elif param.get('method') == 'numpy':
-            x, y = np.linspace(coord[0][0], coord[1][0], n_samples), np.linspace(coord[0][1], coord[1][1], n_samples)
+            x, y = np.linspace(coord[0][0], coord[1][0], n_samples), np.linspace(coord[0][1], coord[1][1], param.get('n_samples'))
             for img in imgs:
                 print('... sampling from {}'.format(img))
                 self.profile[img] = img_dict.get(img)[y.astype(np.int), x.astype(np.int)]
