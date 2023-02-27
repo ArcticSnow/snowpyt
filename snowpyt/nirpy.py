@@ -14,12 +14,15 @@ Convert reflectance image to SSA with the conversion equation  𝑆𝑆𝐴=𝐴
 Finally, use the ruler (or other object of know size) in image to scale image dimension to metric system.
 
 TODO:
-- save final image in netcdf (x,y) (original, calibrated, reflectance, SSA, d_optics)
+- implement a reader for netcdf file in init (deduce most variables)
+- in netcdf onyl store reflectance. Deduce others from reflectance. SAVE SPACE x3
+- add CAAML metadata to netcdf
 - write function to extract SSA profile to import in niviz.org
 - Raw images are in 12 bit. Find a way to convert to BW from original while maintaining the 12bit resolution. Rawpy might be useful. Then make sure the processing pipeline can accept 12bit data (i.e. all skimage functions)
 - wrap micmac function to extract profile 'mm3d vodka'. At least provide the method on how to do it.
 
 """
+import pdb
 
 from skimage import io, measure, color
 import matplotlib.pyplot as plt
@@ -28,6 +31,8 @@ import numpy as np
 import cv2, scipy
 import pandas as pd
 from scipy.optimize import curve_fit
+import xarray as xr
+import datetime as dt
 
 
 def kernel_square(nPix):
@@ -110,6 +115,8 @@ class nir(object):
             print("---> WARNING: No calbration profile provided.")
 
 
+
+
     def pick_targets(self, reflectances=[99, 50]):
         """
         Function to pick reflectance targets
@@ -167,6 +174,9 @@ class nir(object):
         m, c = np.linalg.lstsq(A, reflectances, rcond=None)[0]
 
         self.img_reflectance = self.img_calib * m + c
+
+        # cap max reflectance to 120% to avoid problems
+        self.img_reflectance[self.img_reflectance>120] = 120
 
     def convert_to_SSA(self):
         """
@@ -290,7 +300,7 @@ class nir(object):
 
             return pred_params
 
-        print('Estimating Vigneting...')
+        print('---> Estimating Vigneting by fitting a Gaussian vignette...')
         params = fit(img, with_bounds=True)
         predictions = func((img.shape[1], img.shape[0]), *params)
         self.img_vignette = predictions.reshape(img.shape)
@@ -303,6 +313,10 @@ class nir(object):
     def load_nir(self):
         """
         Function to load jpeg NIR images, and convert them to BW
+
+        TODO:
+        - add units
+        - add other metadata: pit name, location, etc. grab directyl from CAAML 8if exist)
         """
         self.img_rgb = cv2.imread(self.fname_nir)
         self.img_bw = cv2.cvtColor(self.img_rgb, cv2.COLOR_BGR2HSV)[:,:,2]
@@ -337,9 +351,96 @@ class nir(object):
         klicker = clicker(ax, ["event"], markers=["o"],  colors='r')
         plt.show()
 
-        coord = klicker.get_positions().get('event').astype(int)
-        extent = np.array([-coord[0][0], self.img_bw.shape[1] - coord[0][0],  coord[0][1] - self.img_bw.shape[0], coord[0][1]])
-        self.spatial_param = {'scale': scale, 'extent': extent*scale}
+        im_size = [self.img_bw.shape[0] * scale, self.img_bw.shape[1] * scale]
+
+        coord_ori = klicker.get_positions().get('event').astype(int)
+
+         # extent: xmin, xmax, ymin, ymax
+        extent = np.array([-(coord_ori[0][0])*scale,
+                          (self.img_bw.shape[1] - coord_ori[0][0])*scale,
+                          -(self.img_bw.shape[0]- coord_ori[0][1])*scale,
+                          coord_ori[0][1] * scale])
+        #pdb.set_trace()
+        self.spatial_param = {'scale': scale, 'extent': extent}
+
+    def to_netcdf(self, fname=None, variables=None):
+        print('---> Storing to netcdf')
+
+        def compute_scaling_and_offset(da, n=6):
+            """
+            Compute offset and scale factor for int conversion
+            Args:
+                da (dataarray): of a given variable
+                n (int): number of digits to account for
+            """
+            vmin = float(da.min().values)
+            vmax = float(da.max().values)
+
+            # stretch/compress data to the available packed range
+            scale_factor = (vmax - vmin) / (2 ** n - 1)
+            # translate the range to be symmetric about zero
+            add_offset = vmin + 2 ** (n - 1) * scale_factor
+
+            return scale_factor, add_offset
+
+        if fname is None:
+            fname = self.fname_nir.split('.')[0] + '.nc'
+
+        xs = np.linspace(self.spatial_param['extent'][0], self.spatial_param['extent'][1], self.img_bw.shape[1])
+        ys = np.linspace(self.spatial_param['extent'][2], self.spatial_param['extent'][3], self.img_bw.shape[0])
+
+        ds = xr.Dataset(
+            coords={
+                "x":xs,
+                "y":ys
+            },
+            data_vars={
+                "image_original":(['y','x'], np.flip(self.img_bw, axis=0)),
+                "image_calibrated":(['y','x'], np.flip(self.img_calib, axis=0)),
+                "SSA":(['y','x'], np.flip(self.img_ssa, axis=0)),
+                "reflectance":(['y','x'], np.flip(self.img_reflectance, axis=0)),
+                "d_optic":(['y','x'], np.flip(self.img_doptic, axis=0))
+            }
+        )
+
+        ds.attrs = {'title':'NIR photo of Snowpit',
+                'source': 'Processing of NIR photo done with Snowpyt',
+                'creator_name': 'Dataset created by Simon Filhol',
+                'date_created': dt.datetime.now().strftime('%Y/%m/%d %H:%M:%S'),
+                    'original file': self.fname_nir.split('/')[-1]}
+
+        encod_dict = {}
+        if variables is None:
+            variables = list(ds.keys())
+
+        for var in variables:
+            scale_factor, add_offset = compute_scaling_and_offset(ds[var], n=9)
+            if str(ds[var].dtype)[:3] == 'int':
+                encod_dict.update({var:{
+                                   'dtype':ds[var].dtype}})
+            elif var == 'd_optic':
+                encod_dict.update({var:{"zlib": True,
+                                       "complevel": 9,
+                                       'dtype': 'int16',
+                                       'scale_factor': 0.001,
+                                        'add_offset': 0,
+                                         '_FillValue': -9999}})
+            else:
+                encod_dict.update({var:{"zlib": True,
+                                       "complevel": 9,
+                                       'dtype': 'int32',
+                                       'scale_factor': scale_factor,
+                                        'add_offset': add_offset,
+                                         '_FillValue': -9999}})
+        ds[variables].to_netcdf(fname, encoding=encod_dict, engine='h5netcdf')
+        self.ds = ds
+
+    def plot_img(self, img='reflectance', cmap=plt.cm.gray, **kwargs):
+        plt.imshow(self.ds[img], cmap=cmap, aspect='equal', origin='lower', extent=self.spatial_param['extent'], **kwargs)
+        plt.title(img)
+        plt.colorbar()
+        plt.show()
+
 
 
     def extract_profile(self, imgs=['SSA', 'reflectance', 'd_optical'], param={'method': scipy, 'n_samples':1000}):
@@ -426,6 +527,7 @@ if __name__ == '__main__':
     fnir = '/home/simonfi/Desktop/202202_finse_livox/NIR_cam/20220224_NIR/DSC01493.JPG'
     fcalib = '/home/simonfi/Downloads/Foc0200Diaph028-FlatField.tif'
     mo = nir(fname_nir=fnir, fname_calib=None, kernel_size=500)
+    mo.remove_vignetting()
 
     mo.pick_targets()
     mo.convert_all()
