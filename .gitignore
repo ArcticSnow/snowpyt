@@ -3,7 +3,7 @@ docs/_static
 docs/_templates
 .idea/
 __pycache__/
-
+snowpyt/__pycache__
 snowpyt/__pycache__/
 snowpyt/.idea/
 snowpyt/.ipynb_checkpoints/

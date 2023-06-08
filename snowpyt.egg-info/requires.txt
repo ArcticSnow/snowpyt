@@ -1,6 +1,0 @@
-matplotlib
-pandas
-numpy
-xarray
-scikit-image
-scipy

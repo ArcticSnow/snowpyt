@@ -179,11 +179,11 @@ Once you have cloned the project to your home directory, create a git branch and
 ## Example
 ### CAAML File Interpretation
 
-![Example snowpit](snowpyt/plots/Standard_pit.png)
+![Example snowpit](docs/plots/Standard_pit.png)
 
 ### Near-IR Photography
 
-![Example snowpit](snowpyt/plots/pit_NIR.png)
+![Example snowpit](docs/plots/pit_NIR.png)
 
 
 
