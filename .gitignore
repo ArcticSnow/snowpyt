@@ -5,4 +5,6 @@ docs/_templates
 __pycache__/
 
 snowpyt/__pycache__/
+snowpyt/.idea/
+snowpyt/.ipynb_checkpoints/
 snowpyt.egg-info/
