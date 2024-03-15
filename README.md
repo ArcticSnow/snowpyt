@@ -1,9 +1,9 @@
 # Snowpyt: an open-source library to visualize snowpits in Python
 Simon Filhol, November 2016, copyright under the MIT license terms, see the License.txt file
 
-LAST MODIFIED: March 2022 (or see date on github file history)
-
 Feel free to contribute to the project!!!! Many new features can be added...
+
+Documentation available here: https://snowpyt.readthedocs.io/en/latest/index.html
 
 ## To do:
 
