@@ -212,7 +212,7 @@ def get_layers(path_xml, print2term=True):
     stratProfile = xmldoc.getElementsByTagName("caaml:stratProfile")
     if stratProfile.length > 0:
         Layers = []
-        for Layer in stratProfile[0].childNodes[3:]:
+        for Layer in stratProfile[0].childNodes[0:]:
             if Layer.nodeType not in {3, 8}:
                 lay = pc.layer()
                 for child in Layer.childNodes:
